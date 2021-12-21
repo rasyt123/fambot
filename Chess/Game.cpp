@@ -96,27 +96,27 @@ void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window)
             }
             switch (underboard[x][y]) {
                 case 'P':
-                    imagedir += "_pawn_png_128px";
+                    imagedir += "_pawn_png_128px.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'R':
-                    imagedir += "_rook_png_128px";
+                    imagedir += "_rook_png_128px.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'K':
-                    imagedir += "_knight_png_128px";
+                    imagedir += "_knight_png_128px.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'B':
-                    imagedir += "_bishop_png_128px";
+                    imagedir += "_bishop_png_128px.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'A':
-                    imagedir += "_king_png_128px";
+                    imagedir += "_king_png_128px.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'Q':
-                    imagedir += "_queen_png_128px";
+                    imagedir += "_queen_png_128px.png";
                     texture.loadFromFile(imagedir);
                     break;
                 default:
@@ -145,7 +145,7 @@ void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window)
                 window->draw(sprite);
             }
             isempty = false;
-            imagedir = "C:/Users/rasyt/Pictures/Saved Pictures/";
+            imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
         }
     }
 }
