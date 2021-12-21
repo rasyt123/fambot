@@ -23,8 +23,20 @@ void Chess::Game::set_cellwidth(int width) {
 
 }
 
-bool Chess::Game::isPiece(float y, float x) {
-
+bool Chess::Game::isPiece(float y, float x, std::pair<float, float>& piececords) {
+    for (int height = 0; height < BOARD_ROWS; height++) {
+        for (int width = 0; width < BOARD_COLS; width++) {
+            float cellxpos = width * cell_width;
+            float cellypos = height * cell_height;
+            if (x > cellxpos and x < cellxpos + (float) cell_width and y > cellypos and y < cellypos + (float) cell_height) {
+                if (underboard[height][width] != ' ') {
+                    piececords = boardcoords[height][width];
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 void Chess::Game::GameLoop() {
@@ -32,33 +44,36 @@ void Chess::Game::GameLoop() {
     addcoords();
     bool mademove = false;
     bool isgreen = false;
+    std::pair<float, float> piececoords;
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            switch (event.type) {
-                case sf::Event::Closed:
-                    window.close();
-                    break;
-                default:
-                    break;
+            if (event.type == sf::Event::Closed) {
+                window.close();
+                break;
             }
         }
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) and isgreen) {
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (isPiece(mousePos.y, mousePos.x)) {
-
-            }
-            isgreen = false;
-        } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (isPiece(mousePos.y, mousePos.x)) {
-
-            }
-            isgreen = true;
-        }
+        CheckSelect(&window, isgreen);
         window.clear();
-        SetupBoard(960, 960, &window);
+        SetupBoard(&window);
         window.display();
+    }
+}
+
+
+void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) and isgreen) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+        if (isPiece((float) mousePos.y, (float)mousePos.x)) {
+
+        }
+        isgreen = false;
+    } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+        if (isPiece((float) mousePos.y, (float) mousePos.x)) {
+
+        }
+        isgreen = true;
     }
 }
 
@@ -95,7 +110,7 @@ void Chess::Game::addcoords() {
 
 
 
-void Chess::Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window) {
+void Chess::Game::SetupBoard(sf::RenderWindow* window) {
     std::vector<std::pair<float, float>> rowcoords;
     bool isempty = false;
     std::string imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
