@@ -74,6 +74,8 @@ void Game::addcoords() {
 }
 
 
+
+
 void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window) {
     std::vector<std::pair<float, float>> rowcoords;
     bool isempty = false;
@@ -84,15 +86,13 @@ void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window)
         for (int x = 0; x < BOARD_COLS; x++) {
             float cellxpos = x * cell_width;
             float cellypos = y * cell_height;
-            float spritex = cellxpos + cell_width / 2;
-            float spritey = cellypos + cell_height / 2;
             sf::Texture texture;
             if (y <= 1) {
                 imagedir += white;
             } else {
                 imagedir += black;
             }
-            switch (underboard[x][y]) {
+            switch (underboard[y][x]) {
                 case 'P':
                     imagedir += "_pawn_png_128px.png";
                     texture.loadFromFile(imagedir);
@@ -121,7 +121,7 @@ void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window)
                     isempty = true;
             }
             sf::Sprite sprite(texture);
-            sprite.setPosition(spritex, spritey);
+            sprite.setPosition(cellxpos, cellypos);
             sf::RectangleShape boardcell(sf::Vector2f(150.0f, 150.0f));
             if (isEven(y)) {
                 if (isEven(x)) {
