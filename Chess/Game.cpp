@@ -74,8 +74,6 @@ void Game::addcoords() {
 }
 
 
-
-
 void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window) {
     std::vector<std::pair<float, float>> rowcoords;
     bool isempty = false;
