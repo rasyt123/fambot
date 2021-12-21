@@ -23,17 +23,36 @@ void Game::set_cellwidth(int width) {
 
 }
 
+bool Game::isPiece(float y, float x) {
+
+}
+
 void Game::GameLoop() {
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
     addcoords();
     bool mademove = false;
+    bool isgreen = false;
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-                break;
+            switch (event.type) {
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+                default:
+                    break;
             }
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) and isgreen) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (isPiece(mousePos.y, mousePos.x)) {
+                
+            }
+
+        } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+
+            isgreen = true;
         }
         window.clear();
         SetupBoard(960, 960, &window);
@@ -71,7 +90,6 @@ void Game::addcoords() {
         }
     }
 }
-
 
 
 
