@@ -71,7 +71,10 @@ void Chess::Game::GameLoop() {
 void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) and isgreen) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-        if (isPiece((float) mousePos.y, (float)mousePos.x, piececoords, boardcords)) {
+        if (isPiece((float) mousePos.y, (float)mousePos.x, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
+
+
+
 
 
 
@@ -79,7 +82,7 @@ void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pai
         isgreen = false;
     } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-        if (isPiece((float) mousePos.y, (float) mousePos.x, piececoords, boardcords) and piececoords.first != -9000 and piececoords.second != -9000) {
+        if (isPiece((float) mousePos.y, (float) mousePos.x, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
             sf::RectangleShape boardcell(sf::Vector2f(120.0f, 120.0f));
             if ((isEven(pieceyx.first) and isEven(pieceyx.second)) or (!isEven(pieceyx.first) and !isEven(pieceyx.second))) {
                 boardcell.setFillColor(sf::Color::White);
@@ -91,6 +94,9 @@ void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pai
                 boardcell.setOutlineThickness(-15);
             }
         }
+        old_greenposx = ;
+        old_greenposy =  ;
+
         isgreen = true;
     }
     return;
@@ -135,6 +141,7 @@ void Chess::Game::SetupBoard(sf::RenderWindow* window) {
     std::string imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
     std::string black = "b";
     std::string white = "w";
+    std::vector<std::unique_ptr<sf::RectangleShape>> currrow;
     for (int y = 0; y < BOARD_ROWS; y++) {
         for (int x = 0; x < BOARD_COLS; x++) {
             float cellxpos = x * cell_width;
@@ -177,26 +184,28 @@ void Chess::Game::SetupBoard(sf::RenderWindow* window) {
             }
             sf::Sprite sprite(texture);
             sprite.setPosition(spritex, spritey);
-            sf::RectangleShape boardcell(sf::Vector2f(120.0f, 120.0f));
+            std::unique_ptr<sf::RectangleShape> boardcell;
+            boardcell =  std::unique_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(120.0f, 120.0f)));
             if (isEven(y)) {
                 if (isEven(x)) {
-                    boardcell.setFillColor(sf::Color::White);
+                    boardcell->setFillColor(sf::Color::White);
                 } else {
-                    boardcell.setFillColor(sf::Color::Black);
+                    boardcell->setFillColor(sf::Color::Black);
                 }
 
             } else {
                if (isEven(x)) {
-                   boardcell.setFillColor(sf::Color::Black);
+                   boardcell->setFillColor(sf::Color::Black);
                } else {
-                   boardcell.setFillColor(sf::Color::White);
+                   boardcell->setFillColor(sf::Color::White);
                }
             }
-            boardcell.setPosition(cellxpos, cellypos);
-            window->draw(boardcell);
+            boardcell->setPosition(cellxpos, cellypos);
+            window->draw(*boardcell);
             if (!isempty) {
                 window->draw(sprite);
             }
+            currrow.push_back(std::move(boardcell));
             isempty = false;
             imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
         }
