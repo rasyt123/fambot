@@ -4,7 +4,7 @@
 
 #include "Game.h"
 
-bool Game::isEven(int number) {
+bool Chess::Game::isEven(int number) {
     if (number % 2 == 0) {
         return true;
     } else {
@@ -13,21 +13,21 @@ bool Game::isEven(int number) {
 }
 
 
-void Game::set_cellheight(int height) {
+void Chess::Game::set_cellheight(int height) {
     cell_height = height;
 }
 
 
-void Game::set_cellwidth(int width) {
+void Chess::Game::set_cellwidth(int width) {
     cell_width = width;
 
 }
 
-bool Game::isPiece(float y, float x) {
+bool Chess::Game::isPiece(float y, float x) {
 
 }
 
-void Game::GameLoop() {
+void Chess::Game::GameLoop() {
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
     addcoords();
     bool mademove = false;
@@ -46,12 +46,14 @@ void Game::GameLoop() {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) and isgreen) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             if (isPiece(mousePos.y, mousePos.x)) {
-                
+
             }
-
+            isgreen = false;
         } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (isPiece(mousePos.y, mousePos.x)) {
 
-
+            }
             isgreen = true;
         }
         window.clear();
@@ -62,7 +64,7 @@ void Game::GameLoop() {
 
 
 
-void Game::SetUnderBoard() {
+void Chess::Game::SetUnderBoard() {
     underboard = {
             {'R', 'K', 'B', 'Q', 'A', 'B', 'K', 'R'},
             {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
@@ -76,7 +78,7 @@ void Game::SetUnderBoard() {
 }
 
 
-void Game::addcoords() {
+void Chess::Game::addcoords() {
     std::vector<std::pair<float, float>> rowcoords;
     for (int y = 0; y < BOARD_ROWS; y++) {
         for (int x = 0; x < BOARD_COLS; x++) {
@@ -93,7 +95,7 @@ void Game::addcoords() {
 
 
 
-void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window) {
+void Chess::Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window) {
     std::vector<std::pair<float, float>> rowcoords;
     bool isempty = false;
     std::string imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
