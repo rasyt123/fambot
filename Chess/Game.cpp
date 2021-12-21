@@ -4,7 +4,6 @@
 
 #include "Game.h"
 
-
 bool Game::isEven(int number) {
     if (number % 2 == 0) {
         return true;
@@ -25,7 +24,7 @@ void Game::set_cellwidth(int width) {
 }
 
 void Game::GameLoop() {
-    sf::RenderWindow window(sf::VideoMode(1200, 1200), "Chess", sf::Style::Close | sf::Style::Titlebar);
+    sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
     addcoords();
     bool mademove = false;
     while (window.isOpen()) {
@@ -37,7 +36,7 @@ void Game::GameLoop() {
             }
         }
         window.clear();
-        SetupBoard(1200, 1200, &window);
+        SetupBoard(960, 960, &window);
         window.display();
     }
 }
@@ -86,6 +85,8 @@ void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window)
         for (int x = 0; x < BOARD_COLS; x++) {
             float cellxpos = x * cell_width;
             float cellypos = y * cell_height;
+            float spritex = cellxpos + (26);
+            float spritey = cellypos + (26);
             sf::Texture texture;
             if (y <= 1) {
                 imagedir += white;
@@ -94,35 +95,35 @@ void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window)
             }
             switch (underboard[y][x]) {
                 case 'P':
-                    imagedir += "_pawn_png_128px.png";
+                    imagedir += "_P60.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'R':
-                    imagedir += "_rook_png_128px.png";
+                    imagedir += "_R60.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'K':
-                    imagedir += "_knight_png_128px.png";
+                    imagedir += "_K60.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'B':
-                    imagedir += "_bishop_png_128px.png";
+                    imagedir += "_b60.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'A':
-                    imagedir += "_king_png_128px.png";
+                    imagedir += "_A60.png";
                     texture.loadFromFile(imagedir);
                     break;
                 case 'Q':
-                    imagedir += "_queen_png_128px.png";
+                    imagedir += "_Q60.png";
                     texture.loadFromFile(imagedir);
                     break;
                 default:
                     isempty = true;
             }
             sf::Sprite sprite(texture);
-            sprite.setPosition(cellxpos, cellypos);
-            sf::RectangleShape boardcell(sf::Vector2f(150.0f, 150.0f));
+            sprite.setPosition(spritex, spritey);
+            sf::RectangleShape boardcell(sf::Vector2f(120.0f, 120.0f));
             if (isEven(y)) {
                 if (isEven(x)) {
                     boardcell.setFillColor(sf::Color::White);
