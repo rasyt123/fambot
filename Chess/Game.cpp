@@ -4,23 +4,6 @@
 
 #include "Game.h"
 
-void Game::GameLoop() {
-    sf::RenderWindow window(sf::VideoMode(1200, 1200), "Chess", sf::Style::Close | sf::Style::Titlebar);
-    addcoords();
-    bool mademove = false;
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-                break;
-            }
-        }
-        window.clear();
-        SetupBoard(1200, 1200, &window);
-        window.display();
-    }
-}
 
 bool Game::isEven(int number) {
     if (number % 2 == 0) {
@@ -40,6 +23,25 @@ void Game::set_cellwidth(int width) {
     cell_width = width;
 
 }
+
+void Game::GameLoop() {
+    sf::RenderWindow window(sf::VideoMode(1200, 1200), "Chess", sf::Style::Close | sf::Style::Titlebar);
+    addcoords();
+    bool mademove = false;
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+                break;
+            }
+        }
+        window.clear();
+        SetupBoard(1200, 1200, &window);
+        window.display();
+    }
+}
+
 
 
 void Game::SetUnderBoard() {
@@ -77,9 +79,9 @@ void Game::addcoords() {
 void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window) {
     std::vector<std::pair<float, float>> rowcoords;
     bool isempty = false;
-    string imagedir = "C:/Users/rasyt/Pictures/Saved Pictures/";
-    string black = "b";
-    string white = "w";
+    std::string imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
+    std::string black = "b";
+    std::string white = "w";
     for (int y = 0; y < BOARD_ROWS; y++) {
         for (int x = 0; x < BOARD_COLS; x++) {
             float cellxpos = x * cell_width;
@@ -87,12 +89,12 @@ void Game::SetupBoard(int boardwidth, int boardheight, sf::RenderWindow* window)
             float spritex = cellxpos + cell_width / 2;
             float spritey = cellypos + cell_height / 2;
             sf::Texture texture;
+            if (y <= 1) {
+                imagedir += white;
+            } else {
+                imagedir += black;
+            }
             switch (underboard[x][y]) {
-                if (y <= 1) {
-                    imagedir += white;
-                } else {
-                    imagedir += black;
-                }
                 case 'P':
                     imagedir += "_pawn_png_128px";
                     texture.loadFromFile(imagedir);
