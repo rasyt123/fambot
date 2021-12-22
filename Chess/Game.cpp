@@ -74,37 +74,43 @@ void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pai
             sf::RectangleShape oldboardcell(sf::Vector2f(120.0f, 120.0f));
             oldboardcell.setPosition(old_greenposx, old_greenposy);
             if ((isEven(oldposrow) and isEven(oldposcol)) or (!isEven(oldposrow) and !isEven(oldposcol))) {
-
-
+                oldboardcell.setFillColor(sf::Color::White);
+            } else {
+                oldboardcell.setFillColor(sf::Color::Black);
             }
-
-
+            window->draw(oldboardcell);
+            printPiece(old_greenposx, old_greenposy, oldposrow, oldposcol, window, thepieces[oldposrow][oldposcol].getcolor());
+            CoverCellGreen(window, isgreen, piececoords, pieceyx);
         }
         isgreen = false;
     } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-        if (isPiece((float) mousePos.y, (float) mousePos.x, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
-            sf::RectangleShape boardcell(sf::Vector2f(120.0f, 120.0f));
-            boardcell.setPosition(piececoords.first, piececoords.second);
-            if ((isEven(pieceyx.first) and isEven(pieceyx.second)) or (!isEven(pieceyx.first) and !isEven(pieceyx.second))) {
-                boardcell.setFillColor(sf::Color::White);
-                boardcell.setOutlineColor(sf::Color::Green);
-                boardcell.setOutlineThickness(-15);
-            } else {
-                boardcell.setFillColor(sf::Color::Black);
-                boardcell.setOutlineColor(sf::Color::Green);
-                boardcell.setOutlineThickness(-15);
-            }
-            printPiece(piececoords.first, piececoords.second, pieceyx.first, pieceyx.second, window);
-        }
-        old_greenposx = piececoords.first;
-        old_greenposy = piececoords.second;
-        oldposrow = pieceyx.first;
-        oldposcol = pieceyx.second;
-
-        isgreen = true;
+        CoverCellGreen(window, isgreen, piececoords, pieceyx);
     }
     return;
+}
+
+void Chess::Game::CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx) {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+    if (isPiece((float) mousePos.y, (float) mousePos.x, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
+        sf::RectangleShape boardcell(sf::Vector2f(120.0f, 120.0f));
+        boardcell.setPosition(piececoords.first, piececoords.second);
+        if ((isEven(pieceyx.first) and isEven(pieceyx.second)) or (!isEven(pieceyx.first) and !isEven(pieceyx.second))) {
+            boardcell.setFillColor(sf::Color::White);
+            boardcell.setOutlineColor(sf::Color::Green);
+            boardcell.setOutlineThickness(-15);
+        } else {
+            boardcell.setFillColor(sf::Color::Black);
+            boardcell.setOutlineColor(sf::Color::Green);
+            boardcell.setOutlineThickness(-15);
+        }
+        window->draw(boardcell);
+        printPiece(piececoords.first, piececoords.second, pieceyx.first, pieceyx.second, window, thepieces[pieceyx.first][pieceyx.second].getcolor());
+    }
+    old_greenposx = piececoords.first;
+    old_greenposy = piececoords.second;
+    oldposrow = pieceyx.first;
+    oldposcol = pieceyx.second;
+    isgreen = true;
 }
 
 
@@ -131,21 +137,28 @@ void Chess::Game::addcoords() {
             float cellxpos = x * cell_width;
             float cellypos = y * cell_height;
 
-            if (y <= 1) {
+            if (y >= 0 and y <= 1) {
                 Pieces newpiece;
                 newpiece.settype(underboard[y][x]);
                 newpiece.setcolor("w");
+                piecerows.push_back(newpiece);
             } else if (y >= 6 and y < BOARD_ROWS) {
                 Pieces newpiece;
-                
-                
-
+                newpiece.settype(underboard[y][x]);
+                newpiece.setcolor("b");
+                piecerows.push_back(newpiece);
+            } else {
+                Pieces newpiece;
+                newpiece.setblank(true);
+                newpiece.settype(' ');
+                piecerows.push_back(newpiece);
             }
-
             rowcoords.emplace_back(std::make_pair(cellxpos, cellypos));
             if (x == BOARD_COLS) {
-                rowcoords = {};
                 boardcoords.push_back(rowcoords);
+                rowcoords = {};
+                thepieces.push_back(piecerows);
+                piecerows = {};
             }
         }
     }
@@ -157,7 +170,8 @@ void Chess::Game::printPiece(float spritex, float spritey, int ypos, int xpos, s
     std::string imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
     sf::Texture texture;
     bool empty = false;
-    switch (underboard[ypos][xpos]) {
+    imagedir += color;
+    switch (thepieces[ypos][xpos].gettype()) {
         case 'P':
             imagedir += "_P60.png";
             texture.loadFromFile(imagedir);

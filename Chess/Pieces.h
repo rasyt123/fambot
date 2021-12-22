@@ -8,15 +8,18 @@
 namespace Chess {
     class Pieces {
         public:
+            void setcolor(std::string thecolor);
+            void settype(char thetype);
+            void setblank(bool val);
 
-
+            char gettype();
+            string getcolor();
+            bool getblank();
 
         private:
             std::string color;
-            std::string type;
-            float y;
-            float x;
-
+            char type;
+            bool blank = false;
     };
 }
 

@@ -89,6 +89,14 @@ build CMakeFiles/Chess.dir/Pieces.cpp.obj: CXX_COMPILER__Chess_Debug C$:/Users/r
   OBJECT_DIR = CMakeFiles\Chess.dir
   OBJECT_FILE_DIR = CMakeFiles\Chess.dir
 
+build CMakeFiles/Chess.dir/menu.cpp.obj: CXX_COMPILER__Chess_Debug C$:/Users/rasyt/CLionProjects/Chess/menu.cpp || cmake_object_order_depends_target_Chess
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\Chess.dir\menu.cpp.obj.d
+  FLAGS = -g -std=gnu++14
+  INCLUDES = -Ic:/SFML/include -isystem C:/SFML/include
+  OBJECT_DIR = CMakeFiles\Chess.dir
+  OBJECT_FILE_DIR = CMakeFiles\Chess.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Chess
@@ -97,7 +105,7 @@ build CMakeFiles/Chess.dir/Pieces.cpp.obj: CXX_COMPILER__Chess_Debug C$:/Users/r
 #############################################
 # Link the executable Chess.exe
 
-build Chess.exe: CXX_EXECUTABLE_LINKER__Chess_Debug CMakeFiles/Chess.dir/main.cpp.obj CMakeFiles/Chess.dir/Game.cpp.obj CMakeFiles/Chess.dir/Player.cpp.obj CMakeFiles/Chess.dir/Move.cpp.obj CMakeFiles/Chess.dir/Pieces.cpp.obj | C$:/SFML/lib/libsfml-system-s-d.a C$:/SFML/lib/libsfml-window-s-d.a C$:/SFML/lib/libsfml-graphics-s-d.a C$:/SFML/lib/libsfml-audio-s-d.a C$:/SFML/lib/libsfml-window-s-d.a C$:/SFML/lib/libfreetype.a C$:/SFML/lib/libsfml-system-s-d.a C$:/SFML/lib/libopenal32.a C$:/SFML/lib/libvorbisfile.a C$:/SFML/lib/libvorbisenc.a C$:/SFML/lib/libvorbis.a C$:/SFML/lib/libogg.a C$:/SFML/lib/libFLAC.a
+build Chess.exe: CXX_EXECUTABLE_LINKER__Chess_Debug CMakeFiles/Chess.dir/main.cpp.obj CMakeFiles/Chess.dir/Game.cpp.obj CMakeFiles/Chess.dir/Player.cpp.obj CMakeFiles/Chess.dir/Move.cpp.obj CMakeFiles/Chess.dir/Pieces.cpp.obj CMakeFiles/Chess.dir/menu.cpp.obj | C$:/SFML/lib/libsfml-system-s-d.a C$:/SFML/lib/libsfml-window-s-d.a C$:/SFML/lib/libsfml-graphics-s-d.a C$:/SFML/lib/libsfml-audio-s-d.a C$:/SFML/lib/libsfml-window-s-d.a C$:/SFML/lib/libfreetype.a C$:/SFML/lib/libsfml-system-s-d.a C$:/SFML/lib/libopenal32.a C$:/SFML/lib/libvorbisfile.a C$:/SFML/lib/libvorbisenc.a C$:/SFML/lib/libvorbis.a C$:/SFML/lib/libogg.a C$:/SFML/lib/libFLAC.a
   FLAGS = -g
   LINK_LIBRARIES = C:/SFML/lib/libsfml-system-s-d.a  C:/SFML/lib/libsfml-window-s-d.a  C:/SFML/lib/libsfml-graphics-s-d.a  C:/SFML/lib/libsfml-audio-s-d.a  C:/SFML/lib/libsfml-window-s-d.a  -lgdi32  -lOpenGL32  C:/SFML/lib/libfreetype.a  C:/SFML/lib/libsfml-system-s-d.a  -lwinmm  C:/SFML/lib/libopenal32.a  C:/SFML/lib/libvorbisfile.a  C:/SFML/lib/libvorbisenc.a  C:/SFML/lib/libvorbis.a  C:/SFML/lib/libogg.a  C:/SFML/lib/libFLAC.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Chess.dir
