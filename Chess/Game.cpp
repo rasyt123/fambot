@@ -79,8 +79,6 @@ void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pai
             }
 
 
-
-
         }
         isgreen = false;
     } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -127,10 +125,23 @@ void Chess::Game::SetUnderBoard() {
 
 void Chess::Game::addcoords() {
     std::vector<std::pair<float, float>> rowcoords;
+    std::vector<Pieces> piecerows;
     for (int y = 0; y < BOARD_ROWS; y++) {
         for (int x = 0; x < BOARD_COLS; x++) {
             float cellxpos = x * cell_width;
             float cellypos = y * cell_height;
+
+            if (y <= 1) {
+                Pieces newpiece;
+                newpiece.settype(underboard[y][x]);
+                newpiece.setcolor("w");
+            } else if (y >= 6 and y < BOARD_ROWS) {
+                Pieces newpiece;
+                
+                
+
+            }
+
             rowcoords.emplace_back(std::make_pair(cellxpos, cellypos));
             if (x == BOARD_COLS) {
                 rowcoords = {};
@@ -142,7 +153,7 @@ void Chess::Game::addcoords() {
 
 
 
-void Chess::Game::printPiece(float spritex, float spritey, int ypos, int xpos, sf::RenderWindow* window) {
+void Chess::Game::printPiece(float spritex, float spritey, int ypos, int xpos, sf::RenderWindow* window, std::string color) {
     std::string imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
     sf::Texture texture;
     bool empty = false;
@@ -186,9 +197,9 @@ void Chess::Game::printPiece(float spritex, float spritey, int ypos, int xpos, s
 
 void Chess::Game::SetupBoard(sf::RenderWindow* window) {
     std::vector<std::pair<float, float>> rowcoords;
-    std::string imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
     std::string black = "b";
     std::string white = "w";
+    std::string color;
     for (int y = 0; y < BOARD_ROWS; y++) {
         for (int x = 0; x < BOARD_COLS; x++) {
             float cellxpos = x * cell_width;
@@ -197,9 +208,9 @@ void Chess::Game::SetupBoard(sf::RenderWindow* window) {
             float spritey = cellypos + (26);
             sf::Texture texture;
             if (y <= 1) {
-                imagedir += white;
+                color = white;
             } else {
-                imagedir += black;
+                color = black;
             }
             std::unique_ptr<sf::RectangleShape> boardcell;
             boardcell = std::unique_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(120.0f, 120.0f)));
@@ -219,8 +230,7 @@ void Chess::Game::SetupBoard(sf::RenderWindow* window) {
             }
             boardcell->setPosition(cellxpos, cellypos);
             window->draw(*boardcell);
-            printPiece(spritex, spritey, y, x, window);
-            imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
+            printPiece(spritex, spritey, y, x, window, color);
         }
     }
 }
