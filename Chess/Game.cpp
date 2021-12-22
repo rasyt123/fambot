@@ -51,6 +51,7 @@ void Chess::Game::GameLoop() {
     pieceyx.second = OUT_OF_BOUNDS;
     piececoords.first = OUT_OF_BOUNDS;
     piececoords.second = OUT_OF_BOUNDS;
+    std::string turncolor = "white";
     addcoords();
     float clickposy = OUT_OF_BOUNDS;
     float clickposx = OUT_OF_BOUNDS;
@@ -65,13 +66,17 @@ void Chess::Game::GameLoop() {
         window.clear();
         SetupBoard(&window);
         CheckSelect(&window, isgreen, piececoords, pieceyx, mademove, clickposy, clickposx);
-        /*
-         Game logic + moves here
-         */
         window.display();
+        currturncount += 1;
         isgreen = false;
     }
 }
+
+void Chess::Game::MakeMovePlayer() {
+
+
+}
+
 
 
 void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx) {
@@ -80,7 +85,9 @@ void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pai
         clickposy = mousePos.y;
         clickposx = mousePos.x;
         if (isPiece((float) mousePos.y, (float)mousePos.x, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
-            CoverCellGreen(window, isgreen, piececoords, pieceyx, clickposy, clickposx);
+            if (thepieces[pieceyx.first][pieceyx.second].getcolor() == currentturn) {
+                CoverCellGreen(window, isgreen, piececoords, pieceyx, clickposy, clickposx);
+            }
         }
     } else if (!mademove) {
         CoverCellGreen(window, isgreen, piececoords, pieceyx, clickposy, clickposx);
@@ -89,7 +96,8 @@ void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pai
 }
 
 void Chess::Game::CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx) {
-    if (isPiece(clickposy, clickposx, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
+    if (isPiece(clickposy, clickposx, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000
+    and thepieces[pieceyx.first][pieceyx.second].getcolor() == currentturn) {
         sf::RectangleShape boardcell(sf::Vector2f(120.0f, 120.0f));
         boardcell.setPosition(piececoords.first, piececoords.second);
         if ((isEven(pieceyx.first) and isEven(pieceyx.second)) or (!isEven(pieceyx.first) and !isEven(pieceyx.second))) {
