@@ -13,7 +13,7 @@ namespace Chess {
             void setblank(bool val);
 
             char gettype();
-            string getcolor();
+            std::string getcolor();
             bool getblank();
 
         private:

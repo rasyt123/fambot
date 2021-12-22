@@ -9,6 +9,10 @@ namespace Chess {
     class Move {
         public:
 
+        //void capture
+        //void enpassant
+        //void
+
 
         private:
 

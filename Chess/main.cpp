@@ -4,7 +4,7 @@
 
 
 int main() {
-    Game chess;
+    Chess::Game chess;
     chess.SetUnderBoard();
     chess.set_cellwidth(120);
     chess.set_cellheight(120);

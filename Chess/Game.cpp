@@ -44,12 +44,16 @@ void Chess::Game::GameLoop() {
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
     addcoords();
     bool isgreen = false;
+    bool mademove = false;
     std::pair<float, float> piececoords;
     std::pair<int, int> pieceyx;
     pieceyx.first = OUT_OF_BOUNDS;
     pieceyx.second = OUT_OF_BOUNDS;
     piececoords.first = OUT_OF_BOUNDS;
     piececoords.second = OUT_OF_BOUNDS;
+    addcoords();
+    float clickposy = OUT_OF_BOUNDS;
+    float clickposx = OUT_OF_BOUNDS;
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -60,38 +64,32 @@ void Chess::Game::GameLoop() {
         }
         window.clear();
         SetupBoard(&window);
-        CheckSelect(&window, isgreen, piececoords, pieceyx);
+        CheckSelect(&window, isgreen, piececoords, pieceyx, mademove, clickposy, clickposx);
+        /*
+         Game logic + moves here
+         */
         window.display();
         isgreen = false;
     }
 }
 
 
-void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) and isgreen) {
+void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+        clickposy = mousePos.y;
+        clickposx = mousePos.x;
         if (isPiece((float) mousePos.y, (float)mousePos.x, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
-            sf::RectangleShape oldboardcell(sf::Vector2f(120.0f, 120.0f));
-            oldboardcell.setPosition(old_greenposx, old_greenposy);
-            if ((isEven(oldposrow) and isEven(oldposcol)) or (!isEven(oldposrow) and !isEven(oldposcol))) {
-                oldboardcell.setFillColor(sf::Color::White);
-            } else {
-                oldboardcell.setFillColor(sf::Color::Black);
-            }
-            window->draw(oldboardcell);
-            printPiece(old_greenposx, old_greenposy, oldposrow, oldposcol, window, thepieces[oldposrow][oldposcol].getcolor());
-            CoverCellGreen(window, isgreen, piececoords, pieceyx);
+            CoverCellGreen(window, isgreen, piececoords, pieceyx, clickposy, clickposx);
         }
-        isgreen = false;
-    } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        CoverCellGreen(window, isgreen, piececoords, pieceyx);
+    } else if (!mademove) {
+        CoverCellGreen(window, isgreen, piececoords, pieceyx, clickposy, clickposx);
     }
     return;
 }
 
-void Chess::Game::CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx) {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-    if (isPiece((float) mousePos.y, (float) mousePos.x, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
+void Chess::Game::CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx) {
+    if (isPiece(clickposy, clickposx, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000) {
         sf::RectangleShape boardcell(sf::Vector2f(120.0f, 120.0f));
         boardcell.setPosition(piececoords.first, piececoords.second);
         if ((isEven(pieceyx.first) and isEven(pieceyx.second)) or (!isEven(pieceyx.first) and !isEven(pieceyx.second))) {
@@ -104,12 +102,8 @@ void Chess::Game::CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::p
             boardcell.setOutlineThickness(-15);
         }
         window->draw(boardcell);
-        printPiece(piececoords.first, piececoords.second, pieceyx.first, pieceyx.second, window, thepieces[pieceyx.first][pieceyx.second].getcolor());
+        printPiece(piececoords.first + 26, piececoords.second + 26, pieceyx.first, pieceyx.second, window, thepieces[pieceyx.first][pieceyx.second].getcolor());
     }
-    old_greenposx = piececoords.first;
-    old_greenposy = piececoords.second;
-    oldposrow = pieceyx.first;
-    oldposcol = pieceyx.second;
     isgreen = true;
 }
 
@@ -154,7 +148,7 @@ void Chess::Game::addcoords() {
                 piecerows.push_back(newpiece);
             }
             rowcoords.emplace_back(std::make_pair(cellxpos, cellypos));
-            if (x == BOARD_COLS) {
+            if (x == BOARD_COLS - 1) {
                 boardcoords.push_back(rowcoords);
                 rowcoords = {};
                 thepieces.push_back(piecerows);
@@ -166,6 +160,7 @@ void Chess::Game::addcoords() {
 
 
 
+//good
 void Chess::Game::printPiece(float spritex, float spritey, int ypos, int xpos, sf::RenderWindow* window, std::string color) {
     std::string imagedir = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\";
     sf::Texture texture;
@@ -208,7 +203,7 @@ void Chess::Game::printPiece(float spritex, float spritey, int ypos, int xpos, s
 }
 
 
-
+//Good
 void Chess::Game::SetupBoard(sf::RenderWindow* window) {
     std::vector<std::pair<float, float>> rowcoords;
     std::string black = "b";
