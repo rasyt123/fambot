@@ -4,6 +4,56 @@
 #include "Pawn.h"
 
 
+
+void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn , int prevy, int prevx) {
+    if (turn == "black") {
+        if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1) {
+            if (thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P') {
+                createblank(startposy, startposx - 1, underboard, thepieces);
+                char temp = underboard[startposy][startposx];
+                Pieces tempcopy = thepieces[startposy][startposx];
+                createblank(startposy, startposx, underboard, thepieces);
+                underboard[endposy][endposx] = temp;
+                thepieces[endposy][endposx] = tempcopy;
+            } else if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx+1) {
+
+
+            }
+        }
+
+    } else {
+        if () {
+
+
+        }
+    }
+}
+
+void Chess::Pawn::createblank(int posy, int posx, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    underboard[posy][posx] = ' ';
+    thepieces[posy][posx].settype(' ');
+    thepieces[posy][posx].setblank(true);
+    thepieces[posy][posx].setcolor("");
+}
+
+
+void Chess::Pawn::Capture(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+    char oldpiece = underboard[startposy][startposx];
+    underboard[startposy][startposx] = ' ';
+    underboard[endposy][endposx] = oldpiece;
+    thepieces[endposy][endposx] = thepieces[startposy][startposx];
+    thepieces[startposy][startposx].settype(' ');
+    thepieces[startposy][startposx].setblank(true);
+    thepieces[startposy][startposx].setcolor("");
+}
+
+
+void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+    bool chosenpromotion = false;
+
+}
+
+
 bool Chess::Pawn::GenerateMoves(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
     if (turn == "white") {
         GenerateWhite(underboard);
@@ -99,40 +149,4 @@ bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
 }
 
 
-void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn , int prevy, int prevx) {
-    if (turn == "black") {
-        if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1) {
-            if (thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P') {
-                
 
-
-            }
-        }
-        if () {
-
-
-        }
-    } else {
-        if () {
-
-
-        }
-    }
-}
-
-
-void Chess::Pawn::Capture(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
-    char oldpiece = underboard[startposy][startposx];
-    underboard[startposy][startposx] = ' ';
-    underboard[endposy][endposx] = oldpiece;
-    thepieces[endposy][endposx] = thepieces[startposy][startposx];
-    thepieces[startposy][startposx].settype(' ');
-    thepieces[startposy][startposx].setblank(true);
-    thepieces[startposy][startposx].setcolor("");
-}
-
-
-void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
-    bool chosenpromotion = false;
-
-}
