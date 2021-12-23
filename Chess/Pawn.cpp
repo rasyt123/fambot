@@ -4,26 +4,28 @@
 #include "Pawn.h"
 
 
+
+void Chess::Pawn::EnactPassant(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    char temp = underboard[startposy][startposx];
+    Pieces tempcopy = thepieces[startposy][startposx];
+    createblank(startposy, startposx, underboard, thepieces);
+    underboard[endposy][endposx] = temp;
+    thepieces[endposy][endposx] = tempcopy;
+}
+
 void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, Pieces prevpiece, int prevy, int prevx) {
     if (turn == "black") {
         if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1) {
             if (thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
                     prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P') {
                     createblank(startposy, startposx - 1, underboard, thepieces);
-                    char temp = underboard[startposy][startposx];
-                    Pieces tempcopy = thepieces[startposy][startposx];
-                    createblank(startposy, startposx, underboard, thepieces);
-                    underboard[endposy][endposx] = temp;
-                    thepieces[endposy][endposx] = tempcopy;
+                    EnactPassant(underboard, thepieces);
+
             } else if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx+1) {
                 if (thepieces[startposy][startposx + 1].getcolor() == "white" and underboard[startposy][startposx + 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
                     prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P') {
                     createblank(startposy, startposx + 1, underboard, thepieces);
-                    char temp = underboard[startposy][startposx];
-                    Pieces tempcopy = thepieces[startposy][startposx];
-                    createblank(startposy, startposx, underboard, thepieces);
-                    underboard[endposy][endposx] = temp;
-                    thepieces[endposy][endposx] = tempcopy;
+                    EnactPassant(underboard, thepieces);
                 }
             }
         }
@@ -32,21 +34,13 @@ void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<ch
             if (thepieces[startposy][startposx - 1].getcolor() == "black" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy + 1 and prevx == endposx and
                 prevpiece.getcolor() == "black" and prevpiece.gettype() == 'P') {
                 createblank(startposy, startposx - 1, underboard, thepieces);
-                char temp = underboard[startposy][startposx];
-                Pieces tempcopy = thepieces[startposy][startposx];
-                createblank(startposy, startposx, underboard, thepieces);
-                underboard[endposy][endposx] = temp;
-                thepieces[endposy][endposx] = tempcopy;
+                EnactPassant(underboard, thepieces);
             }
         } else if (startposy == 5 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx + 1) {
             if (thepieces[startposy][startposx + 1].getcolor() == "black" and underboard[startposy][startposx + 1] == 'P' and
             prevy == endposy + 1 and prevx == endposx and prevpiece.getcolor() == "black" and prevpiece.gettype() == 'P') {
                 createblank(startposy, startposx + 1, underboard, thepieces);
-                char temp = underboard[startposy][startposx];
-                Pieces tempcopy = thepieces[startposy][startposx];
-                createblank(startposy, startposx, underboard, thepieces);
-                underboard[endposy][endposx] = temp;
-                thepieces[endposy][endposx] = tempcopy;
+                EnactPassant(underboard, thepieces);
             }
         }
     }
@@ -54,21 +48,20 @@ void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<ch
 
 void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoords) {
     if (turn == "white" and IsValidMove(endposy, endposx) and endposy == 7) {
-        std::string whitequeen = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png";
-        std::string whitebishop = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png";
-        std::string whiterook = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png";
-        std::string whiteknight = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png";
+        std::vector<std::string> promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png"
+                                                                                                                                                               "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
         std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
         sf::RectangleShape promotionwindow(sf::Vector2f(480.0f, 120.0f));
         promotionwindow.setPosition(cellcoords.first, cellcoords.second);
-        sf::Texture wqtexture;
-        sf::Texture wbtexture;
-        sf::Texture wrtexture;
-        
-
-
-
-
+        for (int dx = 0; dx < underboard.at(0).size(); dx++) {
+            sf::Texture piecetexture;
+            piecetexture.loadFromFile(promotionstrs[dx]);
+            sf::Sprite pieces(piecetexture);
+            float xwidth = cellcoords.first + dx * 120 + 26;
+            float yheight = cellcoords.second + 26;
+            pieces.setPosition(xwidth, yheight);
+            window->draw();
+        }
         //print queen, rook, knight, bishop
     } else if (turn == "black" and IsValidMove(endposy, endposx) and endposy == 0) {
 
@@ -193,5 +186,7 @@ bool Chess::Pawn::infronttop(std::vector<std::vector<char>> &underboard) {
 bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
     return startposy == 6 and InBounds(startposy-2, startposx, underboard) and underboard[startposy - 2][startposx] == ' ';
 }
+
+
 
 
