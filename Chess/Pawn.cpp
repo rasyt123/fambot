@@ -4,7 +4,6 @@
 #include "Pawn.h"
 
 
-
 void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, Pieces prevpiece, int prevy, int prevx) {
     if (turn == "black") {
         if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1) {
@@ -53,8 +52,30 @@ void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<ch
     }
 }
 
-void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
-    bool chosenpromotion = false;
+void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoords) {
+    if (turn == "white" and IsValidMove(endposy, endposx) and endposy == 7) {
+        std::string whitequeen = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png";
+        std::string whitebishop = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png";
+        std::string whiterook = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png";
+        std::string whiteknight = "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png";
+        std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
+        sf::RectangleShape promotionwindow(sf::Vector2f(480.0f, 120.0f));
+        promotionwindow.setPosition(cellcoords.first, cellcoords.second);
+        sf::Texture wqtexture;
+        sf::Texture wbtexture;
+        sf::Texture wrtexture;
+        
+
+
+
+
+        //print queen, rook, knight, bishop
+    } else if (turn == "black" and IsValidMove(endposy, endposx) and endposy == 0) {
+
+
+
+
+    }
 
 }
 
@@ -105,6 +126,7 @@ bool Chess::Pawn::IsValidMove(int rows, int cols) {
     }
     return false;
 }
+
 
 bool Chess::Pawn::InBounds(int row, int col, std::vector<std::vector<char>>& underboard) {
     return row >= 0 and row <= underboard.size() - 1 and col >= 0 and col <= underboard[0].size() - 1;
@@ -171,10 +193,5 @@ bool Chess::Pawn::infronttop(std::vector<std::vector<char>> &underboard) {
 bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
     return startposy == 6 and InBounds(startposy-2, startposx, underboard) and underboard[startposy - 2][startposx] == ' ';
 }
-
-
-
-
-
 
 
