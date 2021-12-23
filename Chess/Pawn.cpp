@@ -37,6 +37,11 @@ void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<ch
     }
 }
 
+void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+    bool chosenpromotion = false;
+
+}
+
 void Chess::Pawn::createblank(int posy, int posx, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
     underboard[posy][posx] = ' ';
     thepieces[posy][posx].settype(' ');
@@ -55,11 +60,6 @@ void Chess::Pawn::Capture(std::vector<std::vector<char>>& underboard, std::vecto
     thepieces[startposy][startposx].setcolor("");
 }
 
-
-void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
-    bool chosenpromotion = false;
-
-}
 
 
 bool Chess::Pawn::GenerateMoves(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
@@ -155,6 +155,8 @@ bool Chess::Pawn::infronttop(std::vector<std::vector<char>> &underboard) {
 bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
     return startposy == 6 and InBounds(startposy-2, startposx, underboard) and underboard[startposy - 2][startposx] == ' ';
 }
+
+
 
 
 
