@@ -4,18 +4,27 @@
 #include "Pawn.h"
 
 
-void Chess::Pawn::GenerateMoves(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+bool Chess::Pawn::GenerateMoves(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
     if (turn == "white") {
         GenerateWhite(underboard);
-
+        if (IsValidMove(endposy, endposx)) {
+            return true;
+        } else {
+            return false;
+        }
     } else {
         GenerateBlack(underboard);
+        if (IsValidMove(endposy, endposx)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
-bool Chess::Pawn::IsValidMove(int row, int col) {
+bool Chess::Pawn::IsValidMove(int rows, int cols) {
     for (std::pair<int, int> coordpair : possiblemoves) {
-        if (row == coordpair.first and col == coordpair.second) {
+        if (rows == coordpair.first and cols == coordpair.second) {
             return true;
         }
 
@@ -29,31 +38,31 @@ bool Chess::Pawn::InBounds(int row, int col, std::vector<std::vector<char>>& und
 
 void Chess::Pawn::GenerateWhite(std::vector<std::vector<char>>& underboard) {
     if (BottomLeft(underboard)) {
-        possiblemoves.push_back(std::make_pair(startposy + 1, startposx - 1));
+        possiblemoves.emplace_back(std::make_pair(startposy + 1, startposx - 1));
     }
     if (BottomRight(underboard)) {
-        possiblemoves.push_back(std::make_pair(startposy + 1, startposx + 1));
+        possiblemoves.emplace_back(std::make_pair(startposy + 1, startposx + 1));
     }
     if (infrontdown(underboard)) {
-        possiblemoves.push_back(std::make_pair(startposy + 1, startposx))
+        possiblemoves.emplace_back(std::make_pair(startposy + 1, startposx));
     }
     if (infront2down(underboard)) {
-        possiblemoves.push_back(std::make_pair(startposy + 2, startposx));
+        possiblemoves.emplace_back(std::make_pair(startposy + 2, startposx));
     }
 }
 
 void Chess::Pawn::GenerateBlack(std::vector<std::vector<char>> &underboard) {
     if (TopLeft(underboard)) {
-        possiblemoves.push_back(std::make_pair(startposy-1, startposx-1));
+        possiblemoves.emplace_back(std::make_pair(startposy-1, startposx-1));
     }
     if (TopRight(underboard)) {
-        possiblemoves.push_back(std::make_pair(startposy-1, startposx+1));
+        possiblemoves.emplace_back(std::make_pair(startposy-1, startposx+1));
     }
     if (infronttop(underboard)) {
-        possiblemoves.push_back(std::make_pair(startposy-1, startposx));
+        possiblemoves.emplace_back(std::make_pair(startposy-1, startposx));
     }
     if (infront2top(underboard)) {
-        possiblemoves.push_back(std::make_pair(startposy-2, startposx));
+        possiblemoves.emplace_back(std::make_pair(startposy-2, startposx));
     }
 }
 
@@ -90,11 +99,25 @@ bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
 }
 
 
-void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn , int prevy, int prevx) {
+    if (turn == "black") {
+        if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1) {
+            if (thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P') {
+                
 
 
+            }
+        }
+        if () {
 
 
+        }
+    } else {
+        if () {
+
+
+        }
+    }
 }
 
 
@@ -110,10 +133,6 @@ void Chess::Pawn::Capture(sf::RenderWindow* window, std::vector<std::vector<char
 
 
 void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
-
-
-
-
-
+    bool chosenpromotion = false;
 
 }
