@@ -44,26 +44,16 @@ void Chess::Pawn::GenerateWhite(std::vector<std::vector<char>>& underboard) {
 
 void Chess::Pawn::GenerateBlack(std::vector<std::vector<char>> &underboard) {
     if (TopLeft(underboard)) {
-
-
+        possiblemoves.push_back(std::make_pair(startposy-1, startposx-1));
     }
-
     if (TopRight(underboard)) {
-
-
-
+        possiblemoves.push_back(std::make_pair(startposy-1, startposx+1));
     }
-
     if (infronttop(underboard)) {
-
-
-
+        possiblemoves.push_back(std::make_pair(startposy-1, startposx));
     }
-
     if (infront2top(underboard)) {
-
-
-
+        possiblemoves.push_back(std::make_pair(startposy-2, startposx));
     }
 }
 
@@ -84,23 +74,19 @@ bool Chess::Pawn::infront2down(std::vector<std::vector<char>> &underboard) {
 }
 
 bool Chess::Pawn::TopLeft(std::vector<std::vector<char>> &underboard) {
-
+    return InBounds(startposy-1, startposx-1, underboard) and underboard[startposy - 1][startposx - 1] != ' ';
 }
 
 bool Chess::Pawn::TopRight(std::vector<std::vector<char>> &underboard) {
-
-
+    return InBounds(startposy-1, startposx + 1, underboard) and underboard[startposy - 1][startposx + 1];
 }
 
 bool Chess::Pawn::infronttop(std::vector<std::vector<char>> &underboard) {
-
-
-
+    return InBounds(startposy-1, startposx, underboard) and underboard[startposy - 1][startposx] == ' ';
 }
 
 bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
-
-
+    return startposy == 6 and InBounds(startposy-2, startposx, underboard) and underboard[startposy - 2][startposx] == ' ';
 }
 
 
