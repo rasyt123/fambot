@@ -48,26 +48,36 @@ void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<ch
 
 void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoords) {
     if (turn == "white" and IsValidMove(endposy, endposx) and endposy == 7) {
-        std::vector<std::string> promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png"
-                                                                                                                                                               "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
+        std::vector<std::string> promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
         std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
-        sf::RectangleShape promotionwindow(sf::Vector2f(480.0f, 120.0f));
+        sf::RectangleShape promotionwindow(sf::Vector2f(120.0f, 480.0f));
         promotionwindow.setPosition(cellcoords.first, cellcoords.second);
-        for (int dx = 0; dx < underboard.at(0).size(); dx++) {
+        window->draw(promotionwindow);
+        for (int dy = 0; dy < underboard.at(0).size(); dy++) {
             sf::Texture piecetexture;
-            piecetexture.loadFromFile(promotionstrs[dx]);
+            piecetexture.loadFromFile(promotionstrs[dy]);
             sf::Sprite pieces(piecetexture);
-            float xwidth = cellcoords.first + dx * 120 + 26;
-            float yheight = cellcoords.second + 26;
+            float xwidth = cellcoords.first + 26;
+            float yheight = cellcoords.second + dy * 120 + 26;
             pieces.setPosition(xwidth, yheight);
-            window->draw();
+            window->draw(pieces);
         }
         //print queen, rook, knight, bishop
     } else if (turn == "black" and IsValidMove(endposy, endposx) and endposy == 0) {
-
-
-
-
+        std::vector<std::string> promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_K60.png"};
+        std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
+        sf::RectangleShape promotionwindow(sf::Vector2f(120.0f, 480.0f));
+        promotionwindow.setPosition(cellcoords.first, cellcoords.second);
+        window->draw(promotionwindow);
+        for (int dy = 0; dy < underboard.at(0).size(); dy++) {
+            sf::Texture piecetexture;
+            piecetexture.loadFromFile(promotionstrs[dy]);
+            sf::Sprite pieces(piecetexture);
+            float xwidth = cellcoords.first - 26;
+            float yheight = cellcoords.second - dy * 120 - 26;
+            pieces.setPosition(xwidth, yheight);
+            window->draw(pieces);
+        }
     }
 
 }
@@ -186,6 +196,9 @@ bool Chess::Pawn::infronttop(std::vector<std::vector<char>> &underboard) {
 bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
     return startposy == 6 and InBounds(startposy-2, startposx, underboard) and underboard[startposy - 2][startposx] == ' ';
 }
+
+
+
 
 
 
