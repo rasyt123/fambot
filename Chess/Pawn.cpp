@@ -9,13 +9,13 @@ void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<ch
     if (turn == "black") {
         if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1) {
             if (thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
-                prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P') {
-                createblank(startposy, startposx - 1, underboard, thepieces);
-                char temp = underboard[startposy][startposx];
-                Pieces tempcopy = thepieces[startposy][startposx];
-                createblank(startposy, startposx, underboard, thepieces);
-                underboard[endposy][endposx] = temp;
-                thepieces[endposy][endposx] = tempcopy;
+                    prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P') {
+                    createblank(startposy, startposx - 1, underboard, thepieces);
+                    char temp = underboard[startposy][startposx];
+                    Pieces tempcopy = thepieces[startposy][startposx];
+                    createblank(startposy, startposx, underboard, thepieces);
+                    underboard[endposy][endposx] = temp;
+                    thepieces[endposy][endposx] = tempcopy;
             } else if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx+1) {
                 if (thepieces[startposy][startposx + 1].getcolor() == "white" and underboard[startposy][startposx + 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
                     prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P') {
@@ -155,7 +155,6 @@ bool Chess::Pawn::infronttop(std::vector<std::vector<char>> &underboard) {
 bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
     return startposy == 6 and InBounds(startposy-2, startposx, underboard) and underboard[startposy - 2][startposx] == ' ';
 }
-
 
 
 
