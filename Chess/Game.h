@@ -21,7 +21,7 @@ namespace Chess {
         void SetupBoard(sf::RenderWindow* window);
         void CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx);
         void CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx);
-        void HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj);
+        void HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool promotionmove);
         void MakeMovePlayer(std::string turn, int posy, int posx);
         bool isTurn(int counter);
         void GameLoop();
@@ -32,6 +32,7 @@ namespace Chess {
         bool isPiece(float y, float x, std::pair<float, float>& piececords, std::pair<int, int>& boardcords);
         bool isEven(int number);
         void printPiece(float spritex, float spritey, int ypos, int xpos, sf::RenderWindow* window, std::string color);
+        void updatepiece(int row, int col);
 
 
     private:
@@ -45,10 +46,7 @@ namespace Chess {
         int cell_height;
         int currturncount = 0;
 
-        int old_greenposx;
-        int old_greenposy;
-        float oldposrow;
-        float oldposcol;
+      
     };
 
 }
