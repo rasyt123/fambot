@@ -101,14 +101,27 @@ void Chess::Game::MakeMovePlayer(std::string turn, int posy, int posx) {
 
 
 
-void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj) {
+void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn) {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+    float clickposy = mousePos.y;
+    float clickposx = mousePos.x;
+    std::pair<float, float> promoteboxcoords = boardcoords[endposy][endposx];
+    if (turn == "white") 
+    {
+        if () 
+        {
+
+        }
+
+    } else 
+    {
+       if () 
+       {
 
 
+       }
 
-
-
-
-
+    }
 }
 
 void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx) {
