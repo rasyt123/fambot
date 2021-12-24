@@ -33,7 +33,44 @@ void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<ch
                 }
             }
         }
+//
+// Created by rasyt on 12/22/2021.
+//
+#include "Pawn.h"
+
+//correct
+void Chess::Pawn::EnactPassant(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    char temp = underboard[startposy][startposx];
+    Pieces tempcopy = thepieces[startposy][startposx];
+    createblank(startposy, startposx, underboard, thepieces);
+    underboard[endposy][endposx] = temp;
+    thepieces[endposy][endposx] = tempcopy;
+}
+
+//I will check if the start pos is a pawn before I call this function in game.cpp
+void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, Pieces prevpiece, int prevy, int prevx) {
+    if (turn == "black")
+    {
+        //left capture en passant with turn as black
+        if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1)
+        {
+            if (thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
+                    prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P')
+            {
+                    createblank(startposy, startposx - 1, underboard, thepieces);
+                    EnactPassant(underboard, thepieces);
+            } else if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx+1)
+            {
+                if (thepieces[startposy][startposx + 1].getcolor() == "white" and underboard[startposy][startposx + 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
+                    prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P')
+                {
+                    createblank(startposy, startposx + 1, underboard, thepieces);
+                    EnactPassant(underboard, thepieces);
+                }
+            }
+        }
     } else {
+        //left capture en passant with white
         if (startposy == 4 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx - 1)
         {
             if (thepieces[startposy][startposx - 1].getcolor() == "black" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy + 1 and prevx == endposx and
@@ -228,6 +265,8 @@ bool Chess::Pawn::infronttop(std::vector<std::vector<char>> &underboard) {
 bool Chess::Pawn::infront2top(std::vector<std::vector<char>> &underboard) {
     return startposy == 6 and InBounds(startposy-2, startposx, underboard) and underboard[startposy - 2][startposx] == ' ';
 }
+
+
 
 
 
