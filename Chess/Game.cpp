@@ -79,8 +79,7 @@ void Chess::Game::GameLoop() {
         SetupBoard(&window);
 
         CheckSelect(&window, isgreen, piececoords, pieceyx, mademove, clickposy, clickposx);
-        //Main move doing logic here
-        //
+
         window.display();
         if (mademove)
         {
@@ -97,10 +96,17 @@ void Chess::Game::MakeMovePlayer(std::string turn, int posy, int posx) {
 
 }
 
+void Chess::Game::updatepiece(int row, int col) {
+    
+    
+    
+}
 
 
-void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn) {
+
+void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool promotionmove) {
     sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+    std::vector<char> promoteopts = {'Q', 'B', 'R', 'K'};
     float clickposy = mousePos.y;
     float clickposx = mousePos.x;
     std::pair<float, float> promoteboxcoords;
@@ -114,6 +120,12 @@ void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, in
             greenbox.setFillColor(sf::Color::Green);
             greenbox.setPosition(promoteboxcoords.first, promoteboxcoords.second);
             printPiece(promoteboxcoords.first + 26, promoteboxcoords.second + 26, endposy, endposx, window, thepieces[endposy][endposx].getcolor());
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                
+            
+
+            }
         }
     }
 }
