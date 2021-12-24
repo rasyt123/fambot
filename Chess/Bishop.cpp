@@ -10,8 +10,8 @@ bool Chess::Bishop::GenerateMoves(sf::RenderWindow* window, std::vector<std::vec
     grabmovetopright(underboard, thepieces,color);
     grabmovebottomleft(underboard, thepieces,color);
     grabmovebottomright(underboard, thepieces, color);
-    
-    
+
+
 }
 
 
@@ -67,7 +67,7 @@ void Chess::Bishop::grabmovetopright(std::vector<std::vector<char>>& underboard,
 }
 
 void Chess::Bishop::grabmovebottomleft(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-    for (int x = 0; x < underboard.size(); x++)
+    for (int x = 1; x < underboard.size(); x++)
     {
         if (!InBounds(startposy + x, startposx - x, underboard) or
             underboard[startposy + x][startposx - x] == 'A')
@@ -87,7 +87,7 @@ void Chess::Bishop::grabmovebottomleft(std::vector<std::vector<char>>& underboar
 
 
 void Chess::Bishop::grabmovebottomright(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-    for (int x = 0; x < underboard.size(); x++)
+    for (int x = 1; x < underboard.size(); x++)
     {
         if (!InBounds(startposy + x, startposx + x, underboard) or
             underboard[startposy + x][startposx + x] == 'A')
@@ -104,6 +104,11 @@ void Chess::Bishop::grabmovebottomright(std::vector<std::vector<char>>& underboa
         }
     }
 }
+
+
+
+
+
 
 
 
