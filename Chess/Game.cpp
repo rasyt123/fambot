@@ -14,6 +14,12 @@ bool Chess::Game::isEven(int number) {
     }
 }
 
+void Chess::Game::updatepiece(int endposrow, int endposcol, char piece) {
+    underboard[endposrow][endposcol] = piece;
+    thepieces[endposrow][endposcol].settype(piece);
+}
+
+
 void Chess::Game::set_cellheight(int height) {
     cell_height = height;
 }
@@ -77,7 +83,6 @@ void Chess::Game::GameLoop() {
         }
         window.clear();
         SetupBoard(&window);
-
         CheckSelect(&window, isgreen, piececoords, pieceyx, mademove, clickposy, clickposx);
 
         window.display();
@@ -88,23 +93,40 @@ void Chess::Game::GameLoop() {
     }
 }
 
-void Chess::Game::MakeMovePlayer(std::string turn, int posy, int posx) {
+void Chess::Game::MakeMovePlayer(std::string turn, int posy, int posx, bool& mademove) {
+    if (turn == "white")
+    {
+        switch(underboard[posy][posx])
+        {
+            case 'P':
+                //generate possible moves
+                break;
+            case 'R':
+                break;
+            case 'K':
+                break;
+            case 'B':
+                break;
+            case 'A':
+                break;
+            case 'Q':
+                break;
+
+        }
 
 
 
 
+    } else
+    {
 
+
+
+    }
 }
 
-void Chess::Game::updatepiece(int row, int col) {
-    
-    
-    
-}
 
-
-
-void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool promotionmove) {
+void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool& promotionmove) {
     sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
     std::vector<char> promoteopts = {'Q', 'B', 'R', 'K'};
     float clickposy = mousePos.y;
@@ -122,9 +144,8 @@ void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, in
             printPiece(promoteboxcoords.first + 26, promoteboxcoords.second + 26, endposy, endposx, window, thepieces[endposy][endposx].getcolor());
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                
-            
-
+                updatepiece(endposy, endposx, promoteopts[dy]);
+                promotionmove = true;
             }
         }
     }
