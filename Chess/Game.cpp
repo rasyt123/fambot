@@ -125,6 +125,16 @@ void Chess::Game::MakeMovePlayer(std::string turn, int posy, int posx, bool& mad
     }
 }
 
+void Chess::Game::Capture(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+    char oldpiece = underboard[startposy][startposx];
+    underboard[startposy][startposx] = ' ';
+    underboard[endposy][endposx] = oldpiece;
+    thepieces[endposy][endposx] = thepieces[startposy][startposx];
+    thepieces[startposy][startposx].settype(' ');
+    thepieces[startposy][startposx].setblank(true);
+    thepieces[startposy][startposx].setcolor("");
+}
+
 
 void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool& promotionmove) {
     sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
