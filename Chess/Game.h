@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include "Pawn.h"
 #include "Pieces.h"
 #include <SFML/Graphics.hpp>
 #define BOARD_ROWS 8
@@ -20,7 +21,8 @@ namespace Chess {
         void SetupBoard(sf::RenderWindow* window);
         void CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx);
         void CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx);
-        void MakeMovePlayer();
+        void HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj);
+        void MakeMovePlayer(std::string turn, int posy, int posx);
         bool isTurn(int counter);
         void GameLoop();
         void addcoords();
@@ -39,8 +41,6 @@ namespace Chess {
         std::vector<std::vector<Pieces>> thepieces;
 
 
-
-
         int cell_width;
         int cell_height;
         int currturncount = 0;
@@ -55,3 +55,4 @@ namespace Chess {
 
 
 #endif //CHESS_GAME_H
+
