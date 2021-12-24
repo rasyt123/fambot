@@ -44,7 +44,6 @@ bool Chess::Game::isPiece(float y, float x, std::pair<float, float>& piececords,
 }
 
 void Chess::Game::GameLoop() {
-
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
     addcoords();
     bool isgreen = false;
@@ -105,22 +104,17 @@ void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, in
     sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
     float clickposy = mousePos.y;
     float clickposx = mousePos.x;
-    std::pair<float, float> promoteboxcoords = boardcoords[endposy][endposx];
-    if (turn == "white") 
+    std::pair<float, float> promoteboxcoords;
+    for (int dy = 0; dy < 4; dy++)
     {
-        if () 
+        promoteboxcoords = boardcoords[endposy + dy][endposx];
+        if (clickposx > promoteboxcoords.first and clickposx < promoteboxcoords.first + 120 and
+            clickposy > promoteboxcoords.second and clickposy < promoteboxcoords.second + 120)
         {
+            sf::RectangleShape greenbox(sf::Vector2f(120.0f, 120.0f));
+
 
         }
-
-    } else 
-    {
-       if () 
-       {
-
-
-       }
-
     }
 }
 
