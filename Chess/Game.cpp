@@ -4,30 +4,6 @@
 
 #include "Game.h"
 
-bool Chess::Game::isEven(int number) {
-    if (number % 2 == 0)
-    {
-        return true;
-    } else
-    {
-        return false;
-    }
-}
-
-void Chess::Game::updatepiece(int endposrow, int endposcol, char piece) {
-    underboard[endposrow][endposcol] = piece;
-    thepieces[endposrow][endposcol].settype(piece);
-}
-
-
-void Chess::Game::set_cellheight(int height) {
-    cell_height = height;
-}
-
-void Chess::Game::set_cellwidth(int width) {
-    cell_width = width;
-}
-
 bool Chess::Game::isPiece(float y, float x, std::pair<float, float>& piececords, std::pair<int, int>& boardcords) {
     for (int height = 0; height < BOARD_ROWS; height++)
     {
@@ -357,4 +333,29 @@ void Chess::Game::SetupBoard(sf::RenderWindow* window) {
             printPiece(spritex, spritey, y, x, window, color);
         }
     }
+}
+
+
+bool Chess::Game::isEven(int number) {
+    if (number % 2 == 0)
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
+void Chess::Game::updatepiece(int endposrow, int endposcol, char piece) {
+    underboard[endposrow][endposcol] = piece;
+    thepieces[endposrow][endposcol].settype(piece);
+}
+
+
+void Chess::Game::set_cellheight(int height) {
+    cell_height = height;
+}
+
+void Chess::Game::set_cellwidth(int width) {
+    cell_width = width;
 }
