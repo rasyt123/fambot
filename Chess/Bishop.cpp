@@ -6,12 +6,20 @@
 
 
 bool Chess::Bishop::GenerateMoves(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-    grabmovetopleft(underboard, thepieces, color);
-    grabmovetopright(underboard, thepieces,color);
-    grabmovebottomleft(underboard, thepieces,color);
-    grabmovebottomright(underboard, thepieces, color);
+    grabmovetopleft(underboard, thepieces, color, startposy, startposx);
+    grabmovetopright(underboard, thepieces,color, startposy, startposx);
+    grabmovebottomleft(underboard, thepieces,color, startposy, startposx);
+    grabmovebottomright(underboard, thepieces, color, startposy, startposx);
+    possiblemoves = {};
 
-
+    grabmovetopleft(underboard, thepieces, color, endposy, endposx);
+    grabmovetopright(underboard, thepieces,color, endposy, endposx);
+    grabmovebottomleft(underboard, thepieces,color, endposy, endposx);
+    grabmovebottomright(underboard, thepieces, color, endposy, endposx);
+    if (hasking) {
+        return true;
+    }
+    return false;
 }
 
 
@@ -27,83 +35,90 @@ bool Chess::Bishop::IsValidMove(int rows, int cols) {
 }
 
 
-void Chess::Bishop::grabmovetopleft(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+void Chess::Bishop::grabmovetopleft(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
     for (int x = 1; x < underboard.size(); x++)
     {
-        if (!InBounds(startposy - x, startposx - x, underboard) or
-            underboard[startposy - x][startposx - x] == 'A')
+        if (!InBounds(posy - x, posx - x, underboard) or
+                (underboard[posy - x][posx - x] == 'A' and thepieces[posy - x][posx - x].getcolor() != color))
         {
+            hasking = true;
             break;
-        }  else if (underboard[startposy - x][startposx - x] != ' '
-                    and thepieces[startposy - x][startposx - x].getcolor() != color)
+        }  else if (underboard[posy - x][posx - x] != ' '
+                    and thepieces[posy - x][posx - x].getcolor() != color)
         {
-            possiblemoves.emplace_back(std::make_pair(startposy - x, startposx - x));
+            possiblemoves.emplace_back(std::make_pair(posy - x, posx - x));
             break;
         } else
         {
-            possiblemoves.emplace_back(std::make_pair(startposy - x, startposx - x));
+            possiblemoves.emplace_back(std::make_pair(posy - x, posx - x));
         }
     }
 }
 
 
-void Chess::Bishop::grabmovetopright(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+void Chess::Bishop::grabmovetopright(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
     for (int x = 1; x < underboard.size(); x++)
     {
-        if (!InBounds(startposy - x, startposx + x, underboard) or
-            underboard[startposy - x][startposx + x] == 'A')
+        if (!InBounds(posy - x, posx + x, underboard) or
+            underboard[posy - x][posx + x] == 'A' and thepieces[posy - x][posx + x].getcolor() != color)
         {
+            hasking = true;
             break;
-        }  else if (underboard[startposy - x][startposx + x] != ' '
-                    and thepieces[startposy - x][startposx + x].getcolor() != color)
+        }  else if (underboard[posy - x][posx + x] != ' '
+                    and thepieces[posy - x][posx + x].getcolor() != color)
         {
-            possiblemoves.emplace_back(std::make_pair(startposy - x, startposx + x));
+            possiblemoves.emplace_back(std::make_pair(posy - x, posx + x));
             break;
         } else
         {
-            possiblemoves.emplace_back(std::make_pair(startposy - x, startposx + x));
+            possiblemoves.emplace_back(std::make_pair(posy - x, posx + x));
         }
     }
 }
 
-void Chess::Bishop::grabmovebottomleft(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+void Chess::Bishop::grabmovebottomleft(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
     for (int x = 1; x < underboard.size(); x++)
     {
-        if (!InBounds(startposy + x, startposx - x, underboard) or
-            underboard[startposy + x][startposx - x] == 'A')
+        if (!InBounds(posy + x, posx - x, underboard) or
+            underboard[posy + x][posx - x] == 'A' and thepieces[posy + x][posx - x].getcolor() != color)
         {
+            hasking = true;
             break;
-        }  else if (underboard[startposy + x][startposx - x] != ' '
-                    and thepieces[startposy + x][startposx - x].getcolor() != color)
+        }  else if (underboard[posy + x][posx - x] != ' '
+                    and thepieces[posy + x][posx - x].getcolor() != color)
         {
-            possiblemoves.emplace_back(std::make_pair(startposy + x, startposx - x));
+            possiblemoves.emplace_back(std::make_pair(posy + x, posx - x));
             break;
         } else
         {
-            possiblemoves.emplace_back(std::make_pair(startposy + x, startposx - x));
+            possiblemoves.emplace_back(std::make_pair(posy + x, posx - x));
         }
     }
 }
 
 
-void Chess::Bishop::grabmovebottomright(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+void Chess::Bishop::grabmovebottomright(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
     for (int x = 1; x < underboard.size(); x++)
     {
-        if (!InBounds(startposy + x, startposx + x, underboard) or
-            underboard[startposy + x][startposx + x] == 'A')
+        if (!InBounds(posy + x, posx + x, underboard) or
+            underboard[posy + x][posx + x] == 'A' and thepieces[posy + x][posx + x].getcolor() != color)
         {
+            hasking = true;
             break;
-        }  else if (underboard[startposy + x][startposx + x] != ' '
-                    and thepieces[startposy + x][startposx + x].getcolor() != color)
+        }  else if (underboard[posy + x][posx + x] != ' '
+                    and thepieces[posy + x][posx + x].getcolor() != color)
         {
-            possiblemoves.emplace_back(std::make_pair(startposy + x, startposx + x));
+            possiblemoves.emplace_back(std::make_pair(posy + x, posx + x));
             break;
         } else
         {
-            possiblemoves.emplace_back(std::make_pair(startposy + x, startposx + x));
+            possiblemoves.emplace_back(std::make_pair(posy + x, posx + x));
         }
     }
 }
+
+
+
 
 
 
