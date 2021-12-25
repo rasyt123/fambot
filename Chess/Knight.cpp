@@ -14,41 +14,27 @@ std::vector<std::pair<int, int>> Chess::Knight::getpossiblemovescpy() {
     return possiblemovescpy;
 }
 
-void Chess::Knight::GenerateMoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+bool Chess::Knight::GenerateMoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     std::vector<std::pair<int, int>> possiblekmoves;
+    bool incheck = false;
     possiblekmoves = {{startposy - 1, startposx - 2}, {startposy - 2, startposx - 1}, {startposy - 2, startposx + 1},
                       {startposy - 1, startposx + 2}, {startposy + 1, startposx - 2}, {startposy + 2, startposx - 1}, {startposy + 2, startposx + 1},
                       {startposy + 1, startposx + 2}};
     for (std::pair<int, int> horsemove : possiblekmoves)
     {
-        if (InBounds(horsemove.first, horsemove.second) and underboard[horsemove.first][horsemove.second] and
-        thepieces[horsemove.first][horsemove.second].getcolor() != color)
+        if ((InBounds(horsemove.first, horsemove.second, underboard) and
+        thepieces[horsemove.first][horsemove.second].getcolor() != color) or underboard[horsemove.first][horsemove.second] == ' ')
         {
-            if ()
-            hasking = true;
+            if (underboard[horsemove.first][horsemove.second] == 'A')
+            {
+                incheck = true;
+            } else
+            {
+                possiblemoves.emplace_back(std::make_pair(horsemove.first, horsemove.second));
+            }
 
         }
 
     }
-/*
- *
- *
- * if (!InBounds(posy - x, posx - x, underboard) or
-                (underboard[posy - x][posx - x] == 'A' and thepieces[posy - x][posx - x].getcolor() != color))
-        {
-            hasking = true;
-            break;
-        }  else if (underboard[posy - x][posx - x] != ' '
-                    and thepieces[posy - x][posx - x].getcolor() != color)
-        {
-            possiblemoves.emplace_back(std::make_pair(posy - x, posx - x));
-            break;
-        } else
-        {
-            possiblemoves.emplace_back(std::make_pair(posy - x, posx - x));
-        }
-    }
- */
-
-
+    return incheck;
 }
