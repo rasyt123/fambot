@@ -5,20 +5,19 @@
 #include "Rook.h"
 
 bool Chess::Rook::GenerateMoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-    gettop(underboard, thepieces, color, startposy, startposx);
-    getbottom(underboard, thepieces,color, startposy, startposx);
-    getadjacentleft(underboard, thepieces,color, startposy, startposx);
-    getadjacentright(underboard, thepieces, color, startposy, startposx);
+    bool topcheck = gettop(underboard, thepieces, color, startposy, startposx);
+    bool bottomcheck = getbottom(underboard, thepieces,color, startposy, startposx);
+    bool ajleftcheck = getadjacentleft(underboard, thepieces,color, startposy, startposx);
+    bool ajrightcheck = getadjacentright(underboard, thepieces, color, startposy, startposx);
     possiblemovescpy = possiblemoves;
     possiblemoves = {};
-
-    gettop(underboard, thepieces, color, endposy, endposx);
-    getbottom(underboard, thepieces,color, endposy, endposx);
-    getadjacentleft(underboard, thepieces,color, endposy, endposx);
-    getadjacentright(underboard, thepieces, color, endposy, endposx);
-    if (hasking) {
+    if (topcheck or bottomcheck or ajleftcheck or ajrightcheck) 
+    {
         return true;
     }
+    
+
+
     return false;
 }
 
@@ -32,14 +31,15 @@ std::vector<std::pair<int, int>> Chess::Rook::getpossiblemovescpy() {
     return possiblemovescpy;
 }
 
-void Chess::Rook::gettop(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
+bool Chess::Rook::gettop(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
     for (int x = 1; x < underboard.size(); x++)
     {
-        if (!InBounds(posy - x, posx, underboard) or
-            (underboard[posy - x][posx] == 'A' and thepieces[posy - x][posx].getcolor() != color))
+        if (!InBounds(posy - x, posx, underboard))
         {
-            hasking = true;
             break;
+        } else if (underboard[posy - x][posx] == 'A' and thepieces[posy - x][posx].getcolor() != color)
+        {
+            return true;
         }  else if (underboard[posy - x][posx] != ' '
                     and thepieces[posy - x][posx].getcolor() != color)
         {
@@ -50,17 +50,19 @@ void Chess::Rook::gettop(std::vector<std::vector<char>>& underboard, std::vector
             possiblemoves.emplace_back(std::make_pair(posy - x, posx));
         }
     }
+    return false;
 }
 
-void Chess::Rook::getbottom(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
+bool Chess::Rook::getbottom(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
     for (int x = 1; x < underboard.size(); x++)
     {
-        if (!InBounds(posy + x, posx, underboard) or
-            (underboard[posy + x][posx] == 'A' and thepieces[posy + x][posx].getcolor() != color))
+        if (!InBounds(posy + x, posx, underboard))
         {
-            hasking = true;
             break;
-        }  else if (underboard[posy + x][posx] != ' '
+        } else if (underboard[posy + x][posx] == 'A' and thepieces[posy + x][posx].getcolor() != color)
+        {
+            return true;
+        } else if (underboard[posy + x][posx] != ' '
                     and thepieces[posy + x][posx].getcolor() != color)
         {
             possiblemoves.emplace_back(std::make_pair(posy + x, posx));
@@ -70,17 +72,18 @@ void Chess::Rook::getbottom(std::vector<std::vector<char>>& underboard, std::vec
             possiblemoves.emplace_back(std::make_pair(posy + x, posx));
         }
     }
-
+    return false;
 }
 
-void Chess::Rook::getadjacentleft(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
+bool Chess::Rook::getadjacentleft(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
     for (int x = 1; x < underboard.size(); x++)
     {
-        if (!InBounds(posy, posx - x, underboard) or
-            (underboard[posy][posx - x] == 'A' and thepieces[posy][posx - x].getcolor() != color))
+        if (!InBounds(posy, posx - x, underboard))
         {
-            hasking = true;
             break;
+        } else if (underboard[posy][posx - x] == 'A' and thepieces[posy][posx - x].getcolor() != color)
+        {
+            return true;
         }  else if (underboard[posy][posx - x] != ' '
                     and thepieces[posy][posx - x].getcolor() != color)
         {
@@ -91,18 +94,20 @@ void Chess::Rook::getadjacentleft(std::vector<std::vector<char>>& underboard, st
             possiblemoves.emplace_back(std::make_pair(posy, posx - x));
         }
     }
+    return false;
 }
 
 
-void Chess::Rook::getadjacentright(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
+bool Chess::Rook::getadjacentright(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int posy, int posx) {
     for (int x = 1; x < underboard.size(); x++)
     {
-        if (!InBounds(posy, posx + x, underboard) or
-            (underboard[posy][posx + x] == 'A' and thepieces[posy][posx + x].getcolor() != color))
+        if (!InBounds(posy, posx + x, underboard))
         {
-            hasking = true;
-            break;
-        }  else if (underboard[posy][posx + x] != ' '
+           break;
+        } else if (underboard[posy][posx + x] == 'A' and thepieces[posy][posx + x].getcolor() != color)
+        {
+            return true;
+        } else if (underboard[posy][posx + x] != ' '
                     and thepieces[posy][posx + x].getcolor() != color)
         {
             possiblemoves.emplace_back(std::make_pair(posy, posx + x));
@@ -112,4 +117,5 @@ void Chess::Rook::getadjacentright(std::vector<std::vector<char>>& underboard, s
             possiblemoves.emplace_back(std::make_pair(posy, posx + x));
         }
     }
+    return false;
 }
