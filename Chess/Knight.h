@@ -8,7 +8,7 @@
 namespace Chess {
     class Knight : Pieces {
         public:
-            void GenerateMoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
+            bool GenerateMoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
             std::vector<std::pair<int,int>> getpossiblemoves();
             std::vector<std::pair<int, int>> getpossiblemovescpy();
 
@@ -26,9 +26,6 @@ namespace Chess {
 
 
     };
-
-
-
 }
 
 
