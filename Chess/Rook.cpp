@@ -15,9 +15,6 @@ bool Chess::Rook::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
     {
         return true;
     }
-    
-
-
     return false;
 }
 
