@@ -22,9 +22,6 @@ namespace Chess {
             int endposy;
             std::vector<std::pair<int,int>> possiblemoves;
             std::vector<std::pair<int,int>> possiblemovescpy;
-
-
-
     };
 }
 
