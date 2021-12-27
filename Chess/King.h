@@ -26,7 +26,9 @@ namespace Chess {
         bool determinecheckmate(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
         void generatemoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
         void castlemove(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
-
+        void addmoves(std::vector<std::pair<int, int>> src, std::vector<std::pair<int, int>>& destination);
+        void collectmoveinterference(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, Pawn& pawnobj, Rook& rookobj, Queen& queenobj,
+                                     Bishop& bishopobj, King& kingobj, Knight& knightobj, int y, int x, std::string color);
 
 
         private:
