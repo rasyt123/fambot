@@ -34,6 +34,10 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
     Bishop bishopobj;
     King kingobj;
     Knight knightobj;
+    std::vector<std::pair<int, int>> wqsidecoords = {{startposy, startposx - 1}, {startposy, startposx - 2}, {startposy, startposx - 3}};
+    std::vector<std::pair<int, int>> wkingsidecoords = {{startposy, startposx + 1}, {startposy, startposx + 2}};
+    std::vector<std::pair<int, int>> bqsidecoords;
+    std::vector<std::pair<int, int>> bkingsidecoords;
 
     if (color == "white" and endposy == 0 and (endposx == startposx - 2 or
     endposx == startposx + 2))
@@ -48,8 +52,26 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
         {
             ksinghrook = true;
         }
-        if ()
+        if (endposx == startposx - 2)
         {
+            for (int xbet = startposx; xbet >= 1; xbet--)
+            {
+                if (underboard[startposx][xbet] != ' ')
+                {
+                    return false;
+                }
+
+            }
+        }
+        if (endposx == startposx + 2)
+        {
+            for (int xbet = startposx; xbet <= endposx; xbet++)
+            {
+                if (underboard[startposx][xbet] != ' ')
+                {
+                    return false;
+                }
+            }
 
         }
         for (int y = 0; y < underboard.size(); y++)
@@ -63,14 +85,28 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
                 }
             }
         }
+
         for (std::pair<int, int> move : interferemoves)
         {
             if (endposx == startposx - 2)
             {
-
-
+                for (std::pair<int, int> item : wqsidecoords) 
+                {
+                    if (move == item) 
+                    {
+                        return false;
+                    }
+                }
+                
             } else if (endposx == startposx + 2)
             {
+                for (std::pair<int, int> item : wkingsidecoords) 
+                {
+                    if (move == item) 
+                    {
+                        return false;
+                    }
+                }
 
             }
 
