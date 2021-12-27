@@ -36,7 +36,7 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
     Knight knightobj;
 
     if (color == "white" and endposy == 0 and (endposx == startposx - 2 or
-    endposx == startposy + 2))
+    endposx == startposx + 2))
     {
         if (InBounds(startposy, startposx - 4, underboard) and underboard[startposy][startposy - 4] == 'R'
         and thepieces[startposy][startposx - 4].getcolor() == "white")
@@ -48,48 +48,85 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
         {
             ksinghrook = true;
         }
+        if ()
+        {
+
+        }
         for (int y = 0; y < underboard.size(); y++)
         {
             for (int x = 0; x < underboard[0].size(); x++)
             {
-                if (thepieces[y][x].getcolor() == "black")
+                if (thepieces[y][x].getcolor() == "black" and underboard[y][x] != ' ')
                 {
-                    switch (underboard[y][x])
-                    {
-                        case 'P':
-                            pawnobj.GenerateMoves(underboard, thepieces, color);
-                            pawnobj.addmoves(pawnobj.getpossiblemoves(), interferemoves);
-                            break;
-                        case 'R':
-                            rookobj.GenerateMoves(underboard, thepieces, color);
-                            break;
-                        case 'B':
-                            bishopobj.GenerateMoves(underboard, thepieces, color);
-                            break;
-                        case 'Q':
-                            queenobj.GenerateMoves(underboard, thepieces, color);
-                            break;
-                        case 'A':
-                            kingobj.GenerateMoves(underboard, thepieces, color);
-                            break;
-                        case 'K':
-                            knightobj.GenerateMoves(underboard, thepieces, color);
-                            break;
-                        default:
-                            break;
-                    }
+                    collectmoveinterference(underboard, thepieces, pawnobj, rookobj, queenobj, bishopobj, kingobj,
+                                            knightobj, y, x, color);
                 }
             }
         }
+        for (std::pair<int, int> move : interferemoves)
+        {
+            if (endposx == startposx - 2)
+            {
+
+
+            } else if (endposx == startposx + 2)
+            {
+
+            }
+
+        }
 
     } else if (color == "black" and endposy == 7 and (endposx == startposx - 2 or endposx ==
-    startposy + 2))
+    startposx + 2))
     {
 
 
     }
 
     return false;
+}
+
+
+void Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, Pawn& pawnobj, Rook& rookobj, Queen& queenobj,
+                             Bishop& bishopobj, King& kingobj, Knight& knightobj, int y, int x, std::string color) {
+    switch (underboard[y][x])
+    {
+        case 'P':
+            pawnobj.GenerateMoves(underboard, thepieces, color);
+            this->addmoves(pawnobj.getpossiblemoves(), interferemoves);
+            break;
+        case 'R':
+            rookobj.GenerateMoves(underboard, thepieces, color);
+            this->addmoves(rookobj.getpossiblemoves(), interferemoves);
+            break;
+        case 'B':
+            bishopobj.GenerateMoves(underboard, thepieces, color);
+            this->addmoves(bishopobj.getpossiblemoves(), interferemoves);
+            break;
+        case 'Q':
+            queenobj.GenerateMoves(underboard, thepieces, color);
+            this->addmoves(queenobj.getpossiblemoves(), interferemoves);
+            break;
+        case 'A':
+            kingobj.GenerateMoves(underboard, thepieces, color);
+            this->addmoves(queenobj.getpossiblemoves(), interferemoves);
+            break;
+        case 'K':
+            knightobj.GenerateMoves(underboard, thepieces, color);
+            this->addmoves(knightobj.getpossiblemoves(), interferemoves);
+            break;
+        default:
+            break;
+    }
+
+
+}
+
+void Chess::King::addmoves(std::vector<std::pair<int, int>> src, std::vector<std::pair<int, int>> &destination) {
+    for (auto item : src)
+    {
+        destination.emplace_back(item);
+    }
 }
 
 
