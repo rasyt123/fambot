@@ -18,9 +18,39 @@ void Chess::King::CastleMovement(std::vector<std::vector<char>> &underboard,
 
 
 void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-    
+    //top left, topright, uptop,
+    //8 different directions.
+    //for each of the direction coordinates, check if an opposing colored piece is watching the direction
+    //if it isn't, we can push the move into the vector.
+    Pawn pawnobj;
+    Rook rookobj;
+    Queen queenobj;
+    Bishop bishopobj;
+    King kingobj;
+    Knight knightobj;
+    std::vector<std::pair<int, int>> dirs = {{startposy - 1, startposx - 1}, {startposy - 1, startposx}, {startposy - 1, startposx + 1}, {startposy, startposx - 1}, {startposy, startposx + 1},
+                                             {startposy + 1, startposx - 1}, {startposy + 1, startposx}, {startposy + 1, startposx + 1}};
+    for (int y = 0; y < underboard.size(); y++)
+    {
+        for (int x = 0; x < underboard[0].size(); x++)
+        {
+            if (thepieces[y][x].getcolor() != color and underboard[y][x] != ' ')
+            {
+                collectmoveinterference(underboard, thepieces, pawnobj, rookobj, queenobj, bishopobj, kingobj,
+                                        knightobj, y, x, color);
+            }
+        }
+    }
+    for (std::pair<int, int> item : dirs)
+    {
+        for (std::pair<int, int> coords : interferemoves) {
+            if (
+
+        }
 
 
+    }
+    interferemoves = {};
 
 }
 
@@ -219,5 +249,6 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 
 
 }
+
 
 
