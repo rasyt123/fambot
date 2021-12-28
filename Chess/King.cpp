@@ -76,7 +76,7 @@ void Chess::King::setblank(int ypos, int xpos, std::vector<std::vector<char>>& u
 bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
 
     if (color == "black" and endposy == 0 and (endposx == startposx - 2 or
-    endposx == startposx + 2))
+    endposx == startposx + 2) and startposy == 0 and startposx == 4)
     {
          if (CastleCheck(underboard, thepieces, color))
          {
@@ -84,7 +84,7 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
              return true;
          }
     } else if (color == "white" and endposy == 7 and (endposx == startposx - 2 or endposx ==
-    startposx + 2))
+    startposx + 2) and startposy == 7 and startposx == 4)
     {
         if (CastleCheck(underboard, thepieces, color))
         {
