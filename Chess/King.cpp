@@ -10,11 +10,16 @@ void Chess::King::CastleMovement(std::vector<std::vector<char>> &underboard,
     if (endposy == 0 and endposx == startposx - 2)
     {
         char temprook = underboard[endposy][startposx - 3];
-        underboard[endposy][startposx - 3] = ' ';
-        thepieces[endposy][startposx - 3].setblank(true);
-        thepieces[endposy][startposx - 3].setcolor(" ");
-        thepieces[endposy][startposx - 3].settype(' ');
-        char tempking =
+        Pieces tpiecer = thepieces[endposy][startposx - 3];
+        setblank(endposy, startposx - 3, underboard, thepieces);
+        char tempking = underboard[startposy][startposx];
+        Pieces tpiecek = thepieces[startposy][startposx];
+        setblank(startposy, startposx, underboard, thepieces);
+        underboard[endposy][endposx] = tempking;
+        thepieces[endposy][endposx] = tpiecek;
+        underboard[endposy][endposx + 1] = temprook;
+        thepieces[endposy][endposx + 1] = ;
+
 
 
     } else if (endposy == 0 and endposx == startposx + 2)
@@ -38,6 +43,13 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
 
 }
 
+void Chess::King::setblank(int ypos, int xpos, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    underboard[ypos][xpos] = ' ';
+    thepieces[ypos][xpos].setblank(true);
+    thepieces[ypos][xpos].setcolor(" ");
+    thepieces[ypos][xpos].settype(' ');
+}
+
 bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
 
     if (color == "black" and endposy == 0 and (endposx == startposx - 2 or
@@ -46,6 +58,7 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
          if (CastleCheck(underboard, thepieces, color))
          {
              CastleMovement(underboard, thepieces, color);
+             return true;
          }
     } else if (color == "white" and endposy == 7 and (endposx == startposx - 2 or endposx ==
     startposx + 2))
@@ -53,6 +66,7 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
         if (CastleCheck(underboard, thepieces, color))
         {
             CastleMovement(underboard, thepieces, color);
+            return true;
         }
     }
 
@@ -149,6 +163,7 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
 
         }
     }
+    return true;
 }
 
 
@@ -208,3 +223,4 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 
 
 }
+
