@@ -8,10 +8,14 @@
 void Chess::King::CastleMovement(std::vector<std::vector<char>> &underboard,
                                  std::vector<std::vector<Pieces>> &thepieces, std::string color) {
 
-
-
-
-
+    if () 
+    {
+        
+        
+    } else if () 
+    {
+        
+    }
 }
 
 
@@ -22,12 +26,22 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
 }
 
 bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-    bool cancastle = false;
-    bool qsidecastle = false;
-    bool qsidehrook = false;
 
-    bool ksinghrook = false;
-    bool kingsidecastle = true;
+    if (color == "black" and endposy == 0 and (endposx == startposx - 2 or
+    endposx == startposx + 2))
+    {
+        CastleCheck(underboard, thepieces, color);
+    } else if (color == "white" and endposy == 7 and (endposx == startposx - 2 or endposx ==
+    startposx + 2))
+    {
+        CastleCheck(underboard, thepieces, color);
+    }
+
+    return false;
+}
+
+
+bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     Pawn pawnobj;
     Rook rookobj;
     Queen queenobj;
@@ -38,89 +52,86 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
     std::vector<std::pair<int, int>> wkingsidecoords = {{startposy, startposx + 1}, {startposy, startposx + 2}};
     std::vector<std::pair<int, int>> bqsidecoords;
     std::vector<std::pair<int, int>> bkingsidecoords;
-
-    if (color == "white" and endposy == 0 and (endposx == startposx - 2 or
-    endposx == startposx + 2))
+    bool qsidehrook = false;
+    bool ksinghrook = false;
+    if (InBounds(startposy, startposx - 4, underboard) and underboard[startposy][startposy - 4] == 'R'
+        and thepieces[startposy][startposx - 4].getcolor() == color)
     {
-        if (InBounds(startposy, startposx - 4, underboard) and underboard[startposy][startposy - 4] == 'R'
-        and thepieces[startposy][startposx - 4].getcolor() == "white")
-        {
-            qsidehrook = true;
-        }
-        if (InBounds(startposy, startposx + 3, underboard) and underboard[startposy][startposx + 3] == 'R'
-        and thepieces[startposy][startposx + 4].getcolor() == "white")
-        {
-            ksinghrook = true;
-        }
-        if (endposx == startposx - 2)
-        {
-            for (int xbet = startposx; xbet >= 1; xbet--)
-            {
-                if (underboard[startposx][xbet] != ' ')
-                {
-                    return false;
-                }
-
-            }
-        }
-        if (endposx == startposx + 2)
-        {
-            for (int xbet = startposx; xbet <= endposx; xbet++)
-            {
-                if (underboard[startposx][xbet] != ' ')
-                {
-                    return false;
-                }
-            }
-
-        }
-        for (int y = 0; y < underboard.size(); y++)
-        {
-            for (int x = 0; x < underboard[0].size(); x++)
-            {
-                if (thepieces[y][x].getcolor() == "black" and underboard[y][x] != ' ')
-                {
-                    collectmoveinterference(underboard, thepieces, pawnobj, rookobj, queenobj, bishopobj, kingobj,
-                                            knightobj, y, x, color);
-                }
-            }
-        }
-
-        for (std::pair<int, int> move : interferemoves)
-        {
-            if (endposx == startposx - 2)
-            {
-                for (std::pair<int, int> item : wqsidecoords) 
-                {
-                    if (move == item) 
-                    {
-                        return false;
-                    }
-                }
-                
-            } else if (endposx == startposx + 2)
-            {
-                for (std::pair<int, int> item : wkingsidecoords) 
-                {
-                    if (move == item) 
-                    {
-                        return false;
-                    }
-                }
-
-            }
-
-        }
-
-    } else if (color == "black" and endposy == 7 and (endposx == startposx - 2 or endposx ==
-    startposx + 2))
+        qsidehrook = true;
+    }
+    if (InBounds(startposy, startposx + 3, underboard) and underboard[startposy][startposx + 3] == 'R'
+        and thepieces[startposy][startposx + 4].getcolor() == color)
     {
+        ksinghrook = true;
+    }
+    if (endposx == startposx - 2)
+    {
+        if (!qsidehrook)
+        {
+            return false;
+        }
+        for (int xbet = startposx; xbet >= 1; xbet--)
+        {
+            if (underboard[startposy][xbet] != ' ')
+            {
+                return false;
+            }
 
+        }
+    }
+    if (endposx == startposx + 2)
+    {
+        if (!ksinghrook)
+        {
+            return false;
+        }
+        for (int xbet = startposx; xbet <= endposx; xbet++)
+        {
+            if (underboard[startposy][xbet] != ' ')
+            {
+                return false;
+            }
+        }
 
     }
+    for (int y = 0; y < underboard.size(); y++)
+    {
+        for (int x = 0; x < underboard[0].size(); x++)
+        {
+            if (thepieces[y][x].getcolor() != color and underboard[y][x] != ' ')
+            {
+                collectmoveinterference(underboard, thepieces, pawnobj, rookobj, queenobj, bishopobj, kingobj,
+                                        knightobj, y, x, color);
+            }
+        }
+    }
 
-    return false;
+    for (std::pair<int, int> move : interferemoves)
+    {
+        if (endposx == startposx - 2)
+        {
+            for (std::pair<int, int> item : wqsidecoords)
+            {
+                if (move == item)
+                {
+                    return false;
+                }
+            }
+
+        } else if (endposx == startposx + 2)
+        {
+            for (std::pair<int, int> item : wkingsidecoords)
+            {
+                if (move == item)
+                {
+                    return false;
+                }
+            }
+
+        }
+    }
 }
+
 
 
 void Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, Pawn& pawnobj, Rook& rookobj, Queen& queenobj,
@@ -179,9 +190,3 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 
 }
 
-void Chess::King::generatemoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-
-
-
-
-}
