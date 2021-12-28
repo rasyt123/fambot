@@ -7,14 +7,27 @@
 
 void Chess::King::CastleMovement(std::vector<std::vector<char>> &underboard,
                                  std::vector<std::vector<Pieces>> &thepieces, std::string color) {
+    if (endposy == 0 and endposx == startposx - 2)
+    {
+        char temprook = underboard[endposy][startposx - 3];
+        underboard[endposy][startposx - 3] = ' ';
+        thepieces[endposy][startposx - 3].setblank(true);
+        thepieces[endposy][startposx - 3].setcolor(" ");
+        thepieces[endposy][startposx - 3].settype(' ');
+        char tempking =
 
-    if () 
+
+    } else if (endposy == 0 and endposx == startposx + 2)
     {
-        
-        
-    } else if () 
+
+    } else if (endposy == 7 and endposx == startposx - 2)
     {
-        
+
+
+    } else if (endposy == 7 and endposx == startposx + 2)
+    {
+
+
     }
 }
 
@@ -30,11 +43,17 @@ bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std:
     if (color == "black" and endposy == 0 and (endposx == startposx - 2 or
     endposx == startposx + 2))
     {
-        CastleCheck(underboard, thepieces, color);
+         if (CastleCheck(underboard, thepieces, color))
+         {
+             CastleMovement(underboard, thepieces, color);
+         }
     } else if (color == "white" and endposy == 7 and (endposx == startposx - 2 or endposx ==
     startposx + 2))
     {
-        CastleCheck(underboard, thepieces, color);
+        if (CastleCheck(underboard, thepieces, color))
+        {
+            CastleMovement(underboard, thepieces, color);
+        }
     }
 
     return false;
@@ -189,4 +208,3 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 
 
 }
-
