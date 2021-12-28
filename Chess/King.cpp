@@ -43,7 +43,7 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
     }
     for (std::pair<int, int> item : dirs)
     {
-       if (!std::find()) 
+       if (std::find(interferemoves.begin(), interferemoves.end(), item) == interferemoves.end())
        {
            possiblemoves.emplace_back(item);
        }
@@ -236,6 +236,7 @@ void Chess::King::addmoves(std::vector<std::pair<int, int>> src, std::vector<std
 
 
 bool Chess::King::determinecheck(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+    
 
 
 
@@ -247,5 +248,4 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 
 
 }
-
 
