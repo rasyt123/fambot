@@ -236,10 +236,29 @@ void Chess::King::addmoves(std::vector<std::pair<int, int>> src, std::vector<std
 
 
 bool Chess::King::determinecheck(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-    
-
-
-
+    Pawn pawnobj;
+    Rook rookobj;
+    Queen queenobj;
+    Bishop bishopobj;
+    King kingobj;
+    Knight knightobj;
+    for (int y = 0; y < underboard.size(); y++)
+    {
+        for (int x = 0; x < underboard[0].size(); x++)
+        {
+            if (thepieces[y][x].getcolor() != color and underboard[y][x] != ' ')
+            {
+                collectmoveinterference(underboard, thepieces, pawnobj, rookobj, queenobj, bishopobj, kingobj,
+                                        knightobj, y, x, color);
+            }
+        }
+    }
+    std::pair<int, int> currkingpos = {startposy, startposx};
+    if (std::find(interferemoves.begin(), interferemoves.end(), currkingpos) == interferemoves.end()) 
+    {
+        return true;
+    }
+    return false;
 }
 
 
@@ -248,4 +267,5 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 
 
 }
+
 
