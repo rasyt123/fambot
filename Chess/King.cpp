@@ -48,7 +48,6 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
            possiblemoves.emplace_back(item);
        }
     }
-    interferemoves = {};
 
 }
 
@@ -254,7 +253,7 @@ bool Chess::King::determinecheck(std::vector<std::vector<char>>& underboard, std
         }
     }
     std::pair<int, int> currkingpos = {startposy, startposx};
-    if (std::find(interferemoves.begin(), interferemoves.end(), currkingpos) == interferemoves.end()) 
+    if (std::find(interferemoves.begin(), interferemoves.end(), currkingpos) == interferemoves.end())
     {
         return true;
     }
@@ -263,9 +262,14 @@ bool Chess::King::determinecheck(std::vector<std::vector<char>>& underboard, std
 
 
 bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
-
-
-
+    GenerateMoves(underboard, thepieces, color);
+    if (possiblemoves.size() == 0)
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
 }
 
 
