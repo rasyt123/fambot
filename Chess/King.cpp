@@ -6,33 +6,19 @@
 
 
 void Chess::King::CastleMovement(std::vector<std::vector<char>> &underboard,
-                                 std::vector<std::vector<Pieces>> &thepieces, std::string color) {
+                                 std::vector<std::vector<Pieces>> &thepieces) {
     if (endposy == 0 and endposx == startposx - 2)
     {
-        char temprook = underboard[endposy][startposx - 3];
-        Pieces tpiecer = thepieces[endposy][startposx - 3];
-        setblank(endposy, startposx - 3, underboard, thepieces);
-        char tempking = underboard[startposy][startposx];
-        Pieces tpiecek = thepieces[startposy][startposx];
-        setblank(startposy, startposx, underboard, thepieces);
-        underboard[endposy][endposx] = tempking;
-        thepieces[endposy][endposx] = tpiecek;
-        underboard[endposy][endposx + 1] = temprook;
-        thepieces[endposy][endposx + 1] = ;
-
-
-
+        castleenact();
     } else if (endposy == 0 and endposx == startposx + 2)
     {
-
+        castleenact();
     } else if (endposy == 7 and endposx == startposx - 2)
     {
-
-
+        castleenact();
     } else if (endposy == 7 and endposx == startposx + 2)
     {
-
-
+        castleenact();
     }
 }
 
@@ -41,6 +27,21 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
 
 
 
+}
+
+
+void Chess::King::castleenact(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int startposfactor, int kingcrement) {
+    char temprook = underboard[endposy][startposfactor];
+    Pieces tpiecer = thepieces[endposy][startposfactor];
+    setblank(endposy, startposx - 3, underboard, thepieces);
+    char tempking = underboard[startposy][startposx];
+    Pieces tpiecek = thepieces[startposy][startposx];
+    setblank(startposy, startposx, underboard, thepieces);
+    underboard[endposy][endposx] = tempking;
+    thepieces[endposy][endposx] = tpiecek;
+    underboard[endposy][kingcrement] = temprook;
+    thepieces[endposy][kingcrement] = tpiecek;
+    
 }
 
 void Chess::King::setblank(int ypos, int xpos, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
