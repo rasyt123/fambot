@@ -29,12 +29,12 @@ void Chess::Game::GameLoop() {
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
     bool isgreen = false;
     bool mademove = false;
-    std::pair<float, float> piececoords;
-    std::pair<int, int> pieceyx;
-    pieceyx.first = OUT_OF_BOUNDS;
-    pieceyx.second = OUT_OF_BOUNDS;
-    piececoords.first = OUT_OF_BOUNDS;
-    piececoords.second = OUT_OF_BOUNDS;
+    std::pair<float, float> startpiececoords;
+    std::pair<int, int> startpieceyx;
+    startpieceyx.first = OUT_OF_BOUNDS;
+    startpieceyx.second = OUT_OF_BOUNDS;
+    startpiececoords.first = OUT_OF_BOUNDS;
+    startpiececoords.second = OUT_OF_BOUNDS;
     std::string turncolor = "white";
     addcoords();
     float clickposy = OUT_OF_BOUNDS;
@@ -59,7 +59,9 @@ void Chess::Game::GameLoop() {
         }
         window.clear();
         SetupBoard(&window);
-        CheckSelect(&window, isgreen, piececoords, pieceyx, mademove, clickposy, clickposx);
+        CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
+
+
 
         window.display();
         if (mademove)
@@ -69,9 +71,58 @@ void Chess::Game::GameLoop() {
     }
 }
 
-void Chess::Game::MakeMovePlayer(std::string turn, std::pair<int, int> , bool& mademove) {
-   
+void Chess::Game::MakeMovePlayer(std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate) {
+    Pawn pawnobj();
+    Rook rookobj();
+    Queen queenobj();
+    Bishop bishopobj();
+    Knight knightobj();
+    int startposy = startpieceyx.first;
+    int startposx = startpieceyx.second;
+    int endposy = endpieceyx.first;
+    int endposx = endpieceyx.second;
+    std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
+    King kingobj(startpieceyx.second, startpieceyx.first, endpieceyx.second, endpieceyx.first);
+    if (kingobj.determinecheck(this->underboard, this->thepieces, colorturn))
+    {
+        
+    }
+    if (kingobj.determinecheckmate(this->underboard, this->thepieces, colorturn)) {
+
+
+    }
+    switch (underboard[startposy][startposx])
+    {
+
+
+
+
+    }
+
+
+
+
+
 }
+
+
+
+std::pair<int, int> Chess::Game::findking(std::string color, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    for (int height = 0; height < BOARD_ROWS; height++)
+    {
+        for (int width = 0; width < BOARD_COLS; width++)
+        {
+           if (underboard[height][width] == 'A' and thepieces[height][width].getcolor() == color)
+           {
+               std::pair<int, int> kingcoords = std::make_pair(height,width);
+               return kingcoords;
+           }
+        }
+    }
+    return {};
+}
+
+
 
 void Chess::Game::Capture(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, int startposy, int startposx, int endposy, int endposx) {
     char oldpiece = underboard[startposy][startposx];
@@ -110,7 +161,7 @@ void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, in
 }
 
 
-std::pair<int,int> Chess::Game::selectpiecemoves(sf::RenderWindow* window, std::string color) {
+std::pair<int,int> Chess::Game::returnendpos(sf::RenderWindow* window, std::string color) {
     sf::Event event;
     int clickposy;
     int clickposx;
@@ -118,35 +169,28 @@ std::pair<int,int> Chess::Game::selectpiecemoves(sf::RenderWindow* window, std::
     std::pair<int, int> pieceyx;
     int startposy;
     int startposx;
-    while (window->pollEvent(event))
-    {
-        if (event.type == sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
+    while (window->pollEvent(event)) {
+        if (event.type == sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             clickposy = mousePos.y;
             clickposx = mousePos.x;
-            for (int height = 0; height < BOARD_ROWS; height++)
-            {
-                for (int width = 0; width < BOARD_COLS; width++)
-                {
+            for (int height = 0; height < BOARD_ROWS; height++) {
+                for (int width = 0; width < BOARD_COLS; width++) {
                     float cellxpos = width * cell_width;
                     float cellypos = height * cell_height;
-                    if (clickposx > cellxpos and clickposx < cellxpos + (float) cell_width and clickposy > cellypos and clickposy < cellypos + (float) cell_height)
-                    {
-                        if (underboard[height][width] != ' ' and thepieces[height][width].getcolor() != color)
-                        {
+                    if (clickposx > cellxpos and clickposx < cellxpos + (float) cell_width and clickposy > cellypos and
+                        clickposy < cellypos + (float) cell_height) {
+                        if (underboard[height][width] != ' ' and thepieces[height][width].getcolor() != color) {
                             piececoords = boardcoords[height][width];
                             pieceyx = std::make_pair(height, width);
                             return pieceyx;
                         }
                     }
                 }
-                break;
             }
+            break;
         }
     }
-
-
 }
 
 void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx) {
