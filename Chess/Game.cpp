@@ -69,36 +69,8 @@ void Chess::Game::GameLoop() {
     }
 }
 
-void Chess::Game::MakeMovePlayer(std::string turn, int posy, int posx, bool& mademove) {
-    if (turn == "white")
-    {
-        switch(underboard[posy][posx])
-        {
-            case 'P':
-                //generate possible moves
-                break;
-            case 'R':
-                break;
-            case 'K':
-                break;
-            case 'B':
-                break;
-            case 'A':
-                break;
-            case 'Q':
-                break;
-
-        }
-
-
-
-
-    } else
-    {
-
-
-
-    }
+void Chess::Game::MakeMovePlayer(std::string turn, std::pair<int, int> , bool& mademove) {
+   
 }
 
 void Chess::Game::Capture(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, int startposy, int startposx, int endposy, int endposx) {
@@ -138,7 +110,7 @@ void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, in
 }
 
 
-void Chess::Game::selectpiecemoves(sf::RenderWindow* window, std::string color) {
+std::pair<int,int> Chess::Game::selectpiecemoves(sf::RenderWindow* window, std::string color) {
     sf::Event event;
     int clickposy;
     int clickposx;
@@ -165,12 +137,12 @@ void Chess::Game::selectpiecemoves(sf::RenderWindow* window, std::string color) 
                         {
                             piececoords = boardcoords[height][width];
                             pieceyx = std::make_pair(height, width);
+                            return pieceyx;
                         }
                     }
                 }
+                break;
             }
-
-
         }
     }
 
