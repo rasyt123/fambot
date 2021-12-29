@@ -138,10 +138,14 @@ void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, in
 }
 
 
-void Chess::Game::selectpiecemoves(sf::RenderWindow* window) {
+void Chess::Game::selectpiecemoves(sf::RenderWindow* window, std::string color) {
     sf::Event event;
     int clickposy;
     int clickposx;
+    std::pair<float, float> piececoords;
+    std::pair<int, int> pieceyx;
+    int startposy;
+    int startposx;
     while (window->pollEvent(event))
     {
         if (event.type == sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -149,12 +153,24 @@ void Chess::Game::selectpiecemoves(sf::RenderWindow* window) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             clickposy = mousePos.y;
             clickposx = mousePos.x;
-            if () {
-
-
+            for (int height = 0; height < BOARD_ROWS; height++)
+            {
+                for (int width = 0; width < BOARD_COLS; width++)
+                {
+                    float cellxpos = width * cell_width;
+                    float cellypos = height * cell_height;
+                    if (clickposx > cellxpos and clickposx < cellxpos + (float) cell_width and clickposy > cellypos and clickposy < cellypos + (float) cell_height)
+                    {
+                        if (underboard[height][width] != ' ' and thepieces[height][width].getcolor() != color)
+                        {
+                            piececoords = boardcoords[height][width];
+                            pieceyx = std::make_pair(height, width);
+                        }
+                    }
+                }
             }
 
-            break;
+
         }
     }
 
