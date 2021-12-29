@@ -137,6 +137,30 @@ void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, in
     }
 }
 
+
+void Chess::Game::selectpiecemoves(sf::RenderWindow* window) {
+    sf::Event event;
+    int clickposy;
+    int clickposx;
+    while (window->pollEvent(event))
+    {
+        if (event.type == sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            clickposy = mousePos.y;
+            clickposx = mousePos.x;
+            if () {
+
+
+            }
+
+            break;
+        }
+    }
+
+
+}
+
 void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
@@ -207,13 +231,13 @@ void Chess::Game::addcoords() {
             {
                 Pieces newpiece;
                 newpiece.settype(underboard[y][x]);
-                newpiece.setcolor("w");
+                newpiece.setcolor("b");
                 piecerows.push_back(newpiece);
             } else if (y >= 6 and y < BOARD_ROWS)
             {
                 Pieces newpiece;
                 newpiece.settype(underboard[y][x]);
-                newpiece.setcolor("b");
+                newpiece.setcolor("w");
                 piecerows.push_back(newpiece);
             } else
             {
@@ -302,10 +326,10 @@ void Chess::Game::SetupBoard(sf::RenderWindow* window) {
             sf::Texture texture;
             if (y <= 1)
             {
-                color = white;
+                color = black;
             } else
             {
-                color = black;
+                color = white;
             }
             std::unique_ptr<sf::RectangleShape> boardcell;
             boardcell = std::unique_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(120.0f, 120.0f)));
