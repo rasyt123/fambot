@@ -14,40 +14,43 @@ void Chess::Pawn::EnactPassant(std::vector<std::vector<char>>& underboard, std::
 
 //I will check if the start pos is a pawn before I call this function in game.cpp
 void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, Pieces prevpiece, int prevy, int prevx) {
-    if (turn == "black")
+    if (turn == "white")
     {
-        //left capture en passant with turn as black
-        if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1)
+        //left capture en passant with turn as white
+        if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1
+        and underboard[endposy][endposx] == ' ')
         {
-            if (thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
-                    prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P')
+            if (InBounds(startposy, startposx - 1, underboard) and thepieces[startposy][startposx - 1].getcolor() == "black" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
+                    prevpiece.getcolor() == "black" and prevpiece.gettype() == 'P')
             {
                     createblank(startposy, startposx - 1, underboard, thepieces);
                     EnactPassant(underboard, thepieces);
-            } else if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx+1)
+            }
+        }
+        else if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx+1)
+        {
+            if (InBounds(startposy, startposx + 1, underboard) and thepieces[startposy][startposx + 1].getcolor() == "black" and underboard[startposy][startposx + 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
+                prevpiece.getcolor() == "black" and prevpiece.gettype() == 'P')
             {
-                if (thepieces[startposy][startposx + 1].getcolor() == "white" and underboard[startposy][startposx + 1] == 'P' and prevy == endposy - 1 and prevx == endposx and
-                    prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P')
-                {
-                    createblank(startposy, startposx + 1, underboard, thepieces);
-                    EnactPassant(underboard, thepieces);
-                }
+                createblank(startposy, startposx + 1, underboard, thepieces);
+                EnactPassant(underboard, thepieces);
             }
         }
     } else {
-        //left capture en passant with white
-        if (startposy == 4 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx - 1)
+        //left capture en passant with black
+        if (startposy == 4 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx - 1
+        and underboard[endposy][endposx] == ' ')
         {
-            if (thepieces[startposy][startposx - 1].getcolor() == "black" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy + 1 and prevx == endposx and
-                prevpiece.getcolor() == "black" and prevpiece.gettype() == 'P')
+            if (InBounds(startposy, startposx - 1, underboard) and thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P' and prevy == endposy + 1 and prevx == endposx and
+                prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P')
             {
                 createblank(startposy, startposx - 1, underboard, thepieces);
                 EnactPassant(underboard, thepieces);
             }
         } else if (startposy == 4 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx + 1)
         {
-            if (thepieces[startposy][startposx + 1].getcolor() == "black" and underboard[startposy][startposx + 1] == 'P' and
-            prevy == endposy + 1 and prevx == endposx and prevpiece.getcolor() == "black" and prevpiece.gettype() == 'P')
+            if (InBounds(startposy, startposx + 1, underboard) and thepieces[startposy][startposx + 1].getcolor() == "white" and underboard[startposy][startposx + 1] == 'P' and
+            prevy == endposy + 1 and prevx == endposx and prevpiece.getcolor() == "white" and prevpiece.gettype() == 'P')
             {
                 createblank(startposy, startposx + 1, underboard, thepieces);
                 EnactPassant(underboard, thepieces);
@@ -100,8 +103,6 @@ void Chess::Pawn::createblank(int posy, int posx, std::vector<std::vector<char>>
 
 //correct
 
-
-
 //correct
 bool Chess::Pawn::GenerateMoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
     if (turn == "white")
@@ -140,7 +141,7 @@ bool Chess::Pawn::IsValidMove(int rows, int cols) {
 //this is good
 
 //correct
-void Chess::Pawn::GenerateWhite(std::vector<std::vector<char>>& underboard) {
+void Chess::Pawn::GenerateBlack(std::vector<std::vector<char>>& underboard) {
     if (BottomLeft(underboard))
     {
         possiblemoves.emplace_back(std::make_pair(startposy + 1, startposx - 1));
@@ -160,7 +161,7 @@ void Chess::Pawn::GenerateWhite(std::vector<std::vector<char>>& underboard) {
 }
 
 //correct
-void Chess::Pawn::GenerateBlack(std::vector<std::vector<char>> &underboard) {
+void Chess::Pawn::GenerateWhite(std::vector<std::vector<char>> &underboard) {
     if (TopLeft(underboard))
     {
         possiblemoves.emplace_back(std::make_pair(startposy-1, startposx-1));
@@ -229,5 +230,8 @@ std::vector<std::pair<int,int>> Chess::Pawn::getpossiblemoves() {
 std::vector<std::pair<int, int>> Chess::Pawn::getpossiblemovescpy() {
     return possiblemovescpy;
 }
+
+
+
 
 
