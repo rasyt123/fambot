@@ -59,7 +59,8 @@ void Chess::Game::GameLoop() {
         }
         window.clear();
         SetupBoard(&window);
-        CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
+        CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx)
+        //2nd function right here
         window.display();
         if (mademove)
         {
@@ -76,19 +77,25 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
     Bishop bishopobj();
     Knight knightobj();
      */
+    bool moveexists = false;
+    bool random = false;
     int startposy = startpieceyx.first;
     int startposx = startpieceyx.second;
     int endposy = endpieceyx.first;
     int endposx = endpieceyx.second;
     std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
+    std::pair<float, float> cellkingcoords = boardcoords[kingcoords.first][kingcoords.second];
     King kingobj(kingcoords.second, kingcoords.first, endpieceyx.second, endpieceyx.first);
     if (kingobj.determinecheck(this->underboard, this->thepieces, colorturn))
     {
-        kingobj.generatemoves(this->underboard, this->thepieces, colorturn);
-        for (std::pair<int, int> item : kingobj.getpossiblemoves()) {
-            if (item.first == endposy and item.second == endposx) {
-                
-            }
+        //sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx
+        //returnendpos(sf::RenderWindow* window, std::string color)
+        window->clear();
+        SetupBoard(window);
+        CoverCellGreen(window, random, cellkingcoords, kingcoords, );
+        std::pair<int,int> result = returnendpos();
+        if (result.first == OUT_OF_BOUNDS and result.second == OUT_OF_BOUNDS)
+        {
 
         }
         return;
@@ -198,6 +205,7 @@ std::pair<int,int> Chess::Game::returnendpos(sf::RenderWindow* window, std::stri
             break;
         }
     }
+    return {OUT_OF_BOUNDS, OUT_OF_BOUNDS};
 }
 
 void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx) {
