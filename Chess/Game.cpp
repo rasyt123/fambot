@@ -93,26 +93,18 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
         window->clear();
         SetupBoard(window);
         kingobj.clearpossiblemoves();
-        kingobj.generatemoves(this->underboard, thepieces);
+        kingobj.generatemoves(this->underboard, this->thepieces, colorturn);
         float ycellkingcoord = cellkingcoords.second + 26;
         float xcellkingcoord = cellkingcoords.first + 26;
         CoverCellGreen(window, random, cellkingcoords, kingcoords, ycellkingcoord, xcellkingcoord);
         std::pair<int,int> result = returnendpos(window, colorturn);
-       
         if (result.first == OUT_OF_BOUNDS and result.second == OUT_OF_BOUNDS)
         {
             mademove = false;
-        } else {
-            if (underboard[result.first][result.second] == ' ')
-            {
-
-            } else
-            {
-
-            }
+        } else if (IsValidMove(result.first, result.second, kingobj.getpossiblemoves())) {
+            move(this->underboard, this->thepieces, colorturn, kingcoords.first, kingcoords.second, result.first, result.second);
             mademove = true;
         }
-
         return;
     }
     if (kingobj.determinecheckmate(this->underboard, this->thepieces, colorturn)) {
@@ -158,13 +150,23 @@ void Chess::Game::move(std::vector<std::vector<char>>& underboard, std::vector<s
     underboard[startposy][startposx] = ' ';
     switch (underboard[endposy][endposx])
     {
-        
-
-
-
-
-
-        
+        case 'P':
+            currentplayer.addpoints(1);
+            break;
+        case 'R':
+            currentplayer.addpoints(5);
+            break;
+        case 'K':
+            currentplayer.addpoints(3);
+            break;
+        case 'B':
+            currentplayer.addpoints(3);
+            break;
+        case 'Q':
+            currentplayer.addpoints(9);
+            break;
+        default:
+            break;
     }
     underboard[endposy][endposx] = oldpiece;
     thepieces[endposy][endposx] = thepieces[startposy][startposx];
@@ -172,10 +174,7 @@ void Chess::Game::move(std::vector<std::vector<char>>& underboard, std::vector<s
     thepieces[startposy][startposx].setblank(true);
     thepieces[startposy][startposx].setcolor("");
 
-
 }
-
-
 
 
 
@@ -459,4 +458,16 @@ void Chess::Game::set_cellheight(int height) {
 
 void Chess::Game::set_cellwidth(int width) {
     cell_width = width;
+}
+
+
+bool Chess::Game::IsValidMove(int row, int col, std::vector<std::pair<int, int>>& possiblemoves) {
+    for (std::pair<int, int> coordpair : possiblemoves)
+    {
+        if (row == coordpair.first and col == coordpair.second)
+        {
+            return true;
+        }
+    }
+    return false;
 }
