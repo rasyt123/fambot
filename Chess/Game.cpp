@@ -111,19 +111,12 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
     }
     switch (underboard[startposy][startposx])
     {
-        /*
-         Pawn(int x, int y, int endposxx, int endposyy) {
-            startposx = x;
-            startposy = y;
-            endposx = endposxx;
-            endposy = endposyy;
-        }
-         */
         case 'P':
             Pawn pawnobj(startposx, startposy, endposx, endposy);
             if (pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn))
             {
-                
+                //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, Pieces prevpiece, int prevy, int prevx
+                pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, );
                 mademove = true;
             }
             break;
