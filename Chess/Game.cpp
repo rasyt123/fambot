@@ -59,8 +59,8 @@ void Chess::Game::GameLoop() {
         }
         window.clear();
         SetupBoard(&window);
-        CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx)
-        //2nd function right here
+        CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
+        //2nd function right here returnendpos
         window.display();
         if (mademove)
         {
@@ -88,8 +88,6 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
     King kingobj(kingcoords.second, kingcoords.first, endpieceyx.second, endpieceyx.first);
     if (kingobj.determinecheck(this->underboard, this->thepieces, colorturn))
     {
-        //sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx
-        //returnendpos(sf::RenderWindow* window, std::string color)
         window->clear();
         SetupBoard(window);
         kingobj.clearpossiblemoves();
@@ -113,17 +111,39 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
     }
     switch (underboard[startposy][startposx])
     {
-
-
-
+        /*
+         Pawn(int x, int y, int endposxx, int endposyy) {
+            startposx = x;
+            startposy = y;
+            endposx = endposxx;
+            endposy = endposyy;
+        }
+         */
+        case 'P':
+            Pawn pawnobj(startposx, startposy, endposx, endposy);
+            if (pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn))
+            {
+                
+                mademove = true;
+            }
+            break;
+        case 'R':
+            mademove = true;
+            break;
+        case 'K':
+            mademove = true;
+            break;
+        case 'B':
+            mademove = true;
+            break;
+        case 'Q':
+            mademove = true;
+            break;
+        default:
+            break;
 
 
     }
-
-
-
-
-
 }
 
 
