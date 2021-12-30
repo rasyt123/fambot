@@ -9,6 +9,11 @@
 #include <string>
 #include <memory>
 #include "Pawn.h"
+#include "King.h"
+#include "Bishop.h"
+#include "Rook.h"
+#include "Queen.h"
+#include "Knight.h"
 #include "Pieces.h"
 #include <SFML/Graphics.hpp>
 #define BOARD_ROWS 8
@@ -22,9 +27,10 @@ namespace Chess {
         void CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx);
         void CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx);
         void HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool& promotionmove);
-        void MakeMovePlayer(std::string turn, int posy, int posx, bool& mademove);
+        void MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate);
         bool isTurn(int counter);
         void Capture(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, int startposy, int startposx, int endposy, int endposx);
+        void movetoempty();
         void GameLoop();
         void addcoords();
         void set_cellwidth(int width);
@@ -34,7 +40,8 @@ namespace Chess {
         bool isEven(int number);
         void printPiece(float spritex, float spritey, int ypos, int xpos, sf::RenderWindow* window, std::string color);
         void updatepiece(int endposrow, int endposcol, char piece);
-
+        std::pair<int,int> returnendpos(sf::RenderWindow* window, std::string color);
+        std::pair<int, int> findking(std::string color, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
 
     private:
         std::string currentturn = "white";
