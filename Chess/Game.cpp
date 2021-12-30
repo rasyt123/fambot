@@ -60,9 +60,6 @@ void Chess::Game::GameLoop() {
         window.clear();
         SetupBoard(&window);
         CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
-
-
-
         window.display();
         if (mademove)
         {
@@ -71,28 +68,38 @@ void Chess::Game::GameLoop() {
     }
 }
 
-void Chess::Game::MakeMovePlayer(std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate) {
+void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate) {
+    /*
     Pawn pawnobj();
     Rook rookobj();
     Queen queenobj();
     Bishop bishopobj();
     Knight knightobj();
+     */
     int startposy = startpieceyx.first;
     int startposx = startpieceyx.second;
     int endposy = endpieceyx.first;
     int endposx = endpieceyx.second;
     std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
-    King kingobj(startpieceyx.second, startpieceyx.first, endpieceyx.second, endpieceyx.first);
+    King kingobj(kingcoords.second, kingcoords.first, endpieceyx.second, endpieceyx.first);
     if (kingobj.determinecheck(this->underboard, this->thepieces, colorturn))
     {
-        
+        kingobj.generatemoves(this->underboard, this->thepieces, colorturn);
+        for (std::pair<int, int> item : kingobj.getpossiblemoves()) {
+            if (item.first == endposy and item.second == endposx) {
+                
+            }
+
+        }
+        return;
     }
     if (kingobj.determinecheckmate(this->underboard, this->thepieces, colorturn)) {
-
-
+        checkmate = true;
+        return;
     }
     switch (underboard[startposy][startposx])
     {
+
 
 
 
