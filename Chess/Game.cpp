@@ -92,12 +92,27 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
         //returnendpos(sf::RenderWindow* window, std::string color)
         window->clear();
         SetupBoard(window);
-        CoverCellGreen(window, random, cellkingcoords, kingcoords, );
-        std::pair<int,int> result = returnendpos();
+        kingobj.clearpossiblemoves();
+        kingobj.generatemoves(this->underboard, thepieces);
+        float ycellkingcoord = cellkingcoords.second + 26;
+        float xcellkingcoord = cellkingcoords.first + 26;
+        CoverCellGreen(window, random, cellkingcoords, kingcoords, ycellkingcoord, xcellkingcoord);
+        std::pair<int,int> result = returnendpos(window, colorturn);
+       
         if (result.first == OUT_OF_BOUNDS and result.second == OUT_OF_BOUNDS)
         {
+            mademove = false;
+        } else {
+            if (underboard[result.first][result.second] == ' ')
+            {
 
+            } else
+            {
+
+            }
+            mademove = true;
         }
+
         return;
     }
     if (kingobj.determinecheckmate(this->underboard, this->thepieces, colorturn)) {
@@ -138,15 +153,30 @@ std::pair<int, int> Chess::Game::findking(std::string color, std::vector<std::ve
 
 
 
-void Chess::Game::Capture(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, int startposy, int startposx, int endposy, int endposx) {
+void Chess::Game::move(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, int startposy, int startposx, int endposy, int endposx, Player& currentplayer) {
     char oldpiece = underboard[startposy][startposx];
     underboard[startposy][startposx] = ' ';
+    switch (underboard[endposy][endposx])
+    {
+        
+
+
+
+
+
+        
+    }
     underboard[endposy][endposx] = oldpiece;
     thepieces[endposy][endposx] = thepieces[startposy][startposx];
     thepieces[startposy][startposx].settype(' ');
     thepieces[startposy][startposx].setblank(true);
     thepieces[startposy][startposx].setcolor("");
+
+
 }
+
+
+
 
 
 void Chess::Game::HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool& promotionmove) {
