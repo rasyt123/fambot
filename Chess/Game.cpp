@@ -54,9 +54,11 @@ void Chess::Game::GameLoop() {
         if (isEven(currturncount))
         {
             currentturn = "white";
+            currplayer = Player1;
         } else
         {
             currentturn = "black";
+            currplayer = Player2;
         }
         sf::Event event;
         while (window.pollEvent(event))
@@ -70,9 +72,17 @@ void Chess::Game::GameLoop() {
         window.clear();
         SetupBoard(&window);
         CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
+        
         endpieceyx = returnendpos(&window, currentturn);
+        if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second)) {
 
-        if (endpieceyx.first != OUT_OF_BOUNDS and endpieceyx.second != OUT_OF_BOUNDS)
+            break;
+        }
+        else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
+        {
+            //don't have to put anything in here
+        }
+        else if (endpieceyx.first != OUT_OF_BOUNDS and endpieceyx.second != OUT_OF_BOUNDS)
         {
             movemade = MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, mademove, checkmate, prevy, prevx, currplayer);
         }
@@ -80,6 +90,7 @@ void Chess::Game::GameLoop() {
         if (mademove == true)
         {
             currturncount += 1;
+            mademove = false;
         }
         if (movemade == true)
         {
