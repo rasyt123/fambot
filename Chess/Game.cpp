@@ -61,6 +61,7 @@ void Chess::Game::GameLoop() {
         SetupBoard(&window);
         CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
         //2nd function right here returnendpos
+        //make move player goes here
         window.display();
         if (mademove)
         {
@@ -70,7 +71,7 @@ void Chess::Game::GameLoop() {
 }
 
 void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer) {
-
+    bool passant = false;
     bool moveexists = false;
     bool random = false;
     int startposy = startpieceyx.first;
@@ -114,8 +115,12 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
             if (IsValidMove(endposy, endposx, pawnobj.getpossiblemoves()))
             {
-                pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, thepieces[prevy][prevx], prevy, prevx);
-                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
+                pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, thepieces[prevy][prevx], prevy, prevx, passant);
+                if (passant) {
+                    pawnobj.EnactPassant(this->underboard, this->thepieces);
+                } else {
+                    move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
+                }
                 mademove = true;
             }
             break;
@@ -160,7 +165,7 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
                 mademove = true;
             } else if (kingobj.performCastle(this->underboard, this->thepieces, colorturn))
             {
-
+                mademove = true;
             }
         default:
             break;
@@ -215,7 +220,6 @@ void Chess::Game::move(std::vector<std::vector<char>>& underboard, std::vector<s
     thepieces[startposy][startposx].settype(' ');
     thepieces[startposy][startposx].setblank(true);
     thepieces[startposy][startposx].setcolor("");
-
 }
 
 
