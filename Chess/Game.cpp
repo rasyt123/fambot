@@ -94,7 +94,7 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
         float ycellkingcoord = cellkingcoords.second + 26;
         float xcellkingcoord = cellkingcoords.first + 26;
         CoverCellGreen(window, random, cellkingcoords, kingcoords, ycellkingcoord, xcellkingcoord);
-        std::pair<int,int> result = returnendpos(window, colorturn, );
+        std::pair<int,int> result = returnendpos(window, colorturn);
         if (result.first == OUT_OF_BOUNDS and result.second == OUT_OF_BOUNDS)
         {
             mademove = false;
@@ -131,7 +131,8 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             knightobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
             if (IsValidMove(endposy, endposx, knightobj.getpossiblemoves()))
             {
-                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
+                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx,
+                     currentplayer);
                 mademove = true;
             }
             break;
@@ -145,11 +146,22 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             break;
         case 'Q':
             queenobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
-            if (IsValidMove(endposy, endposx, queenobj.getpossiblemoves())) {
+            if (IsValidMove(endposy, endposx, queenobj.getpossiblemoves()))
+            {
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 mademove = true;
             }
             break;
+        case 'A':
+            kingobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
+            if (IsValidMove(endposy, endposx, kingobj.getpossiblemoves()))
+            {
+                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
+                mademove = true;
+            } else if (kingobj.performCastle(this->underboard, this->thepieces, colorturn))
+            {
+
+            }
         default:
             break;
     }
