@@ -104,9 +104,12 @@ void Chess::Game::GameLoop() {
         } else {
             //HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool& promotionmove)
             HighlightPromotion(&window, pawn, endpieceyx.first, endpieceyx.second, currentturn, promotionmove);
-
+            if (promotionmove)
+            {
+                promotionmove = false;
+                promotion = false;
+            }
         }
-
         //Selecting a piece and not making a move yet - done
         //selecting pieces while already in check - done
         //when pawn is promoted need to highlight promoted pieces and
