@@ -300,6 +300,8 @@ void Chess::Game::CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pai
 }
 
 void Chess::Game::CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx) {
+    sf::Color green(118, 150, 86);
+    sf::Color palewhite(238, 238, 210);
     if (isPiece(clickposy, clickposx, piececoords, pieceyx) and piececoords.first != -9000 and piececoords.second != -9000
     and thepieces[pieceyx.first][pieceyx.second].getcolor() == currentturn)
     {
@@ -307,12 +309,12 @@ void Chess::Game::CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::p
         boardcell.setPosition(piececoords.first, piececoords.second);
         if ((isEven(pieceyx.first) and isEven(pieceyx.second)) or (!isEven(pieceyx.first) and !isEven(pieceyx.second)))
         {
-            boardcell.setFillColor(sf::Color::White);
+            boardcell.setFillColor(palewhite);
             boardcell.setOutlineColor(sf::Color::Green);
             boardcell.setOutlineThickness(-15);
         } else
         {
-            boardcell.setFillColor(sf::Color::Black);
+            boardcell.setFillColor(green);
             boardcell.setOutlineColor(sf::Color::Green);
             boardcell.setOutlineThickness(-15);
         }
@@ -433,6 +435,8 @@ void Chess::Game::SetupBoard(sf::RenderWindow* window) {
     std::string black = "b";
     std::string white = "w";
     std::string color;
+    sf::Color green(118, 150, 86);
+    sf::Color palewhite(238, 238, 210);
     for (int y = 0; y < BOARD_ROWS; y++)
     {
         for (int x = 0; x < BOARD_COLS; x++)
@@ -455,19 +459,19 @@ void Chess::Game::SetupBoard(sf::RenderWindow* window) {
             {
                 if (isEven(x))
                 {
-                    boardcell->setFillColor(sf::Color::White);
+                    boardcell->setFillColor(palewhite);
                 } else
                 {
-                    boardcell->setFillColor(sf::Color::Black);
+                    boardcell->setFillColor(green);
                 }
 
             } else
             {
                if (isEven(x))
                {
-                   boardcell->setFillColor(sf::Color::Black);
+                   boardcell->setFillColor(green);
                } else {
-                   boardcell->setFillColor(sf::Color::White);
+                   boardcell->setFillColor(palewhite);
                }
             }
             boardcell->setPosition(cellxpos, cellypos);
@@ -503,7 +507,7 @@ void Chess::Game::set_cellwidth(int width) {
 }
 
 
-bool Chess::Game::IsValidMove(int row, int col, std::vector<std::pair<int, int>>& possiblemoves) {
+bool Chess::Game::IsValidMove(int row, int col, std::vector<std::pair<int, int>> possiblemoves) {
     for (std::pair<int, int> coordpair : possiblemoves)
     {
         if (row == coordpair.first and col == coordpair.second)
