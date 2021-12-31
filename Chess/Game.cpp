@@ -69,20 +69,19 @@ void Chess::Game::GameLoop() {
     }
 }
 
-void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx) {
-    /*
-    Pawn pawnobj();
-    Rook rookobj();
-    Queen queenobj();
-    Bishop bishopobj();
-    Knight knightobj();
-     */
+void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer) {
+
     bool moveexists = false;
     bool random = false;
     int startposy = startpieceyx.first;
     int startposx = startpieceyx.second;
     int endposy = endpieceyx.first;
     int endposx = endpieceyx.second;
+    Pawn pawnobj(startposx, startposy, endposx, endposy);
+    Rook rookobj(startposx, startposy, endposx, endposy);
+    Knight knightobj(startposx, startposy, endposx, endposy);
+    Bishop bishopobj(startposx, startposy, endposx, endposy);
+    Queen queenobj(startposx, startposy, endposx, endposy);
     std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
     std::pair<float, float> cellkingcoords = boardcoords[kingcoords.first][kingcoords.second];
     King kingobj(kingcoords.second, kingcoords.first, endpieceyx.second, endpieceyx.first);
@@ -95,7 +94,7 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
         float ycellkingcoord = cellkingcoords.second + 26;
         float xcellkingcoord = cellkingcoords.first + 26;
         CoverCellGreen(window, random, cellkingcoords, kingcoords, ycellkingcoord, xcellkingcoord);
-        std::pair<int,int> result = returnendpos(window, colorturn);
+        std::pair<int,int> result = returnendpos(window, colorturn, );
         if (result.first == OUT_OF_BOUNDS and result.second == OUT_OF_BOUNDS)
         {
             mademove = false;
@@ -112,32 +111,49 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
     switch (underboard[startposy][startposx])
     {
         case 'P':
-            Pawn pawnobj(startposx, startposy, endposx, endposy);
-            if (pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn))
+            pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
+            if (IsValidMove(endposy, endposx, pawnobj.getpossiblemoves()))
             {
-                //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, Pieces prevpiece, int prevy, int prevx
                 pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, thepieces[prevy][prevx], prevy, prevx);
-                move(this->underboard, this->thepieces, colorturn, startposy)
+                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 mademove = true;
             }
             break;
         case 'R':
-            mademove = true;
+            rookobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
+            if (IsValidMove(endposy, endposx, rookobj.getpossiblemoves()))
+            {
+                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
+                mademove = true;
+            }
             break;
         case 'K':
-            mademove = true;
+            knightobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
+            if (IsValidMove(endposy, endposx, knightobj.getpossiblemoves()))
+            {
+                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
+                mademove = true;
+            }
             break;
         case 'B':
-            mademove = true;
+            bishopobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
+            if (IsValidMove(endposy, endposx, bishopobj.getpossiblemoves()))
+            {
+                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
+                mademove = true;
+            }
             break;
         case 'Q':
-            mademove = true;
+            queenobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
+            if (IsValidMove(endposy, endposx, queenobj.getpossiblemoves())) {
+                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
+                mademove = true;
+            }
             break;
         default:
             break;
-
-
     }
+    return;
 }
 
 
