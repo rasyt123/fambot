@@ -29,6 +29,7 @@ void Chess::Game::GameLoop() {
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
     bool isgreen = false;
     bool mademove = false;
+    bool promotion = false;
     std::pair<float, float> startpiececoords;
     std::pair<int, int> startpieceyx;
     startpieceyx.first = OUT_OF_BOUNDS;
@@ -39,6 +40,8 @@ void Chess::Game::GameLoop() {
     addcoords();
     float clickposy = OUT_OF_BOUNDS;
     float clickposx = OUT_OF_BOUNDS;
+    int prevy = OUT_OF_BOUNDS;
+    int prevx = OUT_OF_BOUNDS;
     while (window.isOpen())
     {
         if (isEven(currturncount))
@@ -60,8 +63,8 @@ void Chess::Game::GameLoop() {
         window.clear();
         SetupBoard(&window);
         CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
-        //2nd function right here returnendpos
-        //make move player goes here
+        std::pair<int, int> endpieceyx = returnendpos(&window, currentturn);
+        MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, )
         window.display();
         if (mademove)
         {
@@ -70,7 +73,7 @@ void Chess::Game::GameLoop() {
     }
 }
 
-void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer) {
+bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer) {
     bool passant = false;
     bool moveexists = false;
     bool random = false;
@@ -100,28 +103,31 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
         {
             mademove = false;
         } else if (IsValidMove(result.first, result.second, kingobj.getpossiblemoves())) {
-            move(this->underboard, this->thepieces, colorturn, kingcoords.first, kingcoords.second, result.first, result.second);
+            move(this->underboard, this->thepieces, colorturn, kingcoords.first, kingcoords.second, result.first, result.second, currentplayer);
             mademove = true;
+            return true;
         }
-        return;
+        return false;
     }
     if (kingobj.determinecheckmate(this->underboard, this->thepieces, colorturn)) {
         checkmate = true;
-        return;
     }
     switch (underboard[startposy][startposx])
     {
         case 'P':
             pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
+            pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, thepieces[prevy][prevx], prevy, prevx, passant);
+            if (passant) {
+                pawnobj.EnactPassant(this->underboard, this->thepieces);
+                break;
+            }
             if (IsValidMove(endposy, endposx, pawnobj.getpossiblemoves()))
             {
-                pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, thepieces[prevy][prevx], prevy, prevx, passant);
-                if (passant) {
-                    pawnobj.EnactPassant(this->underboard, this->thepieces);
-                } else {
-                    move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
-                }
+                //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoord
+                pawnobj.ListPromotionOptions(window, this->underboard, this->thepieces, colorturn, this->boardcoords);
+                move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 mademove = true;
+                return true;
             }
             break;
         case 'R':
@@ -130,6 +136,7 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             {
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 mademove = true;
+                return true;
             }
             break;
         case 'K':
@@ -139,6 +146,7 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx,
                      currentplayer);
                 mademove = true;
+                return true;
             }
             break;
         case 'B':
@@ -147,6 +155,7 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             {
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 mademove = true;
+                return true;
             }
             break;
         case 'Q':
@@ -155,6 +164,7 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             {
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 mademove = true;
+                return true;
             }
             break;
         case 'A':
@@ -163,14 +173,16 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             {
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 mademove = true;
+                return true;
             } else if (kingobj.performCastle(this->underboard, this->thepieces, colorturn))
             {
                 mademove = true;
+                return true;
             }
         default:
             break;
     }
-    return;
+    return false;
 }
 
 
