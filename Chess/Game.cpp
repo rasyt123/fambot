@@ -42,6 +42,7 @@ void Chess::Game::GameLoop() {
     float clickposx = OUT_OF_BOUNDS;
     int prevy = OUT_OF_BOUNDS;
     int prevx = OUT_OF_BOUNDS;
+    Pieces prevpiece;
     while (window.isOpen())
     {
         if (isEven(currturncount))
@@ -64,11 +65,18 @@ void Chess::Game::GameLoop() {
         SetupBoard(&window);
         CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
         std::pair<int, int> endpieceyx = returnendpos(&window, currentturn);
-        MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, )
+        
+        bool movemade = MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, )
         window.display();
-        if (mademove)
+        if (mademove == true)
         {
             currturncount += 1;
+        }
+        if (movemade == true)
+        {
+            prevy = endpieceyx.first;
+            prevx = endpieceyx.second;
+            prevpiece = thepieces[prevy][prevx];
         }
     }
 }
