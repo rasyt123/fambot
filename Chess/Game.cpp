@@ -30,6 +30,7 @@ void Chess::Game::GameLoop() {
     bool isgreen = false;
     bool mademove = false;
     bool promotion = false;
+    bool checkmate = false;
     std::pair<float, float> startpiececoords;
     std::pair<int, int> startpieceyx;
     startpieceyx.first = OUT_OF_BOUNDS;
@@ -43,6 +44,11 @@ void Chess::Game::GameLoop() {
     int prevy = OUT_OF_BOUNDS;
     int prevx = OUT_OF_BOUNDS;
     Pieces prevpiece;
+    std::pair<int, int> endpieceyx;
+    Player Player1; //white
+    Player Player2; //black
+    Player currplayer;
+    bool movemade;
     while (window.isOpen())
     {
         if (isEven(currturncount))
@@ -64,9 +70,11 @@ void Chess::Game::GameLoop() {
         window.clear();
         SetupBoard(&window);
         CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
-        std::pair<int, int> endpieceyx = returnendpos(&window, currentturn);
-        
-        bool movemade = MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, )
+        endpieceyx = returnendpos(&window, currentturn);
+        if (endpieceyx.first != OUT_OF_BOUNDS and endpieceyx.second != OUT_OF_BOUNDS)
+        {
+            movemade = MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, mademove, checkmate, prevy, prevx, currplayer);
+        }
         window.display();
         if (mademove == true)
         {
@@ -127,6 +135,7 @@ bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, thepieces[prevy][prevx], prevy, prevx, passant);
             if (passant) {
                 pawnobj.EnactPassant(this->underboard, this->thepieces);
+                mademove = true;
                 break;
             }
             if (IsValidMove(endposy, endposx, pawnobj.getpossiblemoves()))
