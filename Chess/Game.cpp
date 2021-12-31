@@ -69,7 +69,7 @@ void Chess::Game::GameLoop() {
     }
 }
 
-void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate) {
+void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx) {
     /*
     Pawn pawnobj();
     Rook rookobj();
@@ -116,7 +116,8 @@ void Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             if (pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn))
             {
                 //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, Pieces prevpiece, int prevy, int prevx
-                pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, );
+                pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, thepieces[prevy][prevx], prevy, prevx);
+                move(this->underboard, this->thepieces, colorturn, startposy)
                 mademove = true;
             }
             break;
