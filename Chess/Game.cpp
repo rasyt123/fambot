@@ -49,6 +49,8 @@ void Chess::Game::GameLoop() {
     Player Player2; //black
     Player currplayer;
     bool movemade;
+    Pawn pawn;
+    bool promotionmove = false;
     while (window.isOpen())
     {
         if (isEven(currturncount))
@@ -71,37 +73,45 @@ void Chess::Game::GameLoop() {
         }
         window.clear();
         SetupBoard(&window);
-        CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
-        
-        endpieceyx = returnendpos(&window, currentturn);
-        if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second)) {
+        if (!promotion) {
+            CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
+            endpieceyx = returnendpos(&window, currentturn);
 
-            break;
+            if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second)) {
+
+                break;
+            }
+            else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
+            {
+                //don't have to put anything in here
+            }
+            else if (endpieceyx.first != OUT_OF_BOUNDS and endpieceyx.second != OUT_OF_BOUNDS)
+            {
+                movemade = MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, mademove, checkmate, prevy, prevx, currplayer, promotion);
+            }
+            window.display();
+            if (mademove == true)
+            {
+                currturncount += 1;
+                mademove = false;
+            }
+            if (movemade == true)
+            {
+                prevy = endpieceyx.first;
+                prevx = endpieceyx.second;
+                prevpiece = thepieces[prevy][prevx];
+            }
+        } else {
+            //HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool& promotionmove)
+            HighlightPromotion(&window, pawn, endpieceyx.first, endpieceyx.second, currentturn, promotionmove);
+
         }
-        else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
-        {
-            //don't have to put anything in here
-        }
-        else if (endpieceyx.first != OUT_OF_BOUNDS and endpieceyx.second != OUT_OF_BOUNDS)
-        {
-            movemade = MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, mademove, checkmate, prevy, prevx, currplayer);
-        }
-        window.display();
-        if (mademove == true)
-        {
-            currturncount += 1;
-            mademove = false;
-        }
-        if (movemade == true)
-        {
-            prevy = endpieceyx.first;
-            prevx = endpieceyx.second;
-            prevpiece = thepieces[prevy][prevx];
-        }
-        //Selecting a piece and not making a move yet
+
+        //Selecting a piece and not making a move yet - done
         //selecting pieces while already in check - done
         //when pawn is promoted need to highlight promoted pieces and
     }
+    std::cout << "End Game!" << std::endl;
 }
 
 bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colorturn, bool& mademove, int endposy, int endposx, Player currentplayer)
@@ -145,7 +155,7 @@ bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
 }
 
 
-bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer) {
+bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer, bool& promotion) {
     bool passant = false;
     bool moveexists = false;
     bool random = false;
@@ -174,7 +184,7 @@ bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             if (IsValidMove(endposy, endposx, pawnobj.getpossiblemoves()))
             {
                 //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoord
-                pawnobj.ListPromotionOptions(window, this->underboard, this->thepieces, colorturn, this->boardcoords);
+                pawnobj.ListPromotionOptions(window, this->underboard, this->thepieces, colorturn, this->boardcoords, promotion);
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 mademove = true;
                 return true;
