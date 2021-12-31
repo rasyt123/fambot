@@ -71,6 +71,7 @@ void Chess::Game::GameLoop() {
         SetupBoard(&window);
         CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
         endpieceyx = returnendpos(&window, currentturn);
+
         if (endpieceyx.first != OUT_OF_BOUNDS and endpieceyx.second != OUT_OF_BOUNDS)
         {
             movemade = MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, mademove, checkmate, prevy, prevx, currplayer);
@@ -86,25 +87,18 @@ void Chess::Game::GameLoop() {
             prevx = endpieceyx.second;
             prevpiece = thepieces[prevy][prevx];
         }
+        //Selecting a piece and not making a move yet
+        //selecting pieces while already in check - done
+        //when pawn is promoted need to highlight promoted pieces and
     }
 }
 
-bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer) {
-    bool passant = false;
-    bool moveexists = false;
+bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colorturn, bool& mademove, int endposy, int endposx, Player currentplayer)
+{
     bool random = false;
-    int startposy = startpieceyx.first;
-    int startposx = startpieceyx.second;
-    int endposy = endpieceyx.first;
-    int endposx = endpieceyx.second;
-    Pawn pawnobj(startposx, startposy, endposx, endposy);
-    Rook rookobj(startposx, startposy, endposx, endposy);
-    Knight knightobj(startposx, startposy, endposx, endposy);
-    Bishop bishopobj(startposx, startposy, endposx, endposy);
-    Queen queenobj(startposx, startposy, endposx, endposy);
     std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
     std::pair<float, float> cellkingcoords = boardcoords[kingcoords.first][kingcoords.second];
-    King kingobj(kingcoords.second, kingcoords.first, endpieceyx.second, endpieceyx.first);
+    King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
     if (kingobj.determinecheck(this->underboard, this->thepieces, colorturn))
     {
         window->clear();
@@ -125,9 +119,37 @@ bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
         }
         return false;
     }
+}
+
+
+
+bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
+    std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
+    std::pair<float, float> cellkingcoords = boardcoords[kingcoords.first][kingcoords.second];
+    King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
     if (kingobj.determinecheckmate(this->underboard, this->thepieces, colorturn)) {
-        checkmate = true;
+        return true;
     }
+    return false;
+}
+
+
+bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer) {
+    bool passant = false;
+    bool moveexists = false;
+    bool random = false;
+    int startposy = startpieceyx.first;
+    int startposx = startpieceyx.second;
+    int endposy = endpieceyx.first;
+    int endposx = endpieceyx.second;
+    Pawn pawnobj(startposx, startposy, endposx, endposy);
+    Rook rookobj(startposx, startposy, endposx, endposy);
+    Knight knightobj(startposx, startposy, endposx, endposy);
+    Bishop bishopobj(startposx, startposy, endposx, endposy);
+    Queen queenobj(startposx, startposy, endposx, endposy);
+    std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
+    std::pair<float, float> cellkingcoords = boardcoords[kingcoords.first][kingcoords.second];
+    King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
     switch (underboard[startposy][startposx])
     {
         case 'P':
