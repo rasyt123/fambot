@@ -28,7 +28,7 @@ namespace Chess {
         void CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx);
         void CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx);
         void HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool& promotionmove);
-        bool MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer);
+        bool MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, bool& mademove, bool& checkmate, int prevy, int prevx, Player& currentplayer, bool& promotion);
         bool isTurn(int counter);
         bool currentlyincheck(sf::RenderWindow *window, std::string colorturn, bool& mademove, int endposy, int endposx, Player currentplayer);
         bool checkmate(std::string colorturn, int endposy, int endposx);
