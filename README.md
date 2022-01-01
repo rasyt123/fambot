@@ -1,6 +1,6 @@
 <h1> Chess with AI <h2>
   
-  
+CURRENTLY UNFINISHED  
   
   
 <h2> Demo <h2>
