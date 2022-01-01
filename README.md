@@ -1,3 +1,3 @@
-**Chess with AI**
+<h1> **Chess with AI** <h2>
 
 
