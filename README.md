@@ -1,3 +1,3 @@
-**#Chess with AI**
+**Chess with AI**
 
 
