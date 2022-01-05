@@ -19,7 +19,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-Chess With AI
+### Chess With AI
 
 2 player chess game built using the SFML (Simple and Fast Multimedia Layer) Library. The AI uses the minimax algorithm for move generation and move lookups. I included Alpha Beta Pruning to optimize the AI as it trims the search space of minimax up until a certain depth.
 
