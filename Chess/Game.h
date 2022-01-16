@@ -28,7 +28,7 @@ namespace Chess {
         void CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx);
         void CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx);
         void HighlightPromotion(sf::RenderWindow *window, Pawn& pawnobj, int endposy, int endposx, std::string turn, bool& promotionmove);
-        bool MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, std::vector<std::vector<char>> prevboardstate, std::vector<std::vector<Pieces>> prevboardpieces, Player& currentplayer, bool& promotion);
+        bool MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, Player& currentplayer, bool& promotion);
         bool isTurn(int counter);
         bool currentlyincheck(sf::RenderWindow *window, std::string colorturn, bool& mademove, int endposy, int endposx, Player currentplayer);
         bool checkmate(std::string colorturn, int endposy, int endposx);
@@ -47,12 +47,18 @@ namespace Chess {
         bool samecoords(float curry, float currx, float comparisony, float comparisonx);
         std::pair<int,int> returnendpos(sf::RenderWindow* window, std::string color, int clickposy, int clickposx);
         std::pair<int, int> findking(std::string color, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
+        bool checkpawnmovetwice(int startposy, int startposx, int endposy, int endposx, std::string turn, Pawn pawnobj);
 
     private:
         std::string currentturn = "white";
         std::vector<std::vector<std::pair<float, float>>> boardcoords;
         std::vector<std::vector<char>> underboard;
         std::vector<std::vector<Pieces>> thepieces;
+        std::vector<std::vector<int>> pawnmovetwicewhite;
+        std::vector<std::string> pawninformationwhite;
+
+        std::vector<std::vector<int>> pawnmovetwiceblack;
+        std::vector<std::string> pawninformationblack;
 
 
         int cell_width;
