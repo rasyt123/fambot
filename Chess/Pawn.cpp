@@ -9,6 +9,7 @@ void Chess::Pawn::EnactPassant(std::vector<std::vector<char>>& underboard, std::
     Pieces tempcopy = thepieces[startposy][startposx];
     createblank(startposy, startposx, underboard, thepieces);
     underboard[endposy][endposx] = temp;
+    std::cout << "old contents: " << underboard[endposy][endposx] << std::endl;
     thepieces[endposy][endposx] = tempcopy;
 }
 
@@ -28,20 +29,18 @@ bool Chess::Pawn::passantcheck(std::vector<std::vector<int>>& pawnmoveslist, int
 
 //I will check if the start pos is a pawn before I call this function in game.cpp
 void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, bool& passant, std::vector<std::vector<int>>& pawnmovetwicewhite,
-                            std::vector<std::string>& pawninformationwhite, std::vector<std::vector<int>>& pawnmovetwiceblack, std::vector<std::string>& pawninformationblack) {
+                            std::vector<std::vector<int>>& pawnmovetwiceblack) {
     if (turn == "white")
     {
         //left capture en passant with turn as white
         if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1
         and underboard[endposy][endposx] == ' ')
         {
-
             if (InBounds(startposy, startposx - 1, underboard) and thepieces[startposy][startposx - 1].getcolor() == "black" and underboard[startposy][startposx - 1] == 'P'
             and InBounds(startposy - 1, startposx - 1, underboard) and underboard[startposy - 1][startposx - 1] == ' ' and
                     InBounds(startposy - 2, startposx - 1, underboard) and passantcheck(pawnmovetwiceblack, startposy, startposx - 1))
             {
-                    std::cout << "Passant true? " << std::endl;
-                    createblank(startposy, startposx - 1, underboard, thepieces);
+                   createblank(startposy, startposx - 1, underboard, thepieces);
                     EnactPassant(underboard, thepieces);
                     passant = true;
             }
@@ -254,7 +253,6 @@ std::vector<std::pair<int,int>> Chess::Pawn::getpossiblemoves() {
 std::vector<std::pair<int, int>> Chess::Pawn::getpossiblemovescpy() {
     return possiblemovescpy;
 }
-
 
 
 
