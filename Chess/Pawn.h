@@ -24,7 +24,8 @@ namespace Chess {
         void ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoords, bool& promotion);
         void drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords);
         bool IsValidMove(int rows, int cols);
-        void EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::pair<int, int> endpieceyx, std::vector<std::vector<char>> prevboardstate, std::vector<std::vector<Pieces>> prevboard, bool& passant);
+        void EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, bool& passant,  std::vector<std::vector<int>>& pawnmovetwicewhite,
+        std::vector<std::string>& pawninformationwhite, std::vector<std::vector<int>>& pawnmovetwiceblack, std::vector<std::string>& pawninformationblack);
         void GenerateWhite(std::vector<std::vector<char>>& underboard);
         void GenerateBlack(std::vector<std::vector<char>>& underboard);
         bool BottomLeft(std::vector<std::vector<char>>& underboard);
@@ -35,20 +36,21 @@ namespace Chess {
         bool TopRight(std::vector<std::vector<char>>& underboard);
         bool infronttop(std::vector<std::vector<char>>& underboard);
         bool infront2top(std::vector<std::vector<char>>& underboard);
+        bool passantcheck(std::vector<std::vector<int>>& pawnmoveslist, int pawnnexty, int pawnnextx);
 
         void createblank(int posy, int posx, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
         std::vector<std::pair<int,int>> getpossiblemoves();
         std::vector<std::pair<int, int>> getpossiblemovescpy();
 
-
-
-        private:
+    private:
             int startposx;
             int startposy;
             int endposx;
             int endposy;
-            std::vector<std::pair<int,int>> possiblemoves;
-            std::vector<std::pair<int,int>> possiblemovescpy;
+            int prevposy;
+            int prevposx;
+        std::vector<std::pair<int,int>> possiblemoves;
+        std::vector<std::pair<int,int>> possiblemovescpy;
 
     };
 }
