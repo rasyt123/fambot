@@ -269,11 +269,8 @@ bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
     {
         case 'P':
             pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
-            pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, passant);
-            if (passant) {
-                pawnobj.EnactPassant(this->underboard, this->thepieces);
-                break;
-            }
+            checkpawnmovetwice(startposy, startposx, endposy, endposx, colorturn, pawnobj);
+            pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, passant, pawnmovetwicewhite, pawnmovetwiceblack);
             if (IsValidMove(endposy, endposx, pawnobj.getpossiblemoves()))
             {
                 //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoord
@@ -662,5 +659,4 @@ bool Chess::Game::IsValidMove(int row, int col, std::vector<std::pair<int, int>>
         }
     }
     return false;
-}eturn false;
 }
