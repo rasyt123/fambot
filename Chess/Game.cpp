@@ -107,6 +107,8 @@ void Chess::Game::GameLoop() {
     //For en passant, I need to know that the pawn im about to en passant
     //previously moved two spaces from its original square
     //keep track of the previous board state
+    prevboardstate = underboard;
+    prevboard = thepieces;
     while (window.isOpen())
     {
         if (isEven(currturncount))
@@ -122,6 +124,7 @@ void Chess::Game::GameLoop() {
 
         window.clear();
         SetupBoard(&window);
+        //Create a vector of pairs that represents all the moves that have been currently played
         while (window.pollEvent(event))
         {
             switch (event.type) {
@@ -145,8 +148,6 @@ void Chess::Game::GameLoop() {
                             clickposy = mousePos1.y;
                             clickposx = mousePos1.x;
                             CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
-                            prevy = startpieceyx.first;
-                            prevx = startpieceyx.second;
                             if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second))
                             {
                                 break;
@@ -155,8 +156,6 @@ void Chess::Game::GameLoop() {
                             {
                                 startpieceyx = findking(currentturn, this->underboard, this->thepieces);
                             }
-                            prevboardstate = underboard;
-                            prevboard = thepieces;
                             tileselect = true;
                             move = true;
                         } else if (tileselect and move and !samecoords(startpiececoords.first, startpiececoords.second, getposy, getposx))
@@ -167,7 +166,7 @@ void Chess::Game::GameLoop() {
                             endpieceyx = returnendpos(&window, currentturn, clickposy1, clickposx1);
                             currentendposy = endpieceyx.first;
                             currentendposx = endpieceyx.second;
-                            if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx, prevboardstate, prevboard, currplayer, promotion))
+                            if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion))
                             {
                                 tileselect = false;
                                 move = false;
@@ -177,7 +176,6 @@ void Chess::Game::GameLoop() {
                     }
                     break;
             }
-
         }
 
         if (move)
@@ -221,8 +219,39 @@ bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
     return false;
 }
 
+bool Chess::Game::checkpawnmovetwice(int startposy, int startposx, int endposy, int endposx, std::string turn, Pawn pawnobj) {
+        if (turn == "white")
+        {
+            for (auto item : pawnobj.getpossiblemoves())
+            {
+                if (endposy == startposy - 2 and endposx == startposx and item.first == endposy and item.second == endposx)
+                {
+                   std::vector<int> savepos = {startposy, startposx, item.first, item.second};
+                   std::string currinfo = turn;
+                   pawnmovetwicewhite.push_back(savepos);
+                   pawninformationwhite.push_back(currinfo);
+                   return true;
+                }
+            }
+        } else if (turn == "black")
+        {
+            for (auto item : pawnobj.getpossiblemoves())
+            {
+                if (endposy == startposy + 2 and endposx == startposx and item.first == endposy and item.second == endposx)
+                {
+                    std::vector<int> savepos = {startposy, startposx, item.first, item.second};
+                    std::string currinfo = turn;
+                    pawnmovetwiceblack.push_back(savepos);
+                    pawninformationblack.push_back(currinfo);
+                    return true;
+                }
+            }
+        }
+        return false;
+}
 
-bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, std::vector<std::vector<char>> prevboardstate, std::vector<std::vector<Pieces>> prevboardpieces, Player& currentplayer, bool& promotion) {
+
+bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn, std::pair<int, int> startpieceyx, std::pair<int, int> endpieceyx, Player& currentplayer, bool& promotion) {
     bool passant = false;
     int startposy = startpieceyx.first;
     int startposx = startpieceyx.second;
@@ -240,7 +269,7 @@ bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
     {
         case 'P':
             pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
-            pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, prevboardstate, prevboardpieces, passant);
+            pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, passant);
             if (passant) {
                 pawnobj.EnactPassant(this->underboard, this->thepieces);
                 break;
@@ -249,6 +278,7 @@ bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             {
                 //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoord
                 pawnobj.ListPromotionOptions(window, this->underboard, this->thepieces, colorturn, this->boardcoords, promotion);
+
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 return true;
             }
@@ -632,4 +662,5 @@ bool Chess::Game::IsValidMove(int row, int col, std::vector<std::pair<int, int>>
         }
     }
     return false;
+}eturn false;
 }
