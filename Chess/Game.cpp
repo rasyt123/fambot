@@ -48,10 +48,6 @@ bool Chess::Game::isPiece2(float y, float x, std::pair<int, int>& boardcords) {
 
 
 bool Chess::Game::samecoords(float curry, float currx, float comparisony, float comparisonx) {
-    std::cout << "Current y " << curry  << std::endl;
-    std::cout << "Current x " << currx << std::endl;
-    std::cout << "comparison y " << comparisony  << std::endl;
-    std::cout << "comparison x " << comparisonx  << std::endl;
     for (int height = 0; height < BOARD_ROWS; height++)
     {
         for (int width = 0; width < BOARD_COLS; width++)
@@ -75,13 +71,14 @@ bool Chess::Game::samecoords(float curry, float currx, float comparisony, float 
 
 void Chess::Game::GameLoop() {
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
+    bool incheck = false;
     bool tileselect = false;
     bool isgreen = false;
     bool mademove = false;
     bool promotion = false;
     bool move = false;
-    std::vector<std::vector<char>> prevboardstate;
-    std::vector<std::vector<Pieces>> prevboard;
+    std::vector<std::vector<char>> copyboardstate;
+    std::vector<std::vector<Pieces>> copyboard;
     std::pair<float, float> startpiececoords;
     std::pair<int, int> startpieceyx;
     startpieceyx.first = OUT_OF_BOUNDS;
@@ -107,8 +104,6 @@ void Chess::Game::GameLoop() {
     //For en passant, I need to know that the pawn im about to en passant
     //previously moved two spaces from its original square
     //keep track of the previous board state
-    prevboardstate = underboard;
-    prevboard = thepieces;
     while (window.isOpen())
     {
         if (isEven(currturncount))
@@ -152,7 +147,7 @@ void Chess::Game::GameLoop() {
                             {
                                 break;
                             }
-                            else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
+                            else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer, incheck))
                             {
                                 startpieceyx = findking(currentturn, this->underboard, this->thepieces);
                             }
@@ -166,6 +161,21 @@ void Chess::Game::GameLoop() {
                             endpieceyx = returnendpos(&window, currentturn, clickposy1, clickposx1);
                             currentendposy = endpieceyx.first;
                             currentendposx = endpieceyx.second;
+                            if (incheck)
+                            {
+                                copyboardstate = underboard;
+                                copyboard = thepieces;
+                                MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion);
+                                if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer, incheck))
+                                {
+                                    underboard = copyboardstate;
+                                    thepieces = copyboard;
+                                    tileselect = true;
+                                } else 
+                                {
+                                    incheck = false;
+                                }
+                            }
                             if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion))
                             {
                                 tileselect = false;
@@ -187,9 +197,8 @@ void Chess::Game::GameLoop() {
     std::cout << "End Game!" << std::endl;
 }
 
-bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colorturn, bool& mademove, int endposy, int endposx, Player currentplayer)
+bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colorturn, bool& mademove, int endposy, int endposx, Player currentplayer, bool& incheck)
 {
-    bool random = false;
     std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
     std::pair<float, float> cellkingcoords = boardcoords[kingcoords.first][kingcoords.second];
     King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
@@ -199,9 +208,6 @@ bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colortu
         SetupBoard(window);
         kingobj.clearpossiblemoves();
         kingobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
-        float ycellkingcoord = cellkingcoords.second + 26;
-        float xcellkingcoord = cellkingcoords.first + 26;
-        CoverCellGreen(window, random, cellkingcoords, kingcoords, ycellkingcoord, xcellkingcoord);
         return true;
     }
     return false;
@@ -271,6 +277,10 @@ bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             pawnobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
             checkpawnmovetwice(startposy, startposx, endposy, endposx, colorturn, pawnobj);
             pawnobj.EnPassant(window, this->underboard, this->thepieces, colorturn, passant, pawnmovetwicewhite, pawnmovetwiceblack);
+            if (passant)
+            {
+                return true;
+            }
             if (IsValidMove(endposy, endposx, pawnobj.getpossiblemoves()))
             {
                 //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoord
