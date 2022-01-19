@@ -2,6 +2,10 @@
 // Created by rasyt on 12/20/2021.
 //
 
+//
+// Created by rasyt on 12/20/2021.
+//
+
 #include "Game.h"
 
 bool Chess::Game::isPiece(float y, float x, std::pair<float, float>& piececords, std::pair<int, int>& boardcords) {
@@ -170,11 +174,16 @@ void Chess::Game::GameLoop() {
                                 {
                                     underboard = copyboardstate;
                                     thepieces = copyboard;
-                                    tileselect = true;
-                                } else 
+                                    tileselect = false;
+                                } else
                                 {
+                                    std::cout << "Got out of check!" << std::endl;
+                                    move = false;
+                                    tileselect = false;
                                     incheck = false;
+                                    currturncount += 1;
                                 }
+                                break;
                             }
                             if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion))
                             {
@@ -187,7 +196,6 @@ void Chess::Game::GameLoop() {
                     break;
             }
         }
-
         if (move)
         {
             CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
@@ -200,17 +208,16 @@ void Chess::Game::GameLoop() {
 bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colorturn, bool& mademove, int endposy, int endposx, Player currentplayer, bool& incheck)
 {
     std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
-    std::pair<float, float> cellkingcoords = boardcoords[kingcoords.first][kingcoords.second];
     King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
     if (kingobj.determinecheck(this->underboard, this->thepieces, colorturn))
     {
-        window->clear();
-        SetupBoard(window);
-        kingobj.clearpossiblemoves();
-        kingobj.GenerateMoves(this->underboard, this->thepieces, colorturn);
+        incheck = true;
         return true;
+    } else
+    {
+        std::cout << "Check wrong!" << std::endl;
+        return false;
     }
-    return false;
 }
 
 
