@@ -15,7 +15,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-### Chess With AI
+### Chess With AI (In-Progress)
 
 ~2500 Lines of Code
 
