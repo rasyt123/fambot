@@ -49,6 +49,7 @@ namespace Chess {
         void clearpossiblemoves();
         bool cannotblock(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
         std::vector<int> grabstaredown(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
+        std::pair<int, int> findking(std::string color, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces)
 
 
 
