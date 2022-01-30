@@ -291,6 +291,20 @@ std::vector<std::pair<int,int>> Chess::King::getpossiblemoves() {
 }
 
 
+std::vector<std::pair<int,int>> Chess::King::grabopposingkingssquares(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int y, int x, std::string color) {
+    std::vector<std::pair<int, int>> dirs = {{startposy - 1, startposx - 1}, {startposy - 1, startposx}, {startposy - 1, startposx + 1}, {startposy, startposx - 1}, {startposy, startposx + 1},
+                                             {startposy + 1, startposx - 1}, {startposy + 1, startposx}, {startposy + 1, startposx + 1}};
+    std::vector<std::pair<int, int>> opponentdirs = {{y - 1, x - 1}, {y - 1, x}, {y - 1, x + 1}, {y, x - 1}, {y, x+ 1},
+                                                {y + 1, x- 1}, {y + 1, x}, {y + 1, x + 1}};
+    
+    
+
+
+
+
+}
+
+
 bool Chess::King::determinecheck(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     for (int y = 0; y < underboard.size(); y++)
     {
@@ -330,6 +344,7 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
     piecechecking = grabstaredown(underboard, thepieces, color);
     std::vector<std::pair<int, int>> dirs = {{startposy - 1, startposx - 1}, {startposy - 1, startposx}, {startposy - 1, startposx + 1}, {startposy, startposx - 1}, {startposy, startposx + 1},
                                              {startposy + 1, startposx - 1}, {startposy + 1, startposx}, {startposy + 1, startposx + 1}};
+
     for (auto item : dirs) {
         if (item.first >= 0 and item.first < underboard.size()
         and item.second >= 0 and item.second < underboard[0].size())
@@ -363,7 +378,8 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
 
 bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     GenerateMoves(underboard, thepieces, color);
-    if (determinecheck(underboard, thepieces, color) and possiblemoves.size() == 0)
+    if (determinecheck(underboard, thepieces, color) and possiblemoves.size() == 0
+    and cannotblock(underboard, thepieces, color))
     {
         return true;
     } else
@@ -376,3 +392,4 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 void Chess::King::clearpossiblemoves() {
     possiblemoves = {};
 }
+
