@@ -23,7 +23,7 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
     //8 different directions.
     //for each of the direction coordinates, check if an opposing colored piece is watching the direction
     //if it isn't, we can push the move into the vector.
-
+    std::string kingcolor = color;
     std::vector<std::pair<int, int>> dirs = {{startposy - 1, startposx - 1}, {startposy - 1, startposx}, {startposy - 1, startposx + 1}, {startposy, startposx - 1}, {startposy, startposx + 1},
                                              {startposy + 1, startposx - 1}, {startposy + 1, startposx}, {startposy + 1, startposx + 1}};
     for (int y = 0; y < underboard.size(); y++)
@@ -44,6 +44,39 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
             possiblemoves.emplace_back(item);
         }
     }
+    if (kingcolor == "white")
+    {
+        kingcolor = "black";
+    } else
+    {
+        kingcolor = "white";
+    }
+    std::pair<int, int> oppking = findking(kingcolor, underboard, thepieces);
+    std::vector<std::pair<int,int>> kingoverlapmoves = grabopposingkingssquares(underboard, thepieces, oppking.first, oppking.second, color);
+    for (auto items : kingoverlapmoves)
+    {
+        std::vector<std::pair<int,int>>::iterator it;
+        it = std::find(possiblemoves.begin(), possiblemoves.end(), items);
+        if (it != possiblemoves.end())
+        {
+            possiblemoves.erase(it);
+        }
+    }
+}
+
+std::pair<int, int> Chess::King::findking(std::string color, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    for (int height = 0; height < 8; height++)
+    {
+        for (int width = 0; width < 8; width++)
+        {
+            if (underboard[height][width] == 'A' and thepieces[height][width].getcolor() == color)
+            {
+                std::pair<int, int> kingcoords = std::make_pair(height,width);
+                return kingcoords;
+            }
+        }
+    }
+    return {};
 }
 
 
