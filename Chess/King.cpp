@@ -296,12 +296,16 @@ std::vector<std::pair<int,int>> Chess::King::grabopposingkingssquares(std::vecto
                                              {startposy + 1, startposx - 1}, {startposy + 1, startposx}, {startposy + 1, startposx + 1}};
     std::vector<std::pair<int, int>> opponentdirs = {{y - 1, x - 1}, {y - 1, x}, {y - 1, x + 1}, {y, x - 1}, {y, x+ 1},
                                                 {y + 1, x- 1}, {y + 1, x}, {y + 1, x + 1}};
-    
-    
-
-
-
-
+    std::vector<std::pair<int,int>> overlappingmoves;
+    for (auto ourking : dirs) {
+        for (auto opponentking: opponentdirs) {
+            if (InBounds(ourking.first, ourking.second, underboard) and
+                InBounds(opponentking.first, opponentking.second, underboard) and ourking == opponentking) {
+                overlappingmoves.push_back({ourking.first, ourking.second});
+            }
+        }
+    }
+    return overlappingmoves;
 }
 
 
