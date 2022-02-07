@@ -94,7 +94,13 @@ bool Chess::King::cangobblenearking(int rowpos, int colpos, std::vector<std::vec
             }
         }
     }
-
+    for (auto item : ourmoves) 
+    {
+        if (item.first == rowpos and item.second == colpos) 
+        {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -500,4 +506,5 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 void Chess::King::clearpossiblemoves() {
     possiblemoves = {};
 }
+
 
