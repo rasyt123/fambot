@@ -42,7 +42,8 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
     {
         //king cannot eat protected pieces
         if (InBounds(item.first, item.second, underboard) and std::find(interferemoves.begin(), interferemoves.end(), item) == interferemoves.end()
-        and underboard[item.first][item.second] == ' ')
+        and (underboard[item.first][item.second] == ' ' or (underboard[item.first][item.second] != ' ' and thepieces[item.first][item.second].getcolor() != color
+        and !IsPieceProtected(item.first, item.second) and !cangobblenearking(item.first, item.second, underboard, thepieces, color))))
         {
             possiblemoves.emplace_back(item);
         }
@@ -94,9 +95,9 @@ bool Chess::King::cangobblenearking(int rowpos, int colpos, std::vector<std::vec
             }
         }
     }
-    for (auto item : ourmoves) 
+    for (auto item : ourmoves)
     {
-        if (item.first == rowpos and item.second == colpos) 
+        if (item.first == rowpos and item.second == colpos)
         {
             return true;
         }
