@@ -106,8 +106,6 @@ bool Chess::King::cangobblenearking(int rowpos, int colpos, std::vector<std::vec
 }
 
 
-
-
 bool Chess::King::IsPieceProtected(int opppiecerowpos, int opppiececolpos) {
     for (auto protectedsq : totalprotectingsquares)
     {
@@ -482,11 +480,6 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
             }
         }
     }
-
-    //generate the
-
-
-
     return true;
 }
 
@@ -494,7 +487,7 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
 bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     GenerateMoves(underboard, thepieces, color);
     if (determinecheck(underboard, thepieces, color) and possiblemoves.size() == 0
-    and cannotblock(underboard, thepieces, color))
+    and cannotblock(underboard, thepieces, color) and !cangobblenearking(currstarekingy, currstarekingx, underboard, thepieces, color))
     {
         return true;
     } else
