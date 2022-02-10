@@ -577,34 +577,3 @@ void Chess::King::clearpossiblemoves() {
     possiblemoves = {};
 }
 
-
-/*
-   for (auto item : dirs)
-   {
-       if (item.first >= 0 and item.first < underboard.size()
-       and item.second >= 0 and item.second < underboard[0].size())
-       {
-           if (currstarekingy != -9000 and currstarekingx != -9000 and
-           currstarekingy == item.first and currstarekingx == item.second)
-           {
-               for (int y = 0; y < underboard.size(); y++)
-               {
-                   for (int x = 0; x < underboard[0].size(); x++)
-                   {
-                       if (thepieces[y][x].getcolor() == color and underboard[y][x] != ' ' and underboard[y][x] != 'A')
-                       {
-                           collectmoveinterference2(underboard, thepieces, y, x, thepieces[y][x].getcolor(), interferemoves2);
-                       }
-                   }
-               }
-               for (auto intmoves : interferemoves2)
-               {
-                   if (intmoves.first == currstarekingy and intmoves.second == currstarekingx)
-                   {
-                       return false;
-                   }
-               }
-           }
-       }
-   }
-    */
