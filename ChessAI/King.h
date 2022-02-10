@@ -42,7 +42,7 @@ namespace Chess {
         void castlemove(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
         void addmoves(std::vector<std::pair<int, int>> src, std::vector<std::pair<int, int>>& destination);
         bool collectmoveinterference(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int y, int x, std::string color);
-        void collectmoveinterference2(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int y, int x, std::string color, std::vector<std::pair<int, int>>& addedmoves);
+        std::pair<int, int> collectmoveinterference2(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int y, int x, std::string color, std::vector<std::pair<int, int>>& addedmovese, std::vector<std::pair<char, std::vector<std::pair<int, int>>>>& currmvavailable);
         std::vector<std::pair<int,int>> grabopposingkingssquares(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int y, int x, std::string color);
 
         bool determinestalemate(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
@@ -55,7 +55,7 @@ namespace Chess {
         std::vector<std::pair<int, int>> totalprotectingsquares;
 
 
-        bool cangobblenearking(int rowpos, int colpos, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
+        bool cangobblenearking(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
         bool IsPieceProtected(int opppiecerowpos, int opppiececolpos);
 
 
@@ -83,3 +83,4 @@ namespace Chess {
 
 
 #endif //CHESS_KING_H
+
