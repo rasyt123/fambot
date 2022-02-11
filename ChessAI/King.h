@@ -67,12 +67,15 @@ namespace Chess {
             int endposy;
             int currstarekingy = -9000;
             int currstarekingx = -9000;
+            int piecechecky = -9000;
+            int piececheckx = -9000;
             std::vector<std::pair<int, int>> interferemoves;
             std::vector<std::pair<int ,int>> interferemoves2;
             std::vector<std::pair<int,int>> possiblemoves;
             std::vector<std::pair<int,int>> possiblemovescpy;
             std::vector<std::pair<int, int>> watchingsquares;
             std::vector<std::pair<int, int>> markedsquarestaredown;
+            std::vector<std::pair<int, int>> piececheckvector;
 
 
     };
