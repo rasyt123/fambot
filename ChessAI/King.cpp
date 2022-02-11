@@ -90,6 +90,8 @@ bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, 
     std::vector<std::pair<int, int>> checkmoves;
     std::pair<int,int> currcheckmove;
     std::vector<std::pair<char, std::vector<std::pair<int, int>>>> currmvavailable;
+    std::cout << "Did I get into gobblenearking?" << std::endl;
+    std::cout << "What is the current color? " << color << std::endl;
     for (int y = 0; y < underboard.size(); y++)
     {
         for (int x = 0; x < underboard[0].size(); x++)
@@ -97,20 +99,13 @@ bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, 
             if (thepieces[y][x].getcolor() == color and underboard[y][x] != ' ')
             {
                currcheckmove = collectmoveinterference2(underboard, thepieces, y, x, thepieces[y][x].getcolor(),ourmoves, currmvavailable);
-               if (currcheckmove.first != -9000 and currcheckmove.second != -9000)
-               {
-                   checkmoves.push_back(currcheckmove);
-               }
             }
         }
     }
-    if (checkmoves.size() > 0)
-    {
-        return true;
-    }
+    std::cout << "Seg fault here?" << std::endl;
     for (auto item : ourmoves)
     {
-        if (item.first == checkmoves[0].first and item.second == checkmoves[0].second)
+        if (item.first == piecechecky and item.second == piececheckx)
         {
             return true;
         }
@@ -293,6 +288,8 @@ bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underb
             {
                 std::cout << "Pawn stare down" << std::endl;
                 staredowntrue = true;
+                piecechecky = y;
+                piececheckx = x;
             }
             this->addmoves(pawnobj.getwatchingsquares(), interferemoves);
             this->addmoves(pawnobj.protectingsquares, totalprotectingsquares);
@@ -304,6 +301,8 @@ bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underb
                 currstarekingy = rookobj.getstaredownkingy();
                 currstarekingx = rookobj.getstaredownkingx();
                 std::cout << "Rook stare down" << std::endl;
+                piecechecky = y;
+                piececheckx = x;
                 staredowntrue = true;
             }
             this->addmoves(rookobj.getpossiblemoves(), interferemoves);
@@ -316,6 +315,8 @@ bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underb
                 currstarekingy = bishopobj.getstaredownkingy();
                 currstarekingx = bishopobj.getstaredownkingx();
                 std::cout << "bishop stare down" << std::endl;
+                piecechecky = y;
+                piececheckx = x;
                 staredowntrue = true;
             }
             this->addmoves(bishopobj.getpossiblemoves(), interferemoves);
@@ -323,17 +324,14 @@ bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underb
             break;
         case 'Q':
             queenobj.GenerateMoves(underboard, thepieces, color);
-            std::cout << "We are Queens size : " << queenobj.getpossiblemoves().size() << std::endl;
+            //std::cout << "We are Queens size : " << queenobj.getpossiblemoves().size() << std::endl;
             if (queenobj.getstaredown())
             {
                 currstarekingy = queenobj.getstaredownkingy();
                 currstarekingx = queenobj.getstaredownkingx();
-                std::cout << "queen stare down" << std::endl;
+                piecechecky = y;
+                piececheckx = x;
                 staredowntrue = true;
-            }
-            for (auto item : queenobj.getpossiblemoves())
-            {
-                std::cout << "Queen Watching Squares : " << item.first << " " << item.second << std::endl;
             }
             this->addmoves(queenobj.getpossiblemoves(), interferemoves);
             this->addmoves(queenobj.protectingsquares, totalprotectingsquares);
@@ -343,6 +341,8 @@ bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underb
             if (knightobj.getstaredown())
             {
                 std::cout << "knight stare down" << std::endl;
+                piecechecky = y;
+                piececheckx = x;
                 staredowntrue = true;
             }
             this->addmoves(knightobj.getpossiblemoves(), interferemoves);
@@ -517,6 +517,7 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
     {
         return false;
     }
+    std::cout << "Seg fault here?" << std::endl;
     std::vector<std::pair<int, int>> piecestartingpos;
     std::vector<std::vector<char>> tempunderboard = underboard;
     std::vector<std::vector<Pieces>> temppieces = thepieces;
@@ -537,6 +538,7 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
     int currstartcoords = 0;
     for (auto item : currmvavailable)
     {
+        std::cout << "get past currmavaiable" << std::endl;
         for (std::pair<int, int> currmove : item.second)
         {
             char oldpiece = item.first;
@@ -565,6 +567,7 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
     if (determinecheck(underboard, thepieces, color) and possiblemoves.size() == 0
     and cannotblock(underboard, thepieces, color) and !cangobblenearking(underboard, thepieces, color))
     {
+        std::cout << "checkmate determined?" << std::endl;
         return true;
     } else
     {
@@ -576,4 +579,36 @@ bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard,
 void Chess::King::clearpossiblemoves() {
     possiblemoves = {};
 }
+
+
+/*
+   for (auto item : dirs)
+   {
+       if (item.first >= 0 and item.first < underboard.size()
+       and item.second >= 0 and item.second < underboard[0].size())
+       {
+           if (currstarekingy != -9000 and currstarekingx != -9000 and
+           currstarekingy == item.first and currstarekingx == item.second)
+           {
+               for (int y = 0; y < underboard.size(); y++)
+               {
+                   for (int x = 0; x < underboard[0].size(); x++)
+                   {
+                       if (thepieces[y][x].getcolor() == color and underboard[y][x] != ' ' and underboard[y][x] != 'A')
+                       {
+                           collectmoveinterference2(underboard, thepieces, y, x, thepieces[y][x].getcolor(), interferemoves2);
+                       }
+                   }
+               }
+               for (auto intmoves : interferemoves2)
+               {
+                   if (intmoves.first == currstarekingy and intmoves.second == currstarekingx)
+                   {
+                       return false;
+                   }
+               }
+           }
+       }
+   }
+    */
 
