@@ -540,8 +540,7 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
     {
         std::cout << "get past currmavaiable" << std::endl;
         for (std::pair<int, int> currmove : item.second)
-        {
-            char oldpiece = item.first;
+        {            char oldpiece = item.first;
             underboard[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second] = ' ';
             underboard[currmove.first][currmove.second] = oldpiece;
             thepieces[currmove.first][currmove.second] = thepieces[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second];
@@ -549,6 +548,8 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
             thepieces[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second].setblank(true);
             thepieces[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second].setcolor("");
             if (!determinecheck(underboard, thepieces, color)) {
+                underboard = tempunderboard;
+                thepieces = temppieces;
                 return false;
             }
             underboard = tempunderboard;
@@ -611,4 +612,3 @@ void Chess::King::clearpossiblemoves() {
        }
    }
     */
-
