@@ -124,7 +124,7 @@ bool Chess::Bishop::grabmovebottomleft(std::vector<std::vector<char>>& underboar
            break;
         } else if (underboard[posy + x][posx - x] != ' ' and thepieces[posy + x][posx - x].getcolor() == color)
         {
-            possiblemoves.emplace_back(std::make_pair(posy + x, posx - x));
+            protectingsquares.emplace_back(std::make_pair(posy + x, posx - x));
             break;
         }
         else if (underboard[posy + x][posx - x] == 'A' and thepieces[posy + x][posx - x].getcolor() != color)
@@ -155,7 +155,7 @@ bool Chess::Bishop::grabmovebottomright(std::vector<std::vector<char>>& underboa
             break;
         } else if (underboard[posy + x][posx + x] != ' ' and thepieces[posy + x][posx + x].getcolor() == color)
         {
-            possiblemoves.emplace_back(std::make_pair(posy + x, posx + x));
+            protectingsquares.emplace_back(std::make_pair(posy + x, posx + x));
             break;
         }
         else if (underboard[posy + x][posx + x] == 'A' and thepieces[posy + x][posx + x].getcolor() != color)
@@ -176,6 +176,8 @@ bool Chess::Bishop::grabmovebottomright(std::vector<std::vector<char>>& underboa
     }
     return false;
 }
+
+
 
 
 
