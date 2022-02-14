@@ -4,11 +4,30 @@
 
 #ifndef CHESS_GAMEMENU_H
 #define CHESS_GAMEMENU_H
+#include "Game.h"
 
 
-class Gamemenu {
+namespace Chess {
+    class Gamemenu {
 
-};
 
+    public:
+
+
+        void loadgamemenu();
+
+
+
+
+    private:
+        std::vector<std::pair<int,int>> menubarcoords;
+
+
+
+
+
+
+    };
+}
 
 #endif //CHESS_GAMEMENU_H
