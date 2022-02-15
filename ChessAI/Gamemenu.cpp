@@ -26,14 +26,23 @@ void Chess::Gamemenu::addfonts(sf::RenderWindow *window) {
     Quit.setCharacterSize(24);
 
     Play.setFillColor(sf::Color(0, 0, 0));
-    Options.setFillColor(sf::Color());
-    Quit.setFillColor(sf::Color());
+    Options.setFillColor(sf::Color(0, 0, 0));
+    Quit.setFillColor(sf::Color(0, 0, 0));
 
 
     Play.setStyle(sf::Text::Bold);
     Options.setStyle(sf::Text::Bold);
     Quit.setStyle(sf::Text::Bold);
-    
+
+    Play.setPosition();
+    Options.setPosition();
+    Quit.setPosition();
+
+
+    window->draw(Play);
+    window->draw(Options);
+    window->draw(Quit);
+
 }
 
 bool Chess::Gamemenu::playbuttonpressed(float posx, float posy) {
@@ -85,3 +94,4 @@ bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window)
     window->draw(Quitbutton);
     return false;
 }
+
