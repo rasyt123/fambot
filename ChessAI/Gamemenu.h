@@ -13,9 +13,14 @@ namespace Chess {
 
     public:
 
+        void addfonts(sf::RenderWindow *window);
+        bool loadgamemenu(sf::RenderWindow *window);
 
-        void loadgamemenu();
-
+        bool playbuttonpressed(float posx, float posy);
+        bool quitbuttonpressed(float posx, float posy);
+        bool optionsbuttonpressed(float posx, float posy);
+        void windowpoller(sf::RenderWindow *window);
+        void checkmatemenu(sf::RenderWindow *window);
 
 
 
