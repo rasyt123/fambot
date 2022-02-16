@@ -6,24 +6,27 @@
 
 
 void Chess::Gamemenu::addfonts(sf::RenderWindow *window) {
+    sf::Font font;
+    if (!font.loadFromFile("C:\\Users\\rasyt\\Downloads\\montserrat\\Montserrat-Medium.otf"))
+    {
+        std::cout << "Error loading file";
+    }
     sf::Text Play;
     sf::Text Options;
     sf::Text Quit;
-    sf::Font font;
+
+    Play.setFont(font);
+    Options.setFont(font);
+    Quit.setFont(font);
 
     Play.setString("Play");
     Options.setString("Options");
     Quit.setString("Quit");
 
 
-    Play.setFont(font);
-    Options.setFont(font);
-    Quit.setFont(font);
-
-
-    Play.setCharacterSize(24);
-    Options.setCharacterSize(24);
-    Quit.setCharacterSize(24);
+    Play.setCharacterSize(50);
+    Options.setCharacterSize(50);
+    Quit.setCharacterSize(50);
 
     Play.setFillColor(sf::Color(0, 0, 0));
     Options.setFillColor(sf::Color(0, 0, 0));
@@ -34,9 +37,9 @@ void Chess::Gamemenu::addfonts(sf::RenderWindow *window) {
     Options.setStyle(sf::Text::Bold);
     Quit.setStyle(sf::Text::Bold);
 
-    Play.setPosition();
-    Options.setPosition();
-    Quit.setPosition();
+    Play.setPosition(400, 180);
+    Options.setPosition(350, 430);
+    Quit.setPosition(400, 680);
 
 
     window->draw(Play);
@@ -45,24 +48,36 @@ void Chess::Gamemenu::addfonts(sf::RenderWindow *window) {
 
 }
 
-bool Chess::Gamemenu::playbuttonpressed(float posx, float posy) {
-
-
+bool Chess::Gamemenu::highlightplay(float clickposx, float clickposy) {
+    float playbuttonx = 250;
+    float playbuttony = 150;
+    if (clickposx >= 250 and clickposx <= playbuttonx + 420 and clickposy >= 150 and clickposy <= playbuttony + 150)
+    {
+        return true;
+    }
+    return false;
 }
 
 
-bool Chess::Gamemenu::optionsbuttonpressed(float posx, float posy) {
-
-
-
-
+bool Chess::Gamemenu::highlightoptions(float clickposx, float clickposy) {
+    float optionbuttonx = 250;
+    float optionbuttony = 400;
+    if (clickposx >= 250 and clickposx <= optionbuttonx + 420 and clickposy >= 400 and clickposy <= optionbuttony + 150)
+    {
+        return true;
+    }
+    return false;
 }
 
-bool Chess::Gamemenu::quitbuttonpressed(float posx, float posy) {
+bool Chess::Gamemenu::highlightquit(float clickposx, float clickposy) {
+    float quitbuttonx = 250;
+    float quitbuttony = 650;
+    if (clickposx >= 250 and clickposx <= quitbuttonx + 420 and clickposy >= 650 and clickposy <= quitbuttony + 150)
+    {
 
 
-
-
+        return true;
+    }
 }
 
 
@@ -92,6 +107,9 @@ bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window)
     window->draw(PlayButton);
     window->draw(OptionsButton);
     window->draw(Quitbutton);
+
+    addfonts(window);
     return false;
 }
+
 
