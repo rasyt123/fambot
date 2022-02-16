@@ -5,6 +5,48 @@
 #include "Gamemenu.h"
 
 
+
+void Chess::Gamemenu::addmenu2fonts(sf::RenderWindow *window) {
+    sf::Font font;
+    if (!font.loadFromFile("C:\\Users\\rasyt\\Downloads\\montserrat\\Montserrat-Medium.otf"))
+    {
+        std::cout << "Error loading file";
+    }
+
+
+    sf::Text EasyAI;
+    sf::Text MediumAI;
+    sf::Text HumanOpponent;
+
+    EasyAI.setFont(font);
+    MediumAI.setFont(font);
+    HumanOpponent.setFont(font);
+
+    EasyAI.setString("Easy AI");
+    MediumAI.setString("Medium AI");
+    HumanOpponent.setString("Quit");
+
+
+    EasyAI.setCharacterSize(50);
+    MediumAI.setCharacterSize(50);
+    HumanOpponent.setCharacterSize(50);
+
+    EasyAI.setFillColor(sf::Color(0, 0, 0));
+    MediumAI.setFillColor(sf::Color(0, 0, 0));
+    HumanOpponent.setFillColor(sf::Color(0, 0, 0));
+
+
+    EasyAI.setStyle(sf::Text::Bold);
+    MediumAI.setStyle(sf::Text::Bold);
+    HumanOpponent.setStyle(sf::Text::Bold);
+
+    EasyAI.setPosition(400, 180);
+    MediumAI.setPosition(350, 430);
+    HumanOpponent.setPosition(400, 680);
+
+
+}
+
 void Chess::Gamemenu::addfonts(sf::RenderWindow *window) {
     sf::Font font;
     if (!font.loadFromFile("C:\\Users\\rasyt\\Downloads\\montserrat\\Montserrat-Medium.otf"))
@@ -95,8 +137,9 @@ bool Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
             case sf::Event::MouseButtonPressed:
                 if (highlightplay(getposx, getposy))
                 {
-
-
+                    playbutton = true;
+                    //load the second game menu here
+                    //Easy AI, Medium AI, Human
                 } else if (highlightoptions(getposx, getposy))
                 {
 
@@ -110,6 +153,27 @@ bool Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
 
         }
     }
+}
+
+
+void Chess::Gamemenu::loadplaymenu(sf::RenderWindow *window, float highlightx, float highlighty) {
+    sf::Color green(118, 150, 86);
+    sf::Texture background;
+    sf::Sprite backsprite;
+    background.loadFromFile("C:\\Users\\rasyt\\Pictures\\Saved Pictures\\chessui.jpg");
+    backsprite.setTexture(background);
+    backsprite.setPosition(0, 0);
+    
+    window->draw(backsprite);
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -164,4 +228,25 @@ bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window, float highlightx, f
     addfonts(window);
     return false;
 }
+
+
+bool geteasyai() {
+    
+    
+}
+
+bool getmediumai() {
+    
+    
+}
+
+bool gethumanopponent() {
+    
+    
+    
+}
+bool getplaybutton() {}
+
+
+
 
