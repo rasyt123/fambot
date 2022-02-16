@@ -74,8 +74,6 @@ bool Chess::Gamemenu::highlightquit(float clickposx, float clickposy) {
     float quitbuttony = 650;
     if (clickposx >= 250 and clickposx <= quitbuttonx + 420 and clickposy >= 650 and clickposy <= quitbuttony + 150)
     {
-
-
         return true;
     }
 }
@@ -86,6 +84,7 @@ bool Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
     sf::Vector2i mousePos1 = sf::Mouse::getPosition(*window);
     int getposy = mousePos1.y;
     int getposx = mousePos1.x;
+
     while (window->pollEvent(event))
     {
         switch (event.type)
@@ -114,8 +113,9 @@ bool Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
 }
 
 
-bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window)
+bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window, float highlightx, float highlighty)
 {
+    sf::Color green(118, 150, 86);
     sf::Texture background;
     sf::Sprite backsprite;
     background.loadFromFile("C:\\Users\\rasyt\\Pictures\\Saved Pictures\\chessui.jpg");
@@ -124,14 +124,34 @@ bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window)
     backsprite.setPosition(0, 0);
 
     window->draw(backsprite);
+
     sf::RectangleShape PlayButton(sf::Vector2f(420.0f, 150.0f));
-    PlayButton.setFillColor(sf::Color(255, 255, 255));
+    if (highlightplay(highlightx, highlighty))
+    {
+        PlayButton.setFillColor(green);
+    } else
+    {
+        PlayButton.setFillColor(sf::Color(255, 255, 255));
+    }
 
     sf::RectangleShape OptionsButton(sf::Vector2f(420.0f, 150.0f));
-    OptionsButton.setFillColor(sf::Color(255, 255, 255));
+    if (highlightoptions(highlightx, highlighty))
+    {
+        OptionsButton.setFillColor(green);
+    } else
+    {
+        OptionsButton.setFillColor(sf::Color(255, 255, 255));
+    }
+
 
     sf::RectangleShape Quitbutton(sf::Vector2f(420.0f, 150.0f));
-    Quitbutton.setFillColor(sf::Color(255, 255, 255));
+    if (highlightquit(highlightx, highlighty))
+    {
+        Quitbutton.setFillColor(green);
+    } else
+    {
+        Quitbutton.setFillColor(sf::Color(255, 255, 255));
+    }
 
     PlayButton.setPosition(250, 150);
     OptionsButton.setPosition(250, 400);
