@@ -81,6 +81,39 @@ bool Chess::Gamemenu::highlightquit(float clickposx, float clickposy) {
 }
 
 
+bool Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
+    sf::Event event;
+    sf::Vector2i mousePos1 = sf::Mouse::getPosition(*window);
+    int getposy = mousePos1.y;
+    int getposx = mousePos1.x;
+    while (window->pollEvent(event))
+    {
+        switch (event.type)
+        {
+            case sf::Event::Closed:
+                window->close();
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (highlightplay(getposx, getposy))
+                {
+
+
+                } else if (highlightoptions(getposx, getposy))
+                {
+
+
+                } else if (highlightquit(getposx, getposy))
+                {
+
+
+
+                }
+
+        }
+    }
+}
+
+
 bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window)
 {
     sf::Texture background;
@@ -111,5 +144,4 @@ bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window)
     addfonts(window);
     return false;
 }
-
 
