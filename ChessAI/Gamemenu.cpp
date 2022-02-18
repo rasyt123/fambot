@@ -146,9 +146,8 @@ bool Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
 
                 } else if (highlightquit(getposx, getposy))
                 {
-
-
-
+                    window->close();
+                    break;
                 }
 
         }
@@ -163,7 +162,7 @@ void Chess::Gamemenu::loadplaymenu(sf::RenderWindow *window, float highlightx, f
     background.loadFromFile("C:\\Users\\rasyt\\Pictures\\Saved Pictures\\chessui.jpg");
     backsprite.setTexture(background);
     backsprite.setPosition(0, 0);
-    
+
     window->draw(backsprite);
 
 
@@ -230,22 +229,21 @@ bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window, float highlightx, f
 }
 
 
-bool geteasyai() {
-    
-    
+bool Chess::Gamemenu::geteasyai() {
+    return easyai;
 }
 
-bool getmediumai() {
-    
-    
+bool Chess::Gamemenu::getmediumai() {
+    return mediumai;
 }
 
-bool gethumanopponent() {
-    
-    
-    
+bool Chess::Gamemenu::gethumanopponent() {
+    return humanopponent;
 }
-bool getplaybutton() {}
+bool Chess::Gamemenu::getplaybutton() {
+    return playbutton;
+}
+
 
 
 
