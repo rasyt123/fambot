@@ -68,7 +68,7 @@ bool Chess::Game::samecoords(float curry, float currx, float comparisony, float 
 }
 
 
-void Chess::Game::menudeal(sf::RenderWindow *window, bool& button, Gamemenu& zegame) {
+void Chess::Game::menudeal(sf::RenderWindow *window, bool& startgame, Gamemenu& zegame) {
         window->clear();
         sf::Vector2i mousePosmenu = sf::Mouse::getPosition(*window);
         float currmouseposy = mousePosmenu.y;
@@ -80,9 +80,15 @@ void Chess::Game::menudeal(sf::RenderWindow *window, bool& button, Gamemenu& zeg
         {
             zegame.loadplaymenu(window, currmouseposx, currmouseposy);
             zegame.parseclicks(window);
-
-
-
+            if (zegame.geteasyai()) {
+                startgame = true;
+            } else if (zegame.getmediumai())
+            {
+                startgame = true;
+            } else if (zegame.gethumanopponent())
+            {
+                startgame = true;
+            }
         }
         window->display();
 }
