@@ -6,7 +6,7 @@
 
 
 
-void Chess::Gamemenu::addmenu2fonts(sf::RenderWindow *window) {
+void Chess::Gamemenu::addmenu2fonts(sf::RenderWindow *window, std::string topbuttonstr, std::string midbuttonstr, std::string bottomstr) {
     sf::Font font;
     if (!font.loadFromFile("C:\\Users\\rasyt\\Downloads\\montserrat\\Montserrat-Medium.otf"))
     {
@@ -22,9 +22,9 @@ void Chess::Gamemenu::addmenu2fonts(sf::RenderWindow *window) {
     MediumAI.setFont(font);
     HumanOpponent.setFont(font);
 
-    EasyAI.setString("Easy AI");
-    MediumAI.setString("Medium AI");
-    HumanOpponent.setString("Quit");
+    EasyAI.setString(topbuttonstr);
+    MediumAI.setString(midbuttonstr);
+    HumanOpponent.setString(bottomstr);
 
 
     EasyAI.setCharacterSize(50);
@@ -45,50 +45,13 @@ void Chess::Gamemenu::addmenu2fonts(sf::RenderWindow *window) {
     HumanOpponent.setPosition(400, 680);
 
 
+    window->draw(EasyAI);
+    window->draw(MediumAI);
+    window->draw(HumanOpponent);
+
+
 }
 
-void Chess::Gamemenu::addfonts(sf::RenderWindow *window) {
-    sf::Font font;
-    if (!font.loadFromFile("C:\\Users\\rasyt\\Downloads\\montserrat\\Montserrat-Medium.otf"))
-    {
-        std::cout << "Error loading file";
-    }
-    sf::Text Play;
-    sf::Text Options;
-    sf::Text Quit;
-
-    Play.setFont(font);
-    Options.setFont(font);
-    Quit.setFont(font);
-
-    Play.setString("Play");
-    Options.setString("Options");
-    Quit.setString("Quit");
-
-
-    Play.setCharacterSize(50);
-    Options.setCharacterSize(50);
-    Quit.setCharacterSize(50);
-
-    Play.setFillColor(sf::Color(0, 0, 0));
-    Options.setFillColor(sf::Color(0, 0, 0));
-    Quit.setFillColor(sf::Color(0, 0, 0));
-
-
-    Play.setStyle(sf::Text::Bold);
-    Options.setStyle(sf::Text::Bold);
-    Quit.setStyle(sf::Text::Bold);
-
-    Play.setPosition(400, 180);
-    Options.setPosition(350, 430);
-    Quit.setPosition(400, 680);
-
-
-    window->draw(Play);
-    window->draw(Options);
-    window->draw(Quit);
-
-}
 
 bool Chess::Gamemenu::highlightplay(float clickposx, float clickposy) {
     float playbuttonx = 250;
@@ -121,7 +84,7 @@ bool Chess::Gamemenu::highlightquit(float clickposx, float clickposy) {
 }
 
 
-bool Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
+void Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
     sf::Event event;
     sf::Vector2i mousePos1 = sf::Mouse::getPosition(*window);
     int getposy = mousePos1.y;
@@ -155,35 +118,12 @@ bool Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
 }
 
 
-void Chess::Gamemenu::loadplaymenu(sf::RenderWindow *window, float highlightx, float highlighty) {
+void Chess::Gamemenu::createbuttons(sf::RenderWindow *window, float highlightx, float highlighty) {
     sf::Color green(118, 150, 86);
     sf::Texture background;
     sf::Sprite backsprite;
     background.loadFromFile("C:\\Users\\rasyt\\Pictures\\Saved Pictures\\chessui.jpg");
     backsprite.setTexture(background);
-    backsprite.setPosition(0, 0);
-
-    window->draw(backsprite);
-
-
-
-
-
-
-
-
-
-}
-
-
-bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window, float highlightx, float highlighty)
-{
-    sf::Color green(118, 150, 86);
-    sf::Texture background;
-    sf::Sprite backsprite;
-    background.loadFromFile("C:\\Users\\rasyt\\Pictures\\Saved Pictures\\chessui.jpg");
-    backsprite.setTexture(background);
-    //backsprite.setScale(960/1200, 960/800);
     backsprite.setPosition(0, 0);
 
     window->draw(backsprite);
@@ -223,8 +163,19 @@ bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window, float highlightx, f
     window->draw(PlayButton);
     window->draw(OptionsButton);
     window->draw(Quitbutton);
+}
 
-    addfonts(window);
+
+void Chess::Gamemenu::loadplaymenu(sf::RenderWindow *window, float highlightx, float highlighty) {
+    createbuttons(window, highlightx, highlighty);
+    addmenu2fonts(window, "Easy AI", "Medium AI", "Human");
+}
+
+
+bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window, float highlightx, float highlighty)
+{
+    createbuttons(window, highlightx, highlighty);
+    addmenu2fonts(window, "Play", "Options", "Quit");
     return false;
 }
 
@@ -243,6 +194,7 @@ bool Chess::Gamemenu::gethumanopponent() {
 bool Chess::Gamemenu::getplaybutton() {
     return playbutton;
 }
+
 
 
 
