@@ -16,6 +16,7 @@
 #include "Knight.h"
 #include "Pieces.h"
 #include "Player.h"
+#include "Gamemenu.h"
 #include <SFML/Graphics.hpp>
 #define BOARD_ROWS 8
 #define BOARD_COLS 8
@@ -48,6 +49,7 @@ namespace Chess {
         std::pair<int,int> returnendpos(sf::RenderWindow* window, std::string color, int clickposy, int clickposx);
         std::pair<int, int> findking(std::string color, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
         bool checkpawnmovetwice(int startposy, int startposx, int endposy, int endposx, std::string turn, Pawn pawnobj);
+        void menudeal(sf::RenderWindow *window, bool& humanstartgame, bool& mediumaistartgame, bool& humanstartgame, Gamemenu& zegame);
 
     private:
         std::string currentturn = "white";
