@@ -68,7 +68,27 @@ bool Chess::Game::samecoords(float curry, float currx, float comparisony, float 
 }
 
 
+void Chess::Game::menudeal(sf::RenderWindow *window, bool& button, Gamemenu& zegame) {
+        window->clear();
+        sf::Vector2i mousePosmenu = sf::Mouse::getPosition(*window);
+        float currmouseposy = mousePosmenu.y;
+        float currmouseposx = mousePosmenu.x;
+        if (zegame.loadgamemenu(window, currmouseposx, currmouseposy) and !zegame.getplaybutton())
+        {
+            zegame.parseclicks(window);
+        } else if (zegame.getplaybutton())
+        {
+            zegame.loadplaymenu(window, currmouseposx, currmouseposy);
+            zegame.parseclicks(window);
 
+
+
+        }
+        window->display();
+}
+
+
+//make gameloop pass a pointer to the sfrenderwindow
 void Chess::Game::GameLoop() {
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
     bool incheck = false;
@@ -105,6 +125,8 @@ void Chess::Game::GameLoop() {
     //For en passant, I need to know that the pawn im about to en passant
     //previously moved two spaces from its original square
     //keep track of the previous board state
+    bool button = false;
+    Gamemenu zegame;
     while (window.isOpen())
     {
         if (isEven(currturncount))
@@ -120,7 +142,6 @@ void Chess::Game::GameLoop() {
 
         window.clear();
         SetupBoard(&window);
-        //Create a vector of pairs that represents all the moves that have been currently played
         while (window.pollEvent(event))
         {
             switch (event.type) {
@@ -153,7 +174,7 @@ void Chess::Game::GameLoop() {
                             }
                             else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
                             {
-                                std::cout << "Yo!!!" << std::endl;
+                                std::cout << "Check but not checkmate" << std::endl;
                                 incheck = true;
                                 startpieceyx = findking(currentturn, this->underboard, this->thepieces);
                             }
@@ -234,10 +255,12 @@ bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colortu
 
 
 bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
+    std::cout << "Did I get pass this checkmate function? " << std::endl;
     std::pair<int, int> kingcoords = findking(colorturn, this->underboard, this->thepieces);
     std::pair<float, float> cellkingcoords = boardcoords[kingcoords.first][kingcoords.second];
     King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
     if (kingobj.determinecheckmate(this->underboard, this->thepieces, colorturn)) {
+        std::cout << "Finished the checkmate!" << std::endl;
         return true;
     }
     return false;
