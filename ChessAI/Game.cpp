@@ -68,7 +68,7 @@ bool Chess::Game::samecoords(float curry, float currx, float comparisony, float 
 }
 
 
-void Chess::Game::menudeal(sf::RenderWindow *window, bool& startgame, Gamemenu& zegame) {
+void Chess::Game::menudeal(sf::RenderWindow *window, bool& easyaistartgame, bool& mediumaistartgame, bool& humanstartgame, Gamemenu& zegame) {
         window->clear();
         sf::Vector2i mousePosmenu = sf::Mouse::getPosition(*window);
         float currmouseposy = mousePosmenu.y;
@@ -81,16 +81,17 @@ void Chess::Game::menudeal(sf::RenderWindow *window, bool& startgame, Gamemenu& 
             zegame.loadplaymenu(window, currmouseposx, currmouseposy);
             zegame.parseclicks(window);
             if (zegame.geteasyai()) {
-                startgame = true;
+                easyaistartgame = true;
             } else if (zegame.getmediumai())
             {
-                startgame = true;
+                mediumaistartgame = true;
             } else if (zegame.gethumanopponent())
             {
-                startgame = true;
+                humanstartgame = true;
             }
         }
         window->display();
+        return;
 }
 
 
@@ -133,6 +134,9 @@ void Chess::Game::GameLoop() {
     //keep track of the previous board state
     bool button = false;
     Gamemenu zegame;
+    bool easyaistart = false;
+    bool mediumaistart = false;
+    bool humanopp = false;
     while (window.isOpen())
     {
         if (isEven(currturncount))
