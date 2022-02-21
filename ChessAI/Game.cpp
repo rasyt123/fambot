@@ -79,7 +79,7 @@ void Chess::Game::menudeal(sf::RenderWindow *window, bool& easyaistartgame, bool
         } else if (zegame.getplaybutton())
         {
             zegame.loadplaymenu(window, currmouseposx, currmouseposy);
-            zegame.parseclicks(window);
+            zegame.parseclicks2(window);
             if (zegame.geteasyai()) {
                 easyaistartgame = true;
             } else if (zegame.getmediumai())
@@ -147,9 +147,8 @@ void Chess::Game::GameLoop() {
      */
     while (window.isOpen())
     {
-        if (zegame.geteasyai() or zegame.getmediumai() or zegame.gethumanopponent())
+        if (easyaistart or mediumaistart or humanopp)
         {
-
         } else {
             menudeal(&window, easyaistart, mediumaistart, humanopp, zegame);
             continue;
@@ -164,7 +163,6 @@ void Chess::Game::GameLoop() {
             currplayer = Player2;
         }
         sf::Event event;
-
         window.clear();
         SetupBoard(&window);
         while (window.pollEvent(event))
@@ -194,8 +192,8 @@ void Chess::Game::GameLoop() {
                             if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second))
                             {
                                 ischeckmate = true;
+                                std::cout << "checkmated" << std::endl;
                                 zegame.checkmatemenu(&window, currentturn);
-                                break;
                             }
                             else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
                             {
