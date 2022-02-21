@@ -101,12 +101,9 @@ void Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
                 if (highlightplay(getposx, getposy))
                 {
                     playbutton = true;
-                    //load the second game menu here
-                    //Easy AI, Medium AI, Human
                 } else if (highlightoptions(getposx, getposy))
                 {
-
-
+                    //will add something here later, not really sure what to do yet.
                 } else if (highlightquit(getposx, getposy))
                 {
                     window->close();
@@ -115,6 +112,35 @@ void Chess::Gamemenu::parseclicks(sf::RenderWindow *window) {
 
         }
     }
+}
+
+
+void Chess::Gamemenu::checkmatemenu(sf::RenderWindow *window, std::string color) {
+    sf::Font font;
+    if (!font.loadFromFile("C:\\Users\\rasyt\\Downloads\\montserrat\\Montserrat-Medium.otf"))
+    {
+        std::cout << "Error loading file";
+    }
+
+    sf::Texture background;
+    sf::Sprite backsprite;
+    background.loadFromFile("C:\\Users\\rasyt\\Pictures\\Saved Pictures\\chessui.jpg");
+    backsprite.setTexture(background);
+    backsprite.setPosition(0, 0);
+
+    //rgb(128,128,128) is the color grey;
+    window->draw(backsprite);
+    sf::Text checkmateindicate;
+    checkmateindicate.setFont(font);
+    if (color == "white") 
+    {
+        checkmateindicate.setString("White has been checkmated!");
+    } else 
+    {
+        checkmateindicate.setString("Black has been checkmated!");
+    }
+    checkmateindicate.setString("");
+    checkmateindicate.setCharacterSize(100);
 }
 
 
@@ -176,7 +202,7 @@ bool Chess::Gamemenu::loadgamemenu(sf::RenderWindow *window, float highlightx, f
 {
     createbuttons(window, highlightx, highlighty);
     addmenu2fonts(window, "Play", "Options", "Quit");
-    return false;
+    return true;
 }
 
 
@@ -194,7 +220,6 @@ bool Chess::Gamemenu::gethumanopponent() {
 bool Chess::Gamemenu::getplaybutton() {
     return playbutton;
 }
-
 
 
 
