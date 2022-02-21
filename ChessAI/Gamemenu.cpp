@@ -132,15 +132,17 @@ void Chess::Gamemenu::checkmatemenu(sf::RenderWindow *window, std::string color)
     window->draw(backsprite);
     sf::Text checkmateindicate;
     checkmateindicate.setFont(font);
-    if (color == "white") 
+    if (color == "white")
     {
         checkmateindicate.setString("White has been checkmated!");
-    } else 
+    } else
     {
         checkmateindicate.setString("Black has been checkmated!");
     }
     checkmateindicate.setString("");
     checkmateindicate.setCharacterSize(100);
+    checkmateindicate.setPosition(250, 400);
+    window->draw(checkmateindicate);
 }
 
 
@@ -220,6 +222,8 @@ bool Chess::Gamemenu::gethumanopponent() {
 bool Chess::Gamemenu::getplaybutton() {
     return playbutton;
 }
+
+
 
 
 
