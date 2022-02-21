@@ -54,3 +54,4 @@ namespace Chess {
 }
 
 #endif //CHESS_GAMEMENU_H
+
