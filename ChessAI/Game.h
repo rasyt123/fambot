@@ -23,6 +23,7 @@
 #define OUT_OF_BOUNDS -9000
 
 namespace Chess {
+    class Gamemenu;
     class Game {
     public:
         void SetupBoard(sf::RenderWindow* window);
@@ -49,7 +50,7 @@ namespace Chess {
         std::pair<int,int> returnendpos(sf::RenderWindow* window, std::string color, int clickposy, int clickposx);
         std::pair<int, int> findking(std::string color, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
         bool checkpawnmovetwice(int startposy, int startposx, int endposy, int endposx, std::string turn, Pawn pawnobj);
-        void menudeal(sf::RenderWindow *window, bool& humanstartgame, bool& mediumaistartgame, bool& humanstartgame, Gamemenu& zegame);
+        void menudeal(sf::RenderWindow *window, bool& easyaistartgame, bool& mediumaistartgame, bool& humanstartgame, Gamemenu& zegame);
 
     private:
         std::string currentturn = "white";
@@ -74,3 +75,4 @@ namespace Chess {
 
 
 #endif //CHESS_GAME_H
+
