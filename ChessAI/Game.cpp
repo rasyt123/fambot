@@ -73,7 +73,7 @@ void Chess::Game::menudeal(sf::RenderWindow *window, bool& easyaistartgame, bool
         sf::Vector2i mousePosmenu = sf::Mouse::getPosition(*window);
         float currmouseposy = mousePosmenu.y;
         float currmouseposx = mousePosmenu.x;
-        if (zegame.loadgamemenu(window, currmouseposx, currmouseposy) and !zegame.getplaybutton())
+        if (zegame.loadgamemenu(window,currmouseposx, currmouseposy) and !zegame.getplaybutton())
         {
             zegame.parseclicks(window);
         } else if (zegame.getplaybutton())
@@ -137,8 +137,23 @@ void Chess::Game::GameLoop() {
     bool easyaistart = false;
     bool mediumaistart = false;
     bool humanopp = false;
+    bool thecheckmate = false;
+
+    /*
+     * Make sure to implement
+     *
+     *
+     *
+     */
     while (window.isOpen())
     {
+        if (zegame.geteasyai() or zegame.getmediumai() or zegame.gethumanopponent())
+        {
+
+        } else {
+            menudeal(&window, easyaistart, mediumaistart, humanopp, zegame);
+            continue;
+        }
         if (isEven(currturncount))
         {
             currentturn = "white";
@@ -179,7 +194,7 @@ void Chess::Game::GameLoop() {
                             if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second))
                             {
                                 ischeckmate = true;
-                                std::cout << "You have been checkmated!" << std::endl;
+                                zegame.checkmatemenu(&window, currentturn);
                                 break;
                             }
                             else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
@@ -234,15 +249,17 @@ void Chess::Game::GameLoop() {
                     break;
             }
         }
-        if (move)
+        if (move and !ischeckmate)
         {
             CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
         }
         window.display();
+        /*
         if (ischeckmate) {
             std::cout << "End Game!" << std::endl;
             break;
         }
+         */
     }
     std::cout << "End Game!" << std::endl;
 }
