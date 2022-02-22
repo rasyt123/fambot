@@ -173,10 +173,9 @@ void Chess::Gamemenu::checkmatemenu(sf::RenderWindow *window, std::string color)
         checkmateindicate.setString("Black has been checkmated!");
     }
     checkmateindicate.setFillColor(sf::Color(128, 128, 128));
-    checkmateindicate.setCharacterSize(100);
-    checkmateindicate.setPosition(250, 400);
+    checkmateindicate.setCharacterSize(50);
+    checkmateindicate.setPosition(50, 300);
     window->draw(checkmateindicate);
-    window->display();
 }
 
 
@@ -256,6 +255,8 @@ bool Chess::Gamemenu::gethumanopponent() {
 bool Chess::Gamemenu::getplaybutton() {
     return playbutton;
 }
+
+
 
 
 
