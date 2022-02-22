@@ -138,15 +138,16 @@ void Chess::Game::GameLoop() {
     bool mediumaistart = false;
     bool humanopp = false;
     bool thecheckmate = false;
-
-    /*
-     * Make sure to implement
-     *
-     *
-     *
-     */
+    std::string checkmateturn;
     while (window.isOpen())
     {
+        if (ischeckmate)
+        {
+            window.clear();
+            zegame.checkmatemenu(&window, checkmateturn);
+            window.display();
+            continue;
+        }
         if (easyaistart or mediumaistart or humanopp)
         {
         } else {
@@ -191,9 +192,10 @@ void Chess::Game::GameLoop() {
                             CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
                             if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second))
                             {
+                                std::cout << "Checkmated" << std::endl;
+                                checkmateturn = currentturn;
                                 ischeckmate = true;
-                                std::cout << "checkmated" << std::endl;
-                                zegame.checkmatemenu(&window, currentturn);
+                                break;
                             }
                             else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
                             {
