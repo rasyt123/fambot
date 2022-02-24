@@ -37,6 +37,7 @@ namespace Chess {
         bool infronttop(std::vector<std::vector<char>>& underboard);
         bool infront2top(std::vector<std::vector<char>>& underboard);
         bool passantcheck(std::vector<std::vector<int>>& pawnmoveslist, int pawnnexty, int pawnnextx);
+        bool lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn);
 
         void createblank(int posy, int posx, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
         std::vector<std::pair<int,int>> getpossiblemoves();
