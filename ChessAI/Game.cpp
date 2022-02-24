@@ -166,6 +166,16 @@ void Chess::Game::GameLoop() {
         sf::Event event;
         window.clear();
         SetupBoard(&window);
+        //Add another pollevent, this will deal with the
+        if (promotion)
+        {
+            HighlightPromotion(&window, pawn, currentendposy, currentendposx, currentturn, promotionmove);
+
+
+
+            promotion = false;
+            continue;
+        }
         while (window.pollEvent(event))
         {
             switch (event.type) {
@@ -180,10 +190,7 @@ void Chess::Game::GameLoop() {
                         int getposx = mousePos1.x;
                         std::pair<int, int> curryxpair;
                         bool confirmedpiece = isPiece2(getposy, getposx, curryxpair);
-                        if (promotion)
-                        {
-                            HighlightPromotion(&window, pawn, currentendposy, currentendposx, currentturn, promotionmove);
-                        } else if (!tileselect or (confirmedpiece and thepieces[curryxpair.first][curryxpair.second].getcolor() == currentturn))
+                        if (!tileselect or (confirmedpiece and thepieces[curryxpair.first][curryxpair.second].getcolor() == currentturn))
                         {
                             std::cout << "Tileselcted!" << std::endl;
                             sf::Vector2i mousePos1 = sf::Mouse::getPosition(window);
