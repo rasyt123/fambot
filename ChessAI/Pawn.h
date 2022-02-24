@@ -22,7 +22,7 @@ namespace Chess {
         bool GenerateMoves(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
         void EnactPassant(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
         void ListPromotionOptions(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoords, bool& promotion);
-        void drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords);
+        void drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords, float mouseposy, float mouseposx);
         bool IsValidMove(int rows, int cols);
         void EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, bool& passant,  std::vector<std::vector<int>>& pawnmovetwicewhite,
         std::vector<std::vector<int>>& pawnmovetwiceblack);
@@ -37,7 +37,7 @@ namespace Chess {
         bool infronttop(std::vector<std::vector<char>>& underboard);
         bool infront2top(std::vector<std::vector<char>>& underboard);
         bool passantcheck(std::vector<std::vector<int>>& pawnmoveslist, int pawnnexty, int pawnnextx);
-        bool lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn);
+        bool lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn,  std::vector<std::vector<std::pair<float, float>>>& boardcoords, std::pair<float, float>& promotioncoords);
 
         void createblank(int posy, int posx, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
         std::vector<std::pair<int,int>> getpossiblemoves();
@@ -64,3 +64,4 @@ namespace Chess {
 
 
 #endif //CHESS_PAWN_H
+
