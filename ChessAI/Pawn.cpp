@@ -98,34 +98,52 @@ void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std
     }
 }
 
-bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn,  std::vector<std::vector<std::pair<float, float>>>& boardcoords, std::pair<float, float>& promotioncoords) {
     if (turn == "white")
     {
-        for () 
+        for (int i = 0; i < 8; i++)
         {
-            
-            
+            if (underboard[0][i] == 'P' and thepieces[0][i].getcolor() == "white" )
+            {
+                promotioncoords = boardcoords[0][i];
+                return true;
+            }
+
         }
-
-
     } else if (turn == "black")
     {
-        for () 
+        for (int i = 0; i < 8; i++)
         {
-            
-            
-            
+            if (underboard[7][i] == 'P' and thepieces[7][i].getcolor() == "black")
+            {
+                promotioncoords = boardcoords[7][i];
+                return true;
+            }
         }
     }
+    return false;
 }
 
 //this is correct
-void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords) {
-    sf::RectangleShape promotionwindow(sf::Vector2f(120.0f, 480.0f));
-    promotionwindow.setFillColor(sf::Color::Blue);
-    promotionwindow.setPosition(cellcoords.first, cellcoords.second);
-    window->draw(promotionwindow);
+void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords, float mouseposy, float mouseposx) {
     float xwidth = cellcoords.first + 26;
+    for (int i = 0; i < 4; i++)
+    {
+        float curryheight = cellcoords.second + i * 120;
+        sf::RectangleShape promotionsquare(sf::Vector2f(120.0f, 120.0f));
+        promotionsquare.setPosition(cellcoords.first, curryheight);
+        if ()
+        {
+
+
+        } else
+        {
+
+
+
+        }
+        window->draw(promotionsquare);
+    }
     for (int dy = 0; dy < 4; dy++)
     {
         sf::Texture piecetexture;
@@ -333,6 +351,7 @@ std::vector<std::pair<int, int>> Chess::Pawn::getwatchingsquares() {
 bool Chess::Pawn::getstaredown() {
     return starekingdown;
 }
+
 
 
 
