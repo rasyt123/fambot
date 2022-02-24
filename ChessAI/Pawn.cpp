@@ -86,7 +86,7 @@ void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std
     if (turn == "white" and IsValidMove(endposy, endposx) and endposy == 7)
     {
         std::vector<std::string> promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
-        std::pair<float, float> cellcoords = boardcoords[endposy - 3][endposx];
+        std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
         drawPromotions(window, promotionstrs, underboard, cellcoords);
         promotion = true;
     } else if (turn == "black" and IsValidMove(endposy, endposx) and endposy == 0)
@@ -94,6 +94,28 @@ void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std
         std::vector<std::string> promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_K60.png"};
         std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
         drawPromotions(window, promotionstrs, underboard, cellcoords);
+        promotion = true;
+    }
+}
+
+bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+    if (turn == "white")
+    {
+        for () 
+        {
+            
+            
+        }
+
+
+    } else if (turn == "black")
+    {
+        for () 
+        {
+            
+            
+            
+        }
     }
 }
 
@@ -104,7 +126,7 @@ void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::stri
     promotionwindow.setPosition(cellcoords.first, cellcoords.second);
     window->draw(promotionwindow);
     float xwidth = cellcoords.first + 26;
-    for (int dy = 0; dy < underboard.at(0).size(); dy++)
+    for (int dy = 0; dy < 4; dy++)
     {
         sf::Texture piecetexture;
         piecetexture.loadFromFile(promotionimgs[dy]);
@@ -311,5 +333,6 @@ std::vector<std::pair<int, int>> Chess::Pawn::getwatchingsquares() {
 bool Chess::Pawn::getstaredown() {
     return starekingdown;
 }
+
 
 
