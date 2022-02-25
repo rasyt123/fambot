@@ -9,7 +9,6 @@ void Chess::Pawn::EnactPassant(std::vector<std::vector<char>>& underboard, std::
     Pieces tempcopy = thepieces[startposy][startposx];
     createblank(startposy, startposx, underboard, thepieces);
     underboard[endposy][endposx] = temp;
-    std::cout << "old contents: " << underboard[endposy][endposx] << std::endl;
     thepieces[endposy][endposx] = tempcopy;
 }
 
@@ -87,18 +86,16 @@ void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std
     {
         std::vector<std::string> promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
         std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
-        drawPromotions(window, promotionstrs, underboard, cellcoords);
         promotion = true;
     } else if (turn == "black" and IsValidMove(endposy, endposx) and endposy == 0)
     {
         std::vector<std::string> promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_K60.png"};
         std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
-        drawPromotions(window, promotionstrs, underboard, cellcoords);
         promotion = true;
     }
 }
 
-bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn,  std::vector<std::vector<std::pair<float, float>>>& boardcoords, std::pair<float, float>& promotioncoords) {
+bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn,  std::vector<std::vector<std::pair<float, float>>>& boardcoords, std::pair<float, float>& promotioncoords, std::pair<int, int>& prompos) {
     if (turn == "white")
     {
         for (int i = 0; i < 8; i++)
@@ -106,6 +103,7 @@ bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::
             if (underboard[0][i] == 'P' and thepieces[0][i].getcolor() == "white" )
             {
                 promotioncoords = boardcoords[0][i];
+                prompos = std::make_pair(0, i);
                 return true;
             }
 
@@ -117,6 +115,7 @@ bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::
             if (underboard[7][i] == 'P' and thepieces[7][i].getcolor() == "black")
             {
                 promotioncoords = boardcoords[7][i];
+                prompos = std::make_pair(7, i);
                 return true;
             }
         }
@@ -136,7 +135,7 @@ void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::stri
             float curryheight = cellcoords.second + i * 120;
             sf::RectangleShape promotionsquare(sf::Vector2f(120.0f, 120.0f));
             promotionsquare.setPosition(cellcoords.first, curryheight);
-            if (mouseposx > cellcoords.first and mouseposx < xwidth
+            if (mouseposx > cellcoords.first and mouseposx < cellcoords.first + 120
                 and mouseposy > curryheight and mouseposy < curryheight + 120)
             {
                 promotionsquare.setFillColor(blue);
@@ -162,7 +161,7 @@ void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::stri
             float curryheight = cellcoords.second - (i * 120);
             sf::RectangleShape promotionsquare(sf::Vector2f(120.0f, 120.0f));
             promotionsquare.setPosition(cellcoords.first, curryheight);
-            if (mouseposx > cellcoords.first and mouseposx < xwidth
+            if (mouseposx > cellcoords.first and mouseposx < cellcoords.first + 100
                 and mouseposy > curryheight and mouseposy < curryheight + 120)
             {
                 promotionsquare.setFillColor(blue);
@@ -381,7 +380,6 @@ std::vector<std::pair<int, int>> Chess::Pawn::getwatchingsquares() {
 bool Chess::Pawn::getstaredown() {
     return starekingdown;
 }
-
 
 
 
