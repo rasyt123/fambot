@@ -169,9 +169,11 @@ void Chess::Game::GameLoop() {
         SetupBoard(&window);
         //Add another pollevent, this will deal with the
         std::pair<float, float> promotioncoords;
+        std::pair<int, int> promotionlocation;
         //void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords)
-        if (pawn.lastrankoppo(underboard, thepieces, currentturn, boardcoords, promotioncoords))
+        if (pawn.lastrankoppo(underboard, thepieces, currentturn, boardcoords, promotioncoords, promotionlocation))
         {
+            std::cout << "Im on the last rank!!!" << std::endl;
             if (currentturn == "white")
             {
               promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
@@ -184,11 +186,9 @@ void Chess::Game::GameLoop() {
             float hovermousey = mousePos.y;
             float hovermousex = mousePos.x;
             pawn.drawPromotions(&window, promotionstrs, underboard, promotioncoords, hovermousey, hovermousex, currentturn);
-            //HighlightPromotion(&window, pawn, currentendposy, currentendposx, currentturn, promotionmove);
-
-
+            pollpromotion(&window, hovermousey, hovermousex, currentturn, promotionlocation.first, promotionlocation.second);
+           //void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& promotion)
             window.display();
-            promotion = false;
             continue;
         }
         while (window.pollEvent(event))
@@ -291,11 +291,9 @@ bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colortu
     King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
     if (kingobj.determinecheck(this->underboard, this->thepieces, colorturn))
     {
-        std::cout << "I am definitely in check!" << std::endl;
         return true;
     } else
     {
-        std::cout << "Check wrong!" << std::endl;
         return false;
     }
 }
@@ -373,7 +371,6 @@ bool Chess::Game::MakeMovePlayer(sf::RenderWindow *window, std::string colorturn
             if (IsValidMove(endposy, endposx, pawnobj.getpossiblemoves()))
             {
                 //sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, std::vector<std::vector<std::pair<float, float>>>& boardcoord
-                pawnobj.ListPromotionOptions(window, this->underboard, this->thepieces, colorturn, this->boardcoords, promotion);
                 move(this->underboard, this->thepieces, colorturn, startposy, startposx, endposy, endposx, currentplayer);
                 return true;
             }
@@ -478,7 +475,7 @@ void Chess::Game::move(std::vector<std::vector<char>>& underboard, std::vector<s
 }
 
 
-void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& promotion) {
+void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx) {
     sf::Event event;
     std::pair<float, float> promoteboxcoords;
     while (window->pollEvent(event)) {
