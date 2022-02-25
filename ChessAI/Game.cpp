@@ -478,8 +478,9 @@ void Chess::Game::move(std::vector<std::vector<char>>& underboard, std::vector<s
 }
 
 
-void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx) {
+void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& promotion) {
     sf::Event event;
+    std::pair<float, float> promoteboxcoords;
     while (window->pollEvent(event)) {
         switch (event.type) {
             case sf::Event::MouseButtonPressed:
@@ -487,13 +488,30 @@ void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, flo
                 {
                     if (currturn == "white")
                     {
-
-
-                        updatepiece(promposy, promposx, );
+                        for (int dy = 0; dy < 4; dy++)
+                        {
+                            promoteboxcoords = boardcoords[promposy + dy][promposx];
+                            if (hovermousex > promoteboxcoords.first and hovermousex < promoteboxcoords.first + 120 and
+                                hovermousey > promoteboxcoords.second and hovermousey < promoteboxcoords.second + 120)
+                            {
+                                char prompiece = underboard[promposy + dy][promposx];
+                                updatepiece(promposy + dy, promposx, prompiece);
+                            }
+                        }
+                        //update the promotion piece here
                     } else if (currturn == "black")
                     {
-
-                        updatepiece();
+                        for (int dy = 0; dy < 4; dy++)
+                        {
+                            promoteboxcoords = boardcoords[promposy - dy][promposx];
+                            if (hovermousex > promoteboxcoords.first and hovermousex < promoteboxcoords.first + 120 and
+                                hovermousey > promoteboxcoords.second and hovermousey < promoteboxcoords.second + 120)
+                            {
+                                char prompiece = underboard[promposy - dy][promposx];
+                                updatepiece(promposy - dy, promposx, prompiece);
+                            }
+                        }
+                        //update the promotion piece here
                     }
                 }
         }
