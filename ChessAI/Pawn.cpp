@@ -125,34 +125,64 @@ bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::
 }
 
 //this is correct
-void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords, float mouseposy, float mouseposx) {
+void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords, float mouseposy, float mouseposx, std::string turn) {
     float xwidth = cellcoords.first + 26;
-    for (int i = 0; i < 4; i++)
+    sf::Color green(118, 150, 86);
+    sf::Color blue(0, 0, 205);
+    if (turn == "white")
     {
-        float curryheight = cellcoords.second + i * 120;
-        sf::RectangleShape promotionsquare(sf::Vector2f(120.0f, 120.0f));
-        promotionsquare.setPosition(cellcoords.first, curryheight);
-        if ()
+        for (int i = 0; i < 4; i++)
         {
-
-
-        } else
-        {
-
-
-
+            float curryheight = cellcoords.second + i * 120;
+            sf::RectangleShape promotionsquare(sf::Vector2f(120.0f, 120.0f));
+            promotionsquare.setPosition(cellcoords.first, curryheight);
+            if (mouseposx > cellcoords.first and mouseposx < xwidth
+                and mouseposy > curryheight and mouseposy < curryheight + 120)
+            {
+                promotionsquare.setFillColor(blue);
+            } else
+            {
+                promotionsquare.setFillColor(green);
+            }
+            window->draw(promotionsquare);
         }
-        window->draw(promotionsquare);
-    }
-    for (int dy = 0; dy < 4; dy++)
+        for (int dy = 0; dy < 4; dy++)
+        {
+            sf::Texture piecetexture;
+            piecetexture.loadFromFile(promotionimgs[dy]);
+            sf::Sprite pieces(piecetexture);
+            float yheight = cellcoords.second + dy * 120 + 26;
+            pieces.setPosition(xwidth, yheight);
+            window->draw(pieces);
+        }
+    } else if (turn == "black")
     {
-        sf::Texture piecetexture;
-        piecetexture.loadFromFile(promotionimgs[dy]);
-        sf::Sprite pieces(piecetexture);
-        float yheight = cellcoords.second + dy * 120 + 26;
-        pieces.setPosition(xwidth, yheight);
-        window->draw(pieces);
+        for (int i = 0; i < 4; i++)
+        {
+            float curryheight = cellcoords.second - (i * 120);
+            sf::RectangleShape promotionsquare(sf::Vector2f(120.0f, 120.0f));
+            promotionsquare.setPosition(cellcoords.first, curryheight);
+            if (mouseposx > cellcoords.first and mouseposx < xwidth
+                and mouseposy > curryheight and mouseposy < curryheight + 120)
+            {
+                promotionsquare.setFillColor(blue);
+            } else
+            {
+                promotionsquare.setFillColor(green);
+            }
+            window->draw(promotionsquare);
+        }
+        for (int dy = 0; dy < 4; dy++)
+        {
+            sf::Texture piecetexture;
+            piecetexture.loadFromFile(promotionimgs[dy]);
+            sf::Sprite pieces(piecetexture);
+            float yheight = cellcoords.second - (dy * 120) + 26;
+            pieces.setPosition(xwidth, yheight);
+            window->draw(pieces);
+        }
     }
+
 }
 
 
@@ -351,6 +381,7 @@ std::vector<std::pair<int, int>> Chess::Pawn::getwatchingsquares() {
 bool Chess::Pawn::getstaredown() {
     return starekingdown;
 }
+
 
 
 
