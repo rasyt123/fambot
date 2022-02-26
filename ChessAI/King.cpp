@@ -107,6 +107,7 @@ bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, 
             }
         }
     }
+
     for (auto movechars : currmvavailable)
     {
         for (std::pair<int, int> moves : movechars.second) {
@@ -132,6 +133,7 @@ bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, 
     }
     underboard = tempunderboard;
     thepieces = temppieces;
+    std::cout << "Cannot gobble near king" << std::endl;
     return false;
 }
 
@@ -346,7 +348,6 @@ bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underb
             break;
         case 'Q':
             queenobj.GenerateMoves(underboard, thepieces, color);
-            //std::cout << "We are Queens size : " << queenobj.getpossiblemoves().size() << std::endl;
             if (queenobj.getstaredown())
             {
                 currstarekingy = queenobj.getstaredownkingy();
@@ -562,16 +563,20 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
     {
         std::cout << "get past currmavaiable" << std::endl;
         for (std::pair<int, int> currmove : item.second)
-        {            char oldpiece = item.first;
+        {
+            char oldpiece = item.first;
             underboard[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second] = ' ';
             underboard[currmove.first][currmove.second] = oldpiece;
             thepieces[currmove.first][currmove.second] = thepieces[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second];
             thepieces[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second].settype(' ');
             thepieces[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second].setblank(true);
             thepieces[piecestartingpos[currstartcoords].first][piecestartingpos[currstartcoords].second].setcolor("");
-            if (!determinecheck(underboard, thepieces, color)) {
+            if (!determinecheck(underboard, thepieces, color))
+            {
                 underboard = tempunderboard;
                 thepieces = temppieces;
+                std::cout << "Made it past cannotblock" << std::endl;
+                interferemoves2 = {};
                 return false;
             }
             underboard = tempunderboard;
@@ -581,15 +586,20 @@ bool Chess::King::cannotblock(std::vector<std::vector<char>>& underboard, std::v
     }
     underboard = tempunderboard;
     thepieces = temppieces;
+    interferemoves2 = {};
+
     return true;
 }
 
 
 bool Chess::King::determinecheckmate(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     GenerateMoves(underboard, thepieces, color);
-    for (auto item : possiblemoves) {
-
-        
+    for (auto item : possiblemoves)
+    {
+        std::cout << "Move coordinates: " << item.first << " " << item.second;
+    }
+    if (possiblemoves.size() == 0) {
+        std::cout << "No moves available!" << std::endl;
     }
     if (determinecheck(underboard, thepieces, color) and possiblemoves.size() == 0
     and cannotblock(underboard, thepieces, color) and !cangobblenearking(underboard, thepieces, color))
@@ -607,6 +617,37 @@ void Chess::King::clearpossiblemoves() {
     possiblemoves = {};
 }
 
+
+/*
+   for (auto item : dirs)
+   {
+       if (item.first >= 0 and item.first < underboard.size()
+       and item.second >= 0 and item.second < underboard[0].size())
+       {
+           if (currstarekingy != -9000 and currstarekingx != -9000 and
+           currstarekingy == item.first and currstarekingx == item.second)
+           {
+               for (int y = 0; y < underboard.size(); y++)
+               {
+                   for (int x = 0; x < underboard[0].size(); x++)
+                   {
+                       if (thepieces[y][x].getcolor() == color and underboard[y][x] != ' ' and underboard[y][x] != 'A')
+                       {
+                           collectmoveinterference2(underboard, thepieces, y, x, thepieces[y][x].getcolor(), interferemoves2);
+                       }
+                   }
+               }
+               for (auto intmoves : interferemoves2)
+               {
+                   if (intmoves.first == currstarekingy and intmoves.second == currstarekingx)
+                   {
+                       return false;
+                   }
+               }
+           }
+       }
+   }
+    */
 
 /*
    for (auto item : dirs)
