@@ -260,5 +260,3 @@ bool Chess::Gamemenu::getplaybutton() {
 
 
 
-
-
