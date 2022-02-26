@@ -140,6 +140,9 @@ void Chess::Game::GameLoop() {
     bool thecheckmate = false;
     std::string checkmateturn;
     std::vector<std::string> promotionstrs;
+    bool iswhite = false;
+    bool isblack = false;
+    bool pieceselect = false;
     while (window.isOpen())
     {
         if (ischeckmate)
@@ -171,13 +174,13 @@ void Chess::Game::GameLoop() {
         std::pair<float, float> promotioncoords;
         std::pair<int, int> promotionlocation;
         //void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords)
-        if (pawn.lastrankoppo(underboard, thepieces, currentturn, boardcoords, promotioncoords, promotionlocation))
+        if (pawn.lastrankoppo(underboard, thepieces, currentturn, boardcoords, promotioncoords, promotionlocation, iswhite, isblack))
         {
-            std::cout << "Im on the last rank!!!" << std::endl;
-            if (currentturn == "white")
+            std::cout << "last rank oppo initiated" << std::endl;
+            if (iswhite)
             {
               promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
-            } else if (currentturn == "black")
+            } else if (isblack)
             {
                 promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_K60.png"};
             }
@@ -185,11 +188,22 @@ void Chess::Game::GameLoop() {
             sf::Event event;
             float hovermousey = mousePos.y;
             float hovermousex = mousePos.x;
-            pawn.drawPromotions(&window, promotionstrs, underboard, promotioncoords, hovermousey, hovermousex, currentturn);
-            pollpromotion(&window, hovermousey, hovermousex, currentturn, promotionlocation.first, promotionlocation.second);
+            pawn.drawPromotions(&window, promotionstrs, underboard, promotioncoords, hovermousey, hovermousex, currentturn, iswhite, isblack);
+            pollpromotion(&window, hovermousey, hovermousex, currentturn, promotionlocation.first, promotionlocation.second, iswhite, isblack, pieceselect);
            //void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& promotion)
             window.display();
             continue;
+            /*
+            if (pieceselect)
+            {
+                std::cout << "I'm here" << std::endl;
+                pieceselect = false;
+            } else
+            {
+                continue;
+            }
+             */
+
         }
         while (window.pollEvent(event))
         {
@@ -475,15 +489,16 @@ void Chess::Game::move(std::vector<std::vector<char>>& underboard, std::vector<s
 }
 
 
-void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx) {
+void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& iswhite, bool& isblack, bool& pieceselected) {
     sf::Event event;
     std::pair<float, float> promoteboxcoords;
+    std::vector<char> promotelist = {'Q', 'B', 'R', 'K'};
     while (window->pollEvent(event)) {
         switch (event.type) {
             case sf::Event::MouseButtonPressed:
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    if (currturn == "white")
+                    if (iswhite)
                     {
                         for (int dy = 0; dy < 4; dy++)
                         {
@@ -491,12 +506,14 @@ void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, flo
                             if (hovermousex > promoteboxcoords.first and hovermousex < promoteboxcoords.first + 120 and
                                 hovermousey > promoteboxcoords.second and hovermousey < promoteboxcoords.second + 120)
                             {
-                                char prompiece = underboard[promposy + dy][promposx];
-                                updatepiece(promposy + dy, promposx, prompiece);
+                                char prompiece = promotelist[dy];
+                                updatepiece(promposy, promposx, prompiece);
+                                pieceselected = true;
+                                break;
                             }
                         }
                         //update the promotion piece here
-                    } else if (currturn == "black")
+                    } else if (isblack)
                     {
                         for (int dy = 0; dy < 4; dy++)
                         {
@@ -504,8 +521,11 @@ void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, flo
                             if (hovermousex > promoteboxcoords.first and hovermousex < promoteboxcoords.first + 120 and
                                 hovermousey > promoteboxcoords.second and hovermousey < promoteboxcoords.second + 120)
                             {
+                                std::cout << "Sucessfully chose well!" << std::endl;
                                 char prompiece = underboard[promposy - dy][promposx];
-                                updatepiece(promposy - dy, promposx, prompiece);
+                                updatepiece(promposy, promposx, prompiece);
+                                pieceselected = true;
+                                break;
                             }
                         }
                         //update the promotion piece here
