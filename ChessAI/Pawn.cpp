@@ -95,40 +95,38 @@ void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std
     }
 }
 
-bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn,  std::vector<std::vector<std::pair<float, float>>>& boardcoords, std::pair<float, float>& promotioncoords, std::pair<int, int>& prompos) {
-    if (turn == "white")
-    {
+bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn,  std::vector<std::vector<std::pair<float, float>>>& boardcoords, std::pair<float, float>& promotioncoords, std::pair<int, int>& prompos, bool& iswhite, bool& isblack) {
         for (int i = 0; i < 8; i++)
         {
             if (underboard[0][i] == 'P' and thepieces[0][i].getcolor() == "white" )
             {
                 promotioncoords = boardcoords[0][i];
                 prompos = std::make_pair(0, i);
+                iswhite = true;
                 return true;
             }
 
         }
-    } else if (turn == "black")
-    {
         for (int i = 0; i < 8; i++)
         {
             if (underboard[7][i] == 'P' and thepieces[7][i].getcolor() == "black")
             {
                 promotioncoords = boardcoords[7][i];
                 prompos = std::make_pair(7, i);
+                isblack = true;
                 return true;
             }
         }
-    }
+
     return false;
 }
 
 //this is correct
-void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords, float mouseposy, float mouseposx, std::string turn) {
+void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords, float mouseposy, float mouseposx, std::string turn, bool& iswhite, bool& isblack) {
     float xwidth = cellcoords.first + 26;
-    sf::Color green(118, 150, 86);
+    sf::Color green(0, 128, 0);
     sf::Color blue(0, 0, 205);
-    if (turn == "white")
+    if (iswhite)
     {
         for (int i = 0; i < 4; i++)
         {
@@ -154,7 +152,7 @@ void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::stri
             pieces.setPosition(xwidth, yheight);
             window->draw(pieces);
         }
-    } else if (turn == "black")
+    } else if (isblack)
     {
         for (int i = 0; i < 4; i++)
         {
