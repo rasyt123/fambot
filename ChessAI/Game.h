@@ -26,6 +26,7 @@ namespace Chess {
     class Gamemenu;
     class Game {
     public:
+        void pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& iswhite, bool& isblack, bool& pieceselected);
         void SetupBoard(sf::RenderWindow* window);
         void CheckSelect(sf::RenderWindow* window, bool& isgreen,  std::pair<float, float>& piececoords, std::pair<int, int>& pieceyx, bool mademove, float& clickposy, float& clickposx);
         void CoverCellGreen(sf::RenderWindow *window, bool &isgreen, std::pair<float, float> &piececoords, std::pair<int, int> &pieceyx, float& clickposy, float& clickposx);
