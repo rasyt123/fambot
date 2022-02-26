@@ -521,8 +521,7 @@ void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, flo
                             if (hovermousex > promoteboxcoords.first and hovermousex < promoteboxcoords.first + 120 and
                                 hovermousey > promoteboxcoords.second and hovermousey < promoteboxcoords.second + 120)
                             {
-                                std::cout << "Sucessfully chose well!" << std::endl;
-                                char prompiece = underboard[promposy - dy][promposx];
+                                char prompiece = promotelist[dy];
                                 updatepiece(promposy, promposx, prompiece);
                                 pieceselected = true;
                                 break;
