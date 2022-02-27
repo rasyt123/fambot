@@ -105,6 +105,7 @@ void Chess::Game::GameLoop() {
     bool promotion = false;
     bool move = false;
     bool ischeckmate = false;
+    std::vector<std::vector<char>> prevboard;
     std::vector<std::vector<char>> copyboardstate;
     std::vector<std::vector<Pieces>> copyboard;
     std::pair<float, float> startpiececoords;
@@ -193,17 +194,6 @@ void Chess::Game::GameLoop() {
            //void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& promotion)
             window.display();
             continue;
-            /*
-            if (pieceselect)
-            {
-                std::cout << "I'm here" << std::endl;
-                pieceselect = false;
-            } else
-            {
-                continue;
-            }
-             */
-
         }
         while (window.pollEvent(event))
         {
@@ -274,11 +264,16 @@ void Chess::Game::GameLoop() {
                                 }
                                 break;
                             }
-                            if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion))
+                            prevboard = underboard;
+                            std::pair<int, int> kingcoords = findking(currentturn, this->underboard, this->thepieces);
+                            if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion) and !currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
                             {
                                 tileselect = false;
                                 move = false;
                                 currturncount += 1;
+                            } else
+                            {
+                                underboard = prevboard;
                             }
                         }
                     }
@@ -298,6 +293,10 @@ void Chess::Game::GameLoop() {
          */
     }
 }
+
+
+
+
 
 bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colorturn, bool& mademove, int endposy, int endposx, Player currentplayer)
 {
