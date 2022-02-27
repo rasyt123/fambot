@@ -20,7 +20,7 @@
 **2 player chess game built using the SFML (Simple and Fast Multimedia Layer) Library. It also includes AI that uses the minimax algorithm for move generation and move lookups. I included Alpha Beta Pruning to optimize the AI as it trims the search space of minimax up until a certain depth. This may decrease the overall strength of the ai, but it can still play decent casual chess.**
 
 <p align="center">
-  <img width="478" alt="chessscreenshot" src="https://user-images.githubusercontent.com/26770454/148174568-5b4d241a-78ee-4b26-a7ef-1d8d96d984c3.png">
+  <img width="478" alt="chessscreenshot" src="https://user-images.githubusercontent.com/26770454/155892407-05a322c6-d1b4-48cc-888c-183c00aa451b.png">
 </p>
 
 ![chessenact2](https://user-images.githubusercontent.com/26770454/155891883-82bc6b95-cd64-4066-b834-9e1d8b1d231b.gif)
