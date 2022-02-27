@@ -23,7 +23,7 @@
   <img width="478" alt="chessscreenshot" src="https://user-images.githubusercontent.com/26770454/148174568-5b4d241a-78ee-4b26-a7ef-1d8d96d984c3.png">
 </p>
 
-![chessenact2](https://user-images.githubusercontent.com/26770454/148176526-33577692-2cec-4ef6-8e0e-d5d31870e58c.gif)
+![chessenact2](https://user-images.githubusercontent.com/26770454/155891883-82bc6b95-cd64-4066-b834-9e1d8b1d231b.gif)
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
