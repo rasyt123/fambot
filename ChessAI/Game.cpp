@@ -141,6 +141,7 @@ void Chess::Game::GameLoop() {
     bool thecheckmate = false;
     std::string checkmateturn;
     std::vector<std::string> promotionstrs;
+    std::vector<std::vector<Pieces>> prevthepieces;
     bool iswhite = false;
     bool isblack = false;
     bool pieceselect = false;
@@ -265,6 +266,7 @@ void Chess::Game::GameLoop() {
                                 break;
                             }
                             prevboard = underboard;
+                            prevthepieces = thepieces;
                             std::pair<int, int> kingcoords = findking(currentturn, this->underboard, this->thepieces);
                             if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion) and !currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
                             {
@@ -274,6 +276,7 @@ void Chess::Game::GameLoop() {
                             } else
                             {
                                 underboard = prevboard;
+                                thepieces = prevthepieces;
                             }
                         }
                     }
@@ -304,6 +307,7 @@ bool Chess::Game::currentlyincheck(sf::RenderWindow *window, std::string colortu
     King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
     if (kingobj.determinecheck(this->underboard, this->thepieces, colorturn))
     {
+        std::cout << "Checked even when made illegal move!!!" << std::endl;
         return true;
     } else
     {
