@@ -79,3 +79,71 @@ void Chess::MediumAi::setKingevalsquares() {
                        {-50,-30,-30,-30,-30,-30,-30,-50}};
 }
 
+
+
+std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces) {
+        std::vector<std::pair<char, std::vector<int>>> allpossiblemoves;
+        /*
+         *
+         * Pawn pawnobj(startposx, startposy, endposx, endposy);
+    Rook rookobj(startposx, startposy, endposx, endposy);
+    Knight knightobj(startposx, startposy, endposx, endposy);
+    Bishop bishopobj(startposx, startposy, endposx, endposy);
+    Queen queenobj(startposx, startposy, endposx, endposy);
+         *
+         *
+         *
+         *
+         *
+         *
+         */
+    Pawn pawnobj(0, 0, -9000, -9000);
+    Rook rookobj(0, 0, -9000, -9000);
+    //special moves I need to add: 
+    //castling, en passant, promotion
+
+    Knight knightobj(i, j, -9000, -9000);
+
+        for (int i = 0; i < underboard.size(); i++)
+        {
+            for (int j = 0; j < underboard[0].size(); i++)
+            {
+                if (thepieces[i][j].getcolor() == color)
+                {
+                    switch (underboard[i][j])
+                    {
+                        case 'P':
+
+
+
+                            break;
+                        case 'R':
+
+
+                            break;
+                        case 'K':
+
+                            break;
+                        case 'B':
+
+                            break;
+                        case 'Q':
+
+                            break;
+                        case 'A':
+
+
+                            break;
+
+
+
+                    }
+                }
+            }
+        }
+
+
+
+}
+
+
