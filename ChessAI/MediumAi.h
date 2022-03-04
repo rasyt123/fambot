@@ -1,7 +1,13 @@
 //
 // Created by rasyt on 12/21/2021.
 //
-
+#include "King.h"
+#include "Pawn.h"
+#include "Rook.h"
+#include "Queen.h"
+#include "Knight.h"
+#include "Pieces.h"
+#include "Player.h"
 #ifndef CHESS_MEDIUMAI_H
 #define CHESS_MEDIUMAI_H
 
@@ -19,6 +25,9 @@ namespace Chess {
         void setRookevalsquares();
         void setQueenevalsquares();
         void setKingevalsquares();
+        std::vector<std::pair<char, std::vector<int>>> getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard,
+        std::vector<std::vector<Pieces>> thepieces);
+
 
 
 
@@ -31,6 +40,7 @@ namespace Chess {
         std::vector<std::vector<int>> rookevalsquares;
         std::vector<std::vector<int>> queenevalsquares;
         std::vector<std::vector<int>> kingevalsquares;
+
 
 
 
