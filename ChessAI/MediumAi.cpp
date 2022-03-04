@@ -82,61 +82,109 @@ void Chess::MediumAi::setKingevalsquares() {
 
 
 std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces) {
-        std::vector<std::pair<char, std::vector<int>>> allpossiblemoves;
-        /*
-         *
-         * Pawn pawnobj(startposx, startposy, endposx, endposy);
-    Rook rookobj(startposx, startposy, endposx, endposy);
-    Knight knightobj(startposx, startposy, endposx, endposy);
-    Bishop bishopobj(startposx, startposy, endposx, endposy);
-    Queen queenobj(startposx, startposy, endposx, endposy);
-         *
-         *
-         *
-         *
-         *
-         *
-         */
+    std::vector<std::pair<char, std::vector<int>>> allpossiblemoves;
     Pawn pawnobj(0, 0, -9000, -9000);
     Rook rookobj(0, 0, -9000, -9000);
-    //special moves I need to add: 
+    Knight knightobj(0, 0, -9000, -9000);
+    King kingobj(0, 0, -9000, -9000);
+    Queen queenobj(0, 0, -9000, -9000);
+    Bishop bishopobj(0, 0, -9000, -9000);
+    //special moves I need to add:
     //castling, en passant, promotion
-
-    Knight knightobj(i, j, -9000, -9000);
-
         for (int i = 0; i < underboard.size(); i++)
         {
             for (int j = 0; j < underboard[0].size(); i++)
             {
-                if (thepieces[i][j].getcolor() == color)
+                if (thepieces[i][j].getcolor() == color and underboard[i][j] != ' ')
                 {
                     switch (underboard[i][j])
                     {
                         case 'P':
-
-
-
+                            pawnobj.setstartpos(i, j);
+                            pawnobj.getpossiblemoves();
+                            for (auto item : pawnobj.getpossiblemoves())
+                            {
+                                std::vector<int> moves;
+                                moves.push_back(i);
+                                moves.push_back(j);
+                                moves.push_back(item.first);
+                                moves.push_back(item.second);
+                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                allpossiblemoves.push_back(movecomb);
+                            }
                             break;
                         case 'R':
-
+                            rookobj.setstartpos(i, j);
+                            rookobj.getpossiblemoves();
+                            for (auto item : rookobj.getpossiblemoves())
+                            {
+                                std::vector<int> moves;
+                                moves.push_back(i);
+                                moves.push_back(j);
+                                moves.push_back(item.first);
+                                moves.push_back(item.second);
+                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                allpossiblemoves.push_back(movecomb);
+                            }
 
                             break;
                         case 'K':
-
+                            knightobj.setstartpos(i, j);
+                            knightobj.getpossiblemoves();
+                            for (auto item : knightobj.getpossiblemoves())
+                            {
+                                std::vector<int> moves;
+                                moves.push_back(i);
+                                moves.push_back(j);
+                                moves.push_back(item.first);
+                                moves.push_back(item.second);
+                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                allpossiblemoves.push_back(movecomb);
+                            }
                             break;
                         case 'B':
-
+                            bishopobj.setstartpos(i, j);
+                            bishopobj.getpossiblemoves();
+                            for (auto item : bishopobj.getpossiblemoves())
+                            {
+                                std::vector<int> moves;
+                                moves.push_back(i);
+                                moves.push_back(j);
+                                moves.push_back(item.first);
+                                moves.push_back(item.second);
+                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                allpossiblemoves.push_back(movecomb);
+                            }
                             break;
                         case 'Q':
+                            queenobj.setstartpos(i, j);
+                            queenobj.getpossiblemoves();
+                            for (auto item : queenobj.getpossiblemoves())
+                            {
+                                std::vector<int> moves;
+                                moves.push_back(i);
+                                moves.push_back(j);
+                                moves.push_back(item.first);
+                                moves.push_back(item.second);
+                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                allpossiblemoves.push_back(movecomb);
+                            }
 
                             break;
                         case 'A':
-
-
+                            kingobj.setstartpos(i, j);
+                            kingobj.getpossiblemoves();
+                            for (auto item : kingobj.getpossiblemoves())
+                            {
+                                std::vector<int> moves;
+                                moves.push_back(i);
+                                moves.push_back(j);
+                                moves.push_back(item.first);
+                                moves.push_back(item.second);
+                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                allpossiblemoves.push_back(movecomb);
+                            }
                             break;
-
-
-
                     }
                 }
             }
@@ -145,5 +193,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 }
+
 
 
