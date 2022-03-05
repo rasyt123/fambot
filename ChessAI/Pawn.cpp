@@ -28,7 +28,7 @@ bool Chess::Pawn::passantcheck(std::vector<std::vector<int>>& pawnmoveslist, int
 
 //I will check if the start pos is a pawn before I call this function in game.cpp
 void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn, bool& passant, std::vector<std::vector<int>>& pawnmovetwicewhite,
-                            std::vector<std::vector<int>>& pawnmovetwiceblack) {
+                            std::vector<std::vector<int>>& pawnmovetwiceblack, bool& computer) {
     if (turn == "white")
     {
         //left capture en passant with turn as white
@@ -39,9 +39,9 @@ void Chess::Pawn::EnPassant(sf::RenderWindow* window, std::vector<std::vector<ch
             and InBounds(startposy - 1, startposx - 1, underboard) and underboard[startposy - 1][startposx - 1] == ' ' and
                     InBounds(startposy - 2, startposx - 1, underboard) and passantcheck(pawnmovetwiceblack, startposy, startposx - 1))
             {
-                   createblank(startposy, startposx - 1, underboard, thepieces);
-                    EnactPassant(underboard, thepieces);
-                    passant = true;
+                createblank(startposy, startposx - 1, underboard, thepieces);
+                EnactPassant(underboard, thepieces);
+                passant = true;
             }
         }
         else if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx+1)
@@ -198,6 +198,7 @@ bool Chess::Pawn::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
     if (turn == "white")
     {
         GenerateWhite(underboard, thepieces);
+        //if the pawn move selected is valid and we decide to move two places
         if (IsValidMove(endposy, endposx))
         {
             return true;
@@ -207,6 +208,7 @@ bool Chess::Pawn::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
         }
     } else {
         GenerateBlack(underboard, thepieces);
+        //if the move selected is valid and we decide to move it two places
         if (IsValidMove(endposy, endposx))
         {
             return true;
@@ -318,6 +320,17 @@ void Chess::Pawn::GenerateWhite(std::vector<std::vector<char>> &underboard, std:
     {
         possiblemoves.emplace_back(std::make_pair(startposy-2, startposx));
     }
+
+    if (startposy == 3 and InBounds(endposy, endposx, underboard) and endposy == startposy-1 and endposx == startposx - 1
+        and underboard[endposy][endposx] == ' ')
+    {
+        if (InBounds(startposy, startposx - 1, underboard) and thepieces[startposy][startposx - 1].getcolor() == "black" and underboard[startposy][startposx - 1] == 'P'
+            and InBounds(startposy - 1, startposx - 1, underboard) and underboard[startposy - 1][startposx - 1] == ' ' and
+            InBounds(startposy - 2, startposx - 1, underboard))
+        {
+
+        }
+    }
 }
 
 //correct
@@ -378,6 +391,23 @@ std::vector<std::pair<int, int>> Chess::Pawn::getwatchingsquares() {
 bool Chess::Pawn::getstaredown() {
     return starekingdown;
 }
+
+bool Chess::Pawn::getifmovetwice() {
+    return movetwice;
+}
+
+
+void Chess::Pawn::setmovetwice(bool move) {
+    movetwice = move;
+}
+
+
+void Chess::Pawn::setstartpos(int startposy, int startposx) {
+    this->startposy = startposy;
+    this->startposx = startposx;
+}
+
+
 
 
 
