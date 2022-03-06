@@ -80,6 +80,62 @@ void Chess::MediumAi::setKingevalsquares() {
 }
 
 
+int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
+    //bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
+    if (depth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
+    {
+        return staticeval(underboard, thepieces);
+    }
+    if (maximizingPlayer == "white")
+    {
+        int maxEvaluation = -INT_MAX;
+        //check if im currently able to castle on both ways and add that move in
+        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
+        //getallpossiblemoves will handle move types like enpassant,
+        Player matter;
+        for (std::pair<char, std::vector<int>>& move : possiblemoves)
+        {
+            std::vector<std::vector<char>> prevboard = underboard;
+            std::vector<std::vector<Pieces>> prevpieces = thepieces;
+            thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[3], move.second[4], matter);
+            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, maximizingPlayer, thegame);
+            underboard = prevboard;
+            thepieces = prevpieces;
+            maxEvaluation = std::max(maxEvaluation, eval);
+            alpha = std::max(alpha, eval);
+            if (beta <= alpha)
+            {
+                break;
+            }
+        }
+        return maxEvaluation;
+
+    } else
+    {
+        int minEvaluation = INT_MAX;
+        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
+        Player matter;
+        for (std::pair<char, std::vector<int>>& move : possiblemoves)
+        {
+            std::vector<std::vector<char>> prevboard = underboard;
+            std::vector<std::vector<Pieces>> prevpieces = thepieces;
+            thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[3], move.second[4], matter);
+            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, maximizingPlayer, thegame);
+            underboard = prevboard;
+            thepieces = prevpieces;
+            minEvaluation = std::min(minEvaluation, eval);
+            beta = std::min(beta, eval);
+            if (beta <= alpha) 
+            {
+                break;
+            }
+        }
+        return minEvaluation;
+    }
+}
+
+
+
 
 std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces) {
     std::vector<std::pair<char, std::vector<int>>> allpossiblemoves;
@@ -193,6 +249,8 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 }
+
+
 
 
 
