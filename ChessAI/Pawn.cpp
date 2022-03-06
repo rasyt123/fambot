@@ -3,7 +3,6 @@
 //
 #include "Pawn.h"
 
-//correct
 void Chess::Pawn::EnactPassant(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
     char temp = underboard[startposy][startposx];
     Pieces tempcopy = thepieces[startposy][startposx];
@@ -93,6 +92,21 @@ void Chess::Pawn::ListPromotionOptions(sf::RenderWindow* window, std::vector<std
         std::pair<float, float> cellcoords = boardcoords[endposy][endposx];
         promotion = true;
     }
+}
+
+bool Chess::Pawn::promtiondetect(int starty, int startx, char piece, int endy, int endx, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn) {
+    if (turn == "white" and piece == 'P' and IsValidMove(endy, endx) and endy == 7)
+    {
+        return true;
+    } else if (turn == "black" and piece == 'P' and IsValidMove(endy, endx) and endx == 0)
+    {
+        return false;
+    }
+}
+
+void Chess::Pawn::updatepiece(int endposrow, int endposcol, char piece, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    underboard[endposrow][endposcol] = piece;
+    thepieces[endposrow][endposcol].settype(piece);
 }
 
 bool Chess::Pawn::lastrankoppo(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string turn,  std::vector<std::vector<std::pair<float, float>>>& boardcoords, std::pair<float, float>& promotioncoords, std::pair<int, int>& prompos, bool& iswhite, bool& isblack) {
@@ -299,6 +313,8 @@ void Chess::Pawn::GenerateWhitePassant(std::vector<std::vector<char>> &underboar
     }
 }
 
+
+
 bool Chess::Pawn::twicemovepawn(int thestarty, int thestartx, int theendy, int theendx, std::string color, std::vector<std::vector<bool>>& pawnmovedtwiceal, std::vector<std::vector<char>>& underboard) {
     if (color == "white")
     {
@@ -311,7 +327,7 @@ bool Chess::Pawn::twicemovepawn(int thestarty, int thestartx, int theendy, int t
     } else
     {
         if (thestarty == 1 and  underboard[thestarty][thestartx] == 'P' and theendy == thestarty + 2 and theendx == thestartx
-        and InBounds(theendy, theendx, underboard) and underboard[theendy][theendx] == ' ') 
+        and InBounds(theendy, theendx, underboard) and underboard[theendy][theendx] == ' ')
         {
             pawnmovedtwiceal[theendy][theendx] = true;
             return true;
@@ -319,6 +335,8 @@ bool Chess::Pawn::twicemovepawn(int thestarty, int thestartx, int theendy, int t
     }
     return false;
 }
+
+
 
 
 //correct
@@ -443,9 +461,6 @@ void Chess::Pawn::setstartpos(int startposy, int startposx) {
     this->startposy = startposy;
     this->startposx = startposx;
 }
-
-
-
 
 
 
