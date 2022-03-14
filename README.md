@@ -15,7 +15,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-### Chess With AI (In-Progress)
+### Chess With Basic AI (In-Progress)
 
 **2 player chess game built using the SFML (Simple and Fast Multimedia Layer) Library. It also includes AI that uses the minimax algorithm for move generation and move lookups. I included Alpha Beta Pruning to optimize the AI as it trims the search space of minimax up until a certain depth. This may decrease the overall strength of the ai, but it can still play decent casual chess.**
 
