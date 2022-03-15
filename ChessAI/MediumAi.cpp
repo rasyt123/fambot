@@ -6,7 +6,7 @@
 
 
 
-void Chess::MediumAi::setPawnevalsquares() {
+void Chess::MediumAi::whitesetPawnevalsquares() {
     pawnevalsquares = {{0,  0,  0,  0,  0,  0,  0,  0},
                        {50, 50, 50, 50, 50, 50, 50, 50},
                        {10, 10, 20, 30, 30, 20, 10, 10},
@@ -19,7 +19,7 @@ void Chess::MediumAi::setPawnevalsquares() {
 
 
 
-void Chess::MediumAi::setKnightevalsquares() {
+void Chess::MediumAi::whitesetKnightevalsquares() {
     knightevalsquares = {{-50,-40,-30,-30,-30,-30,-40,-50},
                          {-40,-20,  0,  0,  0,  0,-20,-40},
                          {-30,  0, 10, 15, 15, 10,  0,-30},
@@ -31,7 +31,7 @@ void Chess::MediumAi::setKnightevalsquares() {
 }
 
 
-void Chess::MediumAi::setBishopevalsquares() {
+void Chess::MediumAi::whitesetBishopevalsquares() {
     bishopevalsquares = {{-20,-10,-10,-10,-10,-10,-10,-20},
                          {-10,  0,  0,  0,  0,  0,  0,-10},
                          {-10,  0,  5, 10, 10,  5,  0,-10},
@@ -44,7 +44,7 @@ void Chess::MediumAi::setBishopevalsquares() {
 
 
 
-void Chess::MediumAi::setRookevalsquares() {
+void Chess::MediumAi::whitesetRookevalsquares() {
     rookevalsquares = {{0,  0,  0,  0,  0,  0,  0,  0},
                        {5, 10, 10, 10, 10, 10, 10,  5},
                        {-5,  0,  0,  0,  0,  0,  0, -5},
@@ -56,7 +56,7 @@ void Chess::MediumAi::setRookevalsquares() {
 }
 
 
-void Chess::MediumAi::setQueenevalsquares() {
+void Chess::MediumAi::whitesetQueenevalsquares() {
     queenevalsquares = {{-20,-10,-10, -5, -5,-10,-10,-20},
             {-10,  0,  0,  0,  0,  0,  0,-10},
             {-10,  0,  5,  5,  5,  5,  0,-10},
@@ -68,7 +68,7 @@ void Chess::MediumAi::setQueenevalsquares() {
 }
 
 
-void Chess::MediumAi::setKingevalsquares() {
+void Chess::MediumAi::whitesetKingevalsquares() {
     kingevalsquares = {{-50,-40,-30,-20,-20,-30,-40,-50},
                        {-30,-20,-10,  0,  0,-10,-20,-30},
                        {-30,-10, 20, 30, 30, 20,-10,-30},
@@ -77,6 +77,49 @@ void Chess::MediumAi::setKingevalsquares() {
                        {-30,-10, 20, 30, 30, 20,-10,-30},
                        {-30,-30,  0,  0,  0,  0,-30,-30},
                        {-50,-30,-30,-30,-30,-30,-30,-50}};
+}
+
+
+
+
+void Chess::MediumAi::blacksetPawnevalsquares() {
+    
+}
+
+
+void Chess::MediumAi::blacksetKnightevalsquares() {
+
+
+
+}
+
+
+void Chess::MediumAi::blacksetBishopevalsquares() {
+
+
+
+}
+
+
+void Chess::MediumAi::blacksetRookevalsquares() {
+
+
+
+
+}
+
+
+void Chess::MediumAi::blacksetQueenevalsquares() {
+
+
+
+}
+
+
+void Chess::MediumAi::blacksetKingevalsquares() {
+
+
+    
 }
 
 
@@ -90,6 +133,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     {
         int maxEvaluation = -INT_MAX;
         //check if im currently able to castle on both ways and add that move in
+
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
         //getallpossiblemoves will handle move types like enpassant,
         Player matter;
@@ -125,7 +169,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
             thepieces = prevpieces;
             minEvaluation = std::min(minEvaluation, eval);
             beta = std::min(beta, eval);
-            if (beta <= alpha) 
+            if (beta <= alpha)
             {
                 break;
             }
@@ -249,8 +293,4 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 }
-
-
-
-
 
