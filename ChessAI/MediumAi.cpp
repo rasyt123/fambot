@@ -80,47 +80,79 @@ void Chess::MediumAi::whitesetKingevalsquares() {
 }
 
 
+void Chess::MediumAi::endgamewhitesetkingevalsquares() {
+    endgamekingevalsquares =
+            {{-50,-40,-30,-20,-20,-30,-40,-50},
+             {-30,-20,-10,  0,  0,-10,-20,-30},
+             {-30,-10, 20, 30, 30, 20,-10,-30},
+             {-30,-10, 30, 40, 40, 30,-10,-30},
+             {-30,-10, 30, 40, 40, 30,-10,-30},
+             {-30,-10, 20, 30, 30, 20,-10,-30},
+             {-30,-30,  0,  0,  0,  0,-30,-30},
+             {-50,-30,-30,-30,-30,-30,-30,-50}};
+}
+
+
+void Chess::MediumAi::endgameblacksetkingevalsquares() {
+    std::vector<std::vector<int>> temp = endgamekingevalsquares;
+    std::reverse(temp.begin(), temp.end());
+    blackendgamekingevalsquares = endgamekingevalsquares;
+}
+
+
 
 
 void Chess::MediumAi::blacksetPawnevalsquares() {
-    
+    std::vector<std::vector<int>> temp = pawnevalsquares;
+    std::reverse(temp.begin(), temp.end());
+    blackpawnevalsquares = temp;
 }
 
 
 void Chess::MediumAi::blacksetKnightevalsquares() {
-
-
-
+    std::vector<std::vector<int>> temp = knightevalsquares;
+    std::reverse(temp.begin(), temp.end());
+    blackknightevalsquares = temp;
 }
 
 
 void Chess::MediumAi::blacksetBishopevalsquares() {
-
-
-
+    std::vector<std::vector<int>> temp = bishopevalsquares;
+    std::reverse(temp.begin(), temp.end());
+    blackbishopevalsquares = temp;
 }
 
 
 void Chess::MediumAi::blacksetRookevalsquares() {
-
-
-
-
+    std::vector<std::vector<int>> temp = rookevalsquares;
+    std::reverse(temp.begin(), temp.end());
+    blackrookevalsquares = temp;
 }
 
 
 void Chess::MediumAi::blacksetQueenevalsquares() {
-
-
-
+    std::vector<std::vector<int>> temp = queenevalsquares;
+    std::reverse(temp.begin(), temp.end());
+    blackqueenevalsquares = temp;
 }
 
 
 void Chess::MediumAi::blacksetKingevalsquares() {
-
-
-    
+    std::vector<std::vector<int>> temp = kingevalsquares;
+    std::reverse(temp.begin(), temp.end());
+    blackkingevalsquares = temp;
 }
+
+/*
+ * Will include opening and end game phases
+ * Dont need to detect draws at the moment
+ * Things to add:
+ * quiscience search
+ * Basic knowledge of pawn structure - doubled, isolated, backward and passed pawns
+Something resembling king safety - pawn shield and king tropism results scaled against the strength of opponent's remaining pieces
+basic knowledge about endgames drawn by insufficient material
+ *
+ */
 
 
 int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
@@ -135,7 +167,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         //check if im currently able to castle on both ways and add that move in
 
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
-        //getallpossiblemoves will handle move types like enpassant,
+        //getallpossiblemoves will handle move types like enpassant, promotion
         Player matter;
         for (std::pair<char, std::vector<int>>& move : possiblemoves)
         {
@@ -293,4 +325,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 }
+
+
 
