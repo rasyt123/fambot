@@ -154,6 +154,19 @@ basic knowledge about endgames drawn by insufficient material
  *
  */
 
+int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, std::string color) {
+    int P = 100;
+    int N = 320;
+    int B = 330;
+    int R = 500;
+    int Q = 900;
+    int K = 20000;
+
+
+
+
+}
+
 
 int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
     //bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
@@ -325,6 +338,7 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 }
+
 
 
 
