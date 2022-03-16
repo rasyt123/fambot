@@ -26,12 +26,14 @@ namespace Chess {
         void whitesetRookevalsquares();
         void whitesetQueenevalsquares();
         void whitesetKingevalsquares();
+        void endgamewhitesetkingevalsquares();
         void blacksetPawnevalsquares();
         void blacksetKnightevalsquares();
         void blacksetBishopevalsquares();
         void blacksetRookevalsquares();
         void blacksetQueenevalsquares();
         void blacksetKingevalsquares();
+        void endgameblacksetkingevalsquares();
         std::vector<std::pair<char, std::vector<int>>> getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard,
         std::vector<std::vector<Pieces>> thepieces);
         int minimaxalphabeta(std::vector<std::vector<char>> underboard,
@@ -51,6 +53,7 @@ namespace Chess {
         std::vector<std::vector<int>> rookevalsquares;
         std::vector<std::vector<int>> queenevalsquares;
         std::vector<std::vector<int>> kingevalsquares;
+        std::vector<std::vector<int>> endgamekingevalsquares;
 
 
 
@@ -60,7 +63,7 @@ namespace Chess {
         std::vector<std::vector<int>> blackrookevalsquares;
         std::vector<std::vector<int>> blackqueenevalsquares;
         std::vector<std::vector<int>> blackkingevalsquares;
-
+        std::vector<std::vector<int>> blackendgamekingevalsquares;
     };
 
 
@@ -72,3 +75,4 @@ namespace Chess {
 
 
 #endif //CHESS_MEDIUMAI_H
+
