@@ -290,28 +290,79 @@ void Chess::Pawn::GenerateBlack(std::vector<std::vector<char>>& underboard, std:
     }
 }
 
-void Chess::Pawn::GenerateWhitePassant(std::vector<std::vector<char>> &underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::vector<bool>>& pawnmovedtwiceal) {
+bool Chess::Pawn::GenerateWhitePassant(std::vector<std::vector<char>> &underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::vector<bool>>& pawnmovedtwiceal) {
     if (startposy == 3 and InBounds(startposy - 1, startposx - 1, underboard)
         and underboard[startposy - 1][startposx - 1] == ' ')
     {
         if (InBounds(startposy, startposx - 1, underboard) and thepieces[startposy][startposx - 1].getcolor() == "black" and underboard[startposy][startposx - 1] == 'P'
-            and InBounds(startposy - 1, startposx - 1, underboard) and underboard[startposy - 1][startposx - 1] == ' ' and
-            InBounds(startposy - 2, startposx - 1, underboard) and pawnmovedtwiceal[startposy][startposx -1] == true)
+             and InBounds(startposy - 2, startposx - 1, underboard) and pawnmovedtwiceal[startposy][startposx -1] == true)
         {
             possiblemoves.emplace_back(std::make_pair(startposy - 1, startposx - 1));
+            return true;
         }
     }
 
-    if (startposy == 3 and InBounds(startposy - 1, startposx + 1, underboard))
+    if (startposy == 3 and InBounds(startposy - 1, startposx + 1, underboard)
+       and underboard[startposy - 1][startposx + 1] == ' ')
     {
         if (InBounds(startposy, startposx + 1, underboard) and thepieces[startposy][startposx + 1].getcolor() == "black" and underboard[startposy][startposx + 1] == 'P' and
-            InBounds(startposy - 1, startposx + 1, underboard) and underboard[startposy - 1][startposx + 1] == ' '
-            and InBounds(startposy - 2, startposx + 1, underboard) and pawnmovedtwiceal[startposy][startposx +1] == true)
+            InBounds(startposy - 2, startposx + 1, underboard) and pawnmovedtwiceal[startposy][startposx +1] == true)
         {
             possiblemoves.emplace_back(startposy - 1, startposx + 1);
+            return true;
         }
     }
+    return false;
 }
+
+bool Chess::Pawn::GenerateBlackPassant(std::vector<std::vector<char>> &underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::vector<bool>>& pawnmovedtwiceal) {
+    if (startposy == 4 and InBounds(startposy + 1, startposx - 1, underboard)
+    and underboard[startposy + 1][startposx -1] == ' ')
+    {
+        if (InBounds(startposy, startposx - 1, underboard) and thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P' and
+            InBounds(startposy + 2, startposx - 1, underboard) and pawnmovedtwiceal[startposy][startposx - 1] == true)
+        {
+            possiblemoves.emplace_back(std::make_pair(startposy + 1, startposx - 1));
+            return true;
+        }
+    } else if (startposy == 4 and InBounds(startposy + 1, startposx + 1, underboard)
+    and underboard[startposy + 1][startposx + 1] == ' ')
+    {
+        if (InBounds(startposy, startposx + 1, underboard) and thepieces[startposy][startposx + 1].getcolor() == "white" and underboard[startposy][startposx + 1] == 'P' and
+           InBounds(startposy + 2, startposx + 1, underboard) and pawnmovedtwiceal[startposy][startposx + 1] == true)
+        {
+            possiblemoves.emplace_back(std::make_pair(startposy + 1, startposx + 1));
+            return true;
+        }
+    }
+    return false;
+}
+
+
+/*
+ if (startposy == 4 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx - 1
+        and underboard[endposy][endposx] == ' ')
+        {
+            if (InBounds(startposy, startposx - 1, underboard) and thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P' and
+           underboard[endposy][endposx]  == ' ' and InBounds(startposy + 2, startposx - 1, underboard) and passantcheck(pawnmovetwicewhite, startposy, startposx - 1))
+            {
+                createblank(startposy, startposx - 1, underboard, thepieces);
+                EnactPassant(underboard, thepieces);
+                passant = true;
+            }
+        } else if (startposy == 4 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx + 1)
+        {
+            if (InBounds(startposy, startposx + 1, underboard) and thepieces[startposy][startposx + 1].getcolor() == "white" and underboard[startposy][startposx + 1] == 'P' and
+            underboard[endposy][endposx] == ' ' and InBounds(startposy + 2, startposx + 1, underboard) and passantcheck(pawnmovetwicewhite, startposy, startposx + 1))
+            {
+                createblank(startposy, startposx + 1, underboard, thepieces);
+                EnactPassant(underboard, thepieces);
+                passant = true;
+            }
+        }
+ */
+
+
 
 
 
@@ -461,6 +512,8 @@ void Chess::Pawn::setstartpos(int startposy, int startposx) {
     this->startposy = startposy;
     this->startposx = startposx;
 }
+
+
 
 
 
