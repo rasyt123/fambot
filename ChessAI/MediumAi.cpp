@@ -180,14 +180,19 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         int maxEvaluation = -INT_MAX;
         //check if im currently able to castle on both ways and add that move in
 
-        King jking(0, 0, -9000, -9000);
-        std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
-        std::pair<char, std::vector<int>> castlepairs;
-        jking.setstartpos(ourking.first, ourking.second);
-        jking.CastleCheckGeneration(underboard, thepieces, )
         //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
         //getallpossiblemoves will handle move types like enpassant, promotion
+        King jking(0, 0, -9000, -9000);
+        std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
+
+        std::vector<std::pair<int,int>> currcheckmoves;
+        jking.setstartpos(ourking.first, ourking.second);
+        jking.CastleCheckGeneration(underboard, thepieces, currcheckmoves, maximizingPlayer);
+        for (auto item: currcheckmoves)
+        {
+            std::pair<char, std::vector<int>> castlepairs = std::make_pair('A', );
+        }
         Player matter;
         for (std::pair<char, std::vector<int>>& move : possiblemoves)
         {
@@ -345,6 +350,7 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 }
+
 
 
 
