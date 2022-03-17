@@ -216,6 +216,18 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     {
         int minEvaluation = INT_MAX;
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
+        //getallpossiblemoves will handle move types like enpassant, promotion
+        King jking(0, 0, -9000, -9000);
+        std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
+        std::vector<std::pair<int,int>> currcheckmoves;
+        jking.setstartpos(ourking.first, ourking.second);
+        jking.CastleCheckGeneration(underboard, thepieces, currcheckmoves, maximizingPlayer);
+        for (auto item: currcheckmoves)
+        {
+            std::vector<int> currmove = {item.first, item.second};
+            std::pair<char, std::vector<int>> castlepairs = std::make_pair('A', currmove);
+            possiblemoves.emplace_back(castlepairs);
+        }
         Player matter;
         for (std::pair<char, std::vector<int>>& move : possiblemoves)
         {
@@ -347,12 +359,7 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
                 }
             }
         }
-
-
-
 }
-
-
 
 
 
