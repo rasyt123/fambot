@@ -278,6 +278,7 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
                 }
             }
 
+
         } else if (endposx == startposx + 2)
         {
             for (std::pair<int, int> item : wkingsidecoords)
@@ -293,6 +294,88 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
     return true;
 }
 
+
+
+bool Chess::King::CastleCheckGeneration(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color) {
+    std::vector<std::pair<int, int>> wqsidecoords = {{startposy, startposx - 1}, {startposy, startposx - 2}, {startposy, startposx - 3}};
+    std::vector<std::pair<int, int>> wkingsidecoords = {{startposy, startposx + 1}, {startposy, startposx + 2}};
+    std::vector<std::pair<int, int>> bqsidecoords;
+    std::vector<std::pair<int, int>> bkingsidecoords;
+    bool qsidehrook = false;
+    bool ksinghrook = false;
+    bool qsideclear = true;
+    bool ksideclear = true;
+    if (InBounds(startposy, startposx - 4, underboard) and underboard[startposy][startposx - 4] == 'R'
+        and thepieces[startposy][startposx - 4].getcolor() == color)
+    {
+        qsidehrook = true;
+    }
+    if (InBounds(startposy, startposx + 3, underboard) and underboard[startposy][startposx + 3] == 'R'
+        and thepieces[startposy][startposx + 3].getcolor() == color)
+    {
+        ksinghrook = true;
+    }
+    int currentendposxleft = startposx - 2;
+    if (!qsidehrook)
+    {
+            return false;
+    }
+    for (int xbet = startposx - 1; xbet >= 1; xbet--) {
+        if (underboard[startposy][xbet] != ' ') {
+            return false;
+        }
+    }
+
+
+    int currentendposright = startposx + 2;
+        if (!ksinghrook)
+        {
+            return false;
+        }
+        for (int xbet = startposx + 1; xbet <= endposx; xbet++)
+        {
+            if (underboard[startposy][xbet] != ' ')
+            {
+                return false;
+            }
+        }
+    for (int y = 0; y < underboard.size(); y++)
+    {
+        for (int x = 0; x < underboard[0].size(); x++)
+        {
+            if (thepieces[y][x].getcolor() != color and underboard[y][x] != ' ')
+            {
+                collectmoveinterference(underboard, thepieces, y, x, thepieces[y][x].getcolor());
+            }
+        }
+    }
+
+    for (std::pair<int, int> move : interferemoves)
+    {
+            for (std::pair<int, int> item : wqsidecoords)
+            {
+                if (move == item)
+                {
+                    qsideclear = false;
+                }
+            }
+            for (std::pair<int, int> item : wkingsidecoords)
+            {
+                if (move == item)
+                {
+                    ksideclear = false;
+                }
+            }
+        }
+    if (qsideclear)
+    {
+        possiblemoves.emplace_back(std::make_pair(startposy, currentendposxleft));
+    }
+    if (ksideclear) {
+        possiblemoves.emplace_back(std::make_pair(startposy, currentendposright));
+    }
+    return true;
+}
 
 
 bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int y, int x, std::string color) {
@@ -618,36 +701,11 @@ void Chess::King::clearpossiblemoves() {
 }
 
 
-/*
-   for (auto item : dirs)
-   {
-       if (item.first >= 0 and item.first < underboard.size()
-       and item.second >= 0 and item.second < underboard[0].size())
-       {
-           if (currstarekingy != -9000 and currstarekingx != -9000 and
-           currstarekingy == item.first and currstarekingx == item.second)
-           {
-               for (int y = 0; y < underboard.size(); y++)
-               {
-                   for (int x = 0; x < underboard[0].size(); x++)
-                   {
-                       if (thepieces[y][x].getcolor() == color and underboard[y][x] != ' ' and underboard[y][x] != 'A')
-                       {
-                           collectmoveinterference2(underboard, thepieces, y, x, thepieces[y][x].getcolor(), interferemoves2);
-                       }
-                   }
-               }
-               for (auto intmoves : interferemoves2)
-               {
-                   if (intmoves.first == currstarekingy and intmoves.second == currstarekingx)
-                   {
-                       return false;
-                   }
-               }
-           }
-       }
-   }
-    */
+void Chess::King::setstartpos(int startposy, int startposx) {
+    this->startposy = startposy;
+    this->startposx = startposx;
+}
+
 
 /*
    for (auto item : dirs)
