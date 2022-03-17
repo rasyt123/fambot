@@ -339,33 +339,6 @@ bool Chess::Pawn::GenerateBlackPassant(std::vector<std::vector<char>> &underboar
 }
 
 
-/*
- if (startposy == 4 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx - 1
-        and underboard[endposy][endposx] == ' ')
-        {
-            if (InBounds(startposy, startposx - 1, underboard) and thepieces[startposy][startposx - 1].getcolor() == "white" and underboard[startposy][startposx - 1] == 'P' and
-           underboard[endposy][endposx]  == ' ' and InBounds(startposy + 2, startposx - 1, underboard) and passantcheck(pawnmovetwicewhite, startposy, startposx - 1))
-            {
-                createblank(startposy, startposx - 1, underboard, thepieces);
-                EnactPassant(underboard, thepieces);
-                passant = true;
-            }
-        } else if (startposy == 4 and InBounds(endposy, endposx, underboard) and endposy == startposy + 1 and endposx == startposx + 1)
-        {
-            if (InBounds(startposy, startposx + 1, underboard) and thepieces[startposy][startposx + 1].getcolor() == "white" and underboard[startposy][startposx + 1] == 'P' and
-            underboard[endposy][endposx] == ' ' and InBounds(startposy + 2, startposx + 1, underboard) and passantcheck(pawnmovetwicewhite, startposy, startposx + 1))
-            {
-                createblank(startposy, startposx + 1, underboard, thepieces);
-                EnactPassant(underboard, thepieces);
-                passant = true;
-            }
-        }
- */
-
-
-
-
-
 bool Chess::Pawn::twicemovepawn(int thestarty, int thestartx, int theendy, int theendx, std::string color, std::vector<std::vector<bool>>& pawnmovedtwiceal, std::vector<std::vector<char>>& underboard) {
     if (color == "white")
     {
@@ -512,6 +485,9 @@ void Chess::Pawn::setstartpos(int startposy, int startposx) {
     this->startposy = startposy;
     this->startposx = startposx;
 }
+
+
+
 
 
 
