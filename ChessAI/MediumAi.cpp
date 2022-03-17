@@ -161,6 +161,7 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     int R = 500;
     int Q = 900;
     int K = 20000;
+    int totalscore = 0;
 
 
 
@@ -172,13 +173,19 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     //bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
     if (depth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
     {
-        return staticeval(underboard, thepieces);
+        return staticeval(underboard, thepieces, maximizingPlayer);
     }
     if (maximizingPlayer == "white")
     {
         int maxEvaluation = -INT_MAX;
         //check if im currently able to castle on both ways and add that move in
 
+        King jking(0, 0, -9000, -9000);
+        std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
+        std::pair<char, std::vector<int>> castlepairs;
+        jking.setstartpos(ourking.first, ourking.second);
+        jking.CastleCheckGeneration(underboard, thepieces, )
+        //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
         //getallpossiblemoves will handle move types like enpassant, promotion
         Player matter;
@@ -338,6 +345,7 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 }
+
 
 
 
