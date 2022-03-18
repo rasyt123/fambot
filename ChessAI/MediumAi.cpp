@@ -171,6 +171,7 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
 
 int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
     //bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
+    //-10, -11, -12 will be values for
     if (depth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
     {
         return staticeval(underboard, thepieces, maximizingPlayer);
@@ -183,6 +184,8 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
         //getallpossiblemoves will handle move types like enpassant, promotion
+
+        //castle move additions
         King jking(0, 0, -9000, -9000);
         std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
         std::vector<std::pair<int,int>> currcheckmoves;
@@ -190,10 +193,22 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         jking.CastleCheckGeneration(underboard, thepieces, currcheckmoves, maximizingPlayer);
         for (auto item: currcheckmoves)
         {
-            std::vector<int> currmove = {item.first, item.second};
+            std::vector<int> currmove = {item.first, item.second, CASTLE};
             std::pair<char, std::vector<int>> castlepairs = std::make_pair('A', currmove);
             possiblemoves.emplace_back(castlepairs);
         }
+
+        //enpassant move addons
+        for (int i = 0; i < underboard.size(); i++) {
+            for (int j = 0; j < underboard[0].size(); j++) {
+                Pawn newpawn(j, i, -9000, -9000);
+                if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == "white")
+                {
+                    newpawn.GenerateWhitePassant();
+                }
+            }
+        }
+
         Player matter;
         for (std::pair<char, std::vector<int>>& move : possiblemoves)
         {
@@ -359,6 +374,9 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
                 }
             }
         }
+
+
+
 }
 
 
