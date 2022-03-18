@@ -218,7 +218,7 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& unde
                 }
 
             }
-            if (hasisolatedleftfile and hasisolatedrightfile) 
+            if (hasisolatedleftfile and hasisolatedrightfile)
             {
                 numisolated += 1;
             }
@@ -226,6 +226,8 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& unde
             hasisolatedleftfile = false;
         }
     }
+    int score = numisolated * -10;
+    return score;
 }
 
 
@@ -436,10 +438,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
-
-
-
-
 
 
 
