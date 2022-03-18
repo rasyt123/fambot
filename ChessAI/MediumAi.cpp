@@ -187,8 +187,8 @@ int Chess::MediumAi::countdoubledpawnscore(std::vector<std::vector<char>>& under
 
 int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     int numisolated = 0;
-    bool hasisolatedleftfile = false;
-    bool hasisolatedrightfile = false;
+    bool hasisolatedleftfile = true;
+    bool hasisolatedrightfile = true;
     for (int i = 0; i < underboard.size(); i++)
     {
         for (int j = 0; j < underboard[0].size(); j++)
@@ -201,7 +201,7 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& unde
                     if ((underboard[i][j - 1 + z] == 'P' and thepieces[i][j - 1 + z].getcolor() == color)
                     or (underboard[i][j - 1 - z] == 'P' and thepieces[i][j - 1 - z].getcolor() == color))
                     {
-                        hasisolatedleftfile = true;
+                        hasisolatedleftfile = false;
                     }
                 }
             }
@@ -213,17 +213,17 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& unde
                     if ((underboard[i][j + 1 + z] == 'P' and thepieces[i][j + 1 + z].getcolor() == color)
                         or (underboard[i][j + 1 - z] == 'P' and thepieces[i][j + 1 - z].getcolor() == color))
                     {
-                        hasisolatedrightfile = true;
+                        hasisolatedrightfile = false;
                     }
                 }
 
             }
-            if (hasisolatedleftfile and hasisolatedrightfile)
+            if (!hasisolatedleftfile and !hasisolatedrightfile)
             {
                 numisolated += 1;
             }
-            hasisolatedrightfile = false;
-            hasisolatedleftfile = false;
+            hasisolatedrightfile = true;
+            hasisolatedleftfile = true;
         }
     }
     int score = numisolated * -10;
