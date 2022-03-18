@@ -187,30 +187,33 @@ int Chess::MediumAi::countdoubledpawnscore(std::vector<std::vector<char>>& under
 
 int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     int numisolated = 0;
-
+    bool hasisolatedleftfile = false;
+    bool hasisolatedrightfile = false;
     for (int i = 0; i < underboard.size(); i++)
     {
         for (int j = 0; j < underboard[0].size(); j++)
         {
             if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
-                and j - 1 >= 0 and j - 1 <= underboard[0].size() - 1) 
+                and j - 1 >= 0 and j - 1 <= underboard[0].size() - 1)
             {
-                for (int z = 0; z < underboard.size();) 
+                for (int z = 0; z < underboard.size(); j++)
                 {
-                    
-                    
-                    
-                }
-                for (int i) 
-                {
-                    
-                    
-                    
+                    if ((underboard[i][z + i] == 'P' and thepieces[i][z + i].getcolor() == color)
+                    or (underboard[i][z - i] == 'P' and thepieces[i][z - i].getcolor() == color)) 
+                    {
+                        
+                    }
                 }
             }
+            if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
+                and j + 1 < underboard[0].size())
+            {
+
+            }
+
         }
     }
-    
+
 }
 
 
@@ -421,6 +424,8 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
+
+
 
 
 
