@@ -168,6 +168,22 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
 
 }
 
+int Chess::MediumAi::countdoubledpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+    int numdoubled = 0;
+    for (int i = 0; i < underboard.size(); i++)
+    {
+        for (int j = 0; j < underboard[0].size(); j++)
+        {
+            if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
+            and i - 1 >= 0 and underboard[i - 1][j] == 'P' and thepieces[i-1][j].getcolor() == color) {
+                numdoubled += 1;
+            }
+        }
+    }
+    int score = numdoubled * -5;
+    return score;
+}
+
 
 int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
     //bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
@@ -375,9 +391,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
                 }
             }
         }
-
-
-
 }
 
 
