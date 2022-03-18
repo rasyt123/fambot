@@ -385,5 +385,3 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 
-
-
