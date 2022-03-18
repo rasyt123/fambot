@@ -197,24 +197,16 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
             std::pair<char, std::vector<int>> castlepairs = std::make_pair('A', currmove);
             possiblemoves.emplace_back(castlepairs);
         }
-
-        //enpassant move addons
-        for (int i = 0; i < underboard.size(); i++) {
-            for (int j = 0; j < underboard[0].size(); j++) {
-                Pawn newpawn(j, i, -9000, -9000);
-                if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == "white")
-                {
-                    newpawn.GenerateWhitePassant();
-                }
-            }
-        }
-
         Player matter;
         for (std::pair<char, std::vector<int>>& move : possiblemoves)
         {
             std::vector<std::vector<char>> prevboard = underboard;
             std::vector<std::vector<Pieces>> prevpieces = thepieces;
             thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[3], move.second[4], matter);
+            if (move.first == 'P' and move.second[3] == 0)
+            {
+                updatepiece(underboard, thepieces, move.second[3], move.second[4], 'Q');
+            }
             int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, maximizingPlayer, thegame);
             underboard = prevboard;
             thepieces = prevpieces;
@@ -249,6 +241,10 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
             std::vector<std::vector<char>> prevboard = underboard;
             std::vector<std::vector<Pieces>> prevpieces = thepieces;
             thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[3], move.second[4], matter);
+            if (move.first == 'P' and move.second[3] == 7)
+            {
+                updatepiece(underboard, thepieces, move.second[3], move.second[4], 'Q');
+            }
             int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, maximizingPlayer, thegame);
             underboard = prevboard;
             thepieces = prevpieces;
@@ -263,6 +259,11 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     }
 }
 
+
+void Chess::MediumAi::updatepiece(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int endposrow, int endposcol, char piece) {
+    underboard[endposrow][endposcol] = piece;
+    thepieces[endposrow][endposcol].settype(piece);
+}
 
 
 
@@ -378,6 +379,7 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
 
 
 }
+
 
 
 
