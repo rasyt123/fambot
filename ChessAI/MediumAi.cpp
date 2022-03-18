@@ -185,6 +185,35 @@ int Chess::MediumAi::countdoubledpawnscore(std::vector<std::vector<char>>& under
 }
 
 
+int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+    int numisolated = 0;
+
+    for (int i = 0; i < underboard.size(); i++)
+    {
+        for (int j = 0; j < underboard[0].size(); j++)
+        {
+            if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
+                and j - 1 >= 0 and j - 1 <= underboard[0].size() - 1) 
+            {
+                for (int z = 0; z < underboard.size();) 
+                {
+                    
+                    
+                    
+                }
+                for (int i) 
+                {
+                    
+                    
+                    
+                }
+            }
+        }
+    }
+    
+}
+
+
 int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
     //bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
     //-10, -11, -12 will be values for
