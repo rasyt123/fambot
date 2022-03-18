@@ -196,24 +196,36 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& unde
             if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
                 and j - 1 >= 0 and j - 1 <= underboard[0].size() - 1)
             {
-                for (int z = 0; z < underboard.size(); j++)
+                for (int z = 0; z < underboard.size(); z++)
                 {
-                    if ((underboard[i][z + i] == 'P' and thepieces[i][z + i].getcolor() == color)
-                    or (underboard[i][z - i] == 'P' and thepieces[i][z - i].getcolor() == color)) 
+                    if ((underboard[i][j - 1 + z] == 'P' and thepieces[i][j - 1 + z].getcolor() == color)
+                    or (underboard[i][j - 1 - z] == 'P' and thepieces[i][j - 1 - z].getcolor() == color))
                     {
-                        
+                        hasisolatedleftfile = true;
                     }
                 }
             }
             if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
                 and j + 1 < underboard[0].size())
             {
+                for (int z = 0; z < underboard.size(); z++)
+                {
+                    if ((underboard[i][j + 1 + z] == 'P' and thepieces[i][j + 1 + z].getcolor() == color)
+                        or (underboard[i][j + 1 - z] == 'P' and thepieces[i][j + 1 - z].getcolor() == color))
+                    {
+                        hasisolatedrightfile = true;
+                    }
+                }
 
             }
-
+            if (hasisolatedleftfile and hasisolatedrightfile) 
+            {
+                numisolated += 1;
+            }
+            hasisolatedrightfile = false;
+            hasisolatedleftfile = false;
         }
     }
-
 }
 
 
@@ -424,7 +436,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
-
 
 
 
