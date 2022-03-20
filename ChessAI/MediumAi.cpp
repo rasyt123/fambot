@@ -185,6 +185,9 @@ int Chess::MediumAi::countdoubledpawnscore(std::vector<std::vector<char>>& under
 }
 
 
+
+
+
 int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     int numisolated = 0;
     bool hasisolatedleftfile = true;
@@ -228,6 +231,16 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& unde
     }
     int score = numisolated * -10;
     return score;
+}
+
+
+int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, Game& thegame) {
+
+
+    
+    
+    
+    
 }
 
 
@@ -438,6 +451,7 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
+
 
 
 
