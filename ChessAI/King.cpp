@@ -82,6 +82,10 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
     }
 }
 
+std::vector<std::pair<int,int>>& Chess::King::getinterferemoves() {
+    return interferemoves;
+}
+
 
 
 bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
@@ -296,7 +300,7 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
 
 
 
-bool Chess::King::CastleCheckGeneration(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color) {
+bool Chess::King::CastleCheckGeneration(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>>& possiblemoves,  std::string color) {
     std::vector<std::pair<int, int>> wqsidecoords = {{startposy, startposx - 1}, {startposy, startposx - 2}, {startposy, startposx - 3}};
     std::vector<std::pair<int, int>> wkingsidecoords = {{startposy, startposx + 1}, {startposy, startposx + 2}};
     std::vector<std::pair<int, int>> bqsidecoords;
