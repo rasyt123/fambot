@@ -234,14 +234,51 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& unde
 }
 
 
+
+
 int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, Game& thegame) {
 
+    if (color == "white")
+    {
+        King watchingpawn(0, 0, -9000, 9000);
+        for (int i = 0; i < underboard.size(); i++)
+        {
+            for (int j = 0; j < underboard[0].size(); j++)
+            {
+                if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == "white"
+                and ((underboard[i-1][j-1] == 'P' and thepieces[i-1][j-1].getcolor() == "white") or (underboard[i-1][j+1] == 'P'
+                and thepieces[i-1][j+1].getcolor() == "white")))
+                {
+                    if (underboard[i-1][j] == ' ' and )
+                    {
 
-    
-    
-    
-    
+
+
+                    }
+
+
+                }
+            }
+        }
+
+
+
+
+    } else if (color == "black") {
+
+
+
+    }
 }
+
+int Chess::MediumAi::countpassedpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+
+
+
+
+}
+
+
 
 
 int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
@@ -451,7 +488,5 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
-
-
 
 
