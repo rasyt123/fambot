@@ -291,7 +291,7 @@ int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>>& underboar
             for (int j = 0; j < underboard[0].size(); j++)
             {
                 if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == "black"
-                    and ((inbounds(i + 1, j - 1) and underboard[i+1][j-1] == 'P' and thepieces[i+1][j-1].getcolor() == "black") or (inbounds(i+1, j+1) and 
+                    and ((inbounds(i + 1, j - 1) and underboard[i+1][j-1] == 'P' and thepieces[i+1][j-1].getcolor() == "black") or (inbounds(i+1, j+1) and
                     underboard[i+1][j+1] == 'P' and thepieces[i+1][j+1].getcolor() == "black")))
                 {
                     if (underboard[i+1][j] == ' ' and isWatching(underboard, thepieces, color, i+1, j))
@@ -307,40 +307,45 @@ int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>>& underboar
 
 int Chess::MediumAi::countpassedpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
         int numpassedpawns = 0;
+        bool ispassed = true;
         for (int i = 0; i < underboard.size(); i++)
         {
             for (int j = 0; j < underboard[0].size(); j++)
             {
-                if (color == "white" and underboard[i][j] == 'P')
+                if (color == "white" and underboard[i][j] == 'P' and thepieces[i][j].getcolor() == "white")
                 {
-                    for (int z = 0; z < underboard.size(); z++)
+                    for (int z = 0; z < underboard.size() and ispassed; z++)
                     {
-                        if ((underboard[i-1-z][j-1] == 'P') or () or ())
+                        if ((inbounds(i-1-z, j-1) and underboard[i-1-z][j-1] == 'P'
+                        and thepieces[i-1-z][j-1].getcolor() == "black") or (
+                                (inbounds(i-1-z, j) and underboard[i-1-z][j] == 'P' and thepieces[i-1-z][j].getcolor() == "black")
+                                or (inbounds(i-1-z, j+1) and underboard[i-1-z][j+1] == 'P' and thepieces[i-1-z][j+1].getcolor() == "black")))
                         {
-
-
-
+                            ispassed = false;
                         }
-
-
                     }
-                } else
+                } else if (color == "black" and underboard[i][j] == 'P' and thepieces[i][j].getcolor() == "black")
                 {
-
+                    for (int z = 0; z < underboard.size() and ispassed; z++)
+                    {
+                        if ((inbounds(i+1+z, j-1) and underboard[i+1+z][j-1] == 'P'
+                             and thepieces[i+1+z][j-1].getcolor() == "white") or (
+                                    (inbounds(i+1+z, j) and underboard[i+1+z][j] == 'P' and thepieces[i+1+z][j].getcolor() == "white")
+                                    or (inbounds(i+1+z, j+1) and underboard[i+1+z][j+1] == 'P' and thepieces[i+1+z][j+1].getcolor() == "white")))
+                        {
+                            ispassed = false;
+                        }
+                    }
+                }
+                if (ispassed)
+                {
+                    numpassedpawns += 1;
+                    ispassed = false;
                 }
             }
         }
+        return 8 * numpassedpawns;
 }
-
-
-/*
- *
- *
- *
- *
- */
-
-
 
 
 int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
@@ -550,6 +555,8 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
+
+
 
 
 
