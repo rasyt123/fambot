@@ -234,10 +234,33 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>>& unde
 }
 
 
+bool Chess::MediumAi::isWatching(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int row, int col) {
+    King watching(0, 0, -9000, 9000);
+    for (int i = 0; i < underboard.size(); i++)
+    {
+        for (int j = 0; j < underboard[0].size(); j++)
+        {
+            if (underboard[i][j] == ' ' and thepieces[i][j].getcolor() != color)
+            {
+                watching.collectmoveinterference(underboard, thepieces, i, j, color);
+            }
+        }
+    }
+    for (auto item : watching.getinterferemoves())
+    {
+        if (item.first == row and item.second == col)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 
 int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, Game& thegame) {
-
+    int numbackwardpawns = 0;
     if (color == "white")
     {
         King watchingpawn(0, 0, -9000, 9000);
@@ -249,34 +272,69 @@ int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>>& underboar
                 and ((underboard[i-1][j-1] == 'P' and thepieces[i-1][j-1].getcolor() == "white") or (underboard[i-1][j+1] == 'P'
                 and thepieces[i-1][j+1].getcolor() == "white")))
                 {
-                    if (underboard[i-1][j] == ' ' and )
+                    if (underboard[i-1][j] == ' ' and isWatching(underboard, thepieces, color, i -1, j))
                     {
+                        numbackwardpawns += 1;
+                    }
+                }
+            }
+        }
+    } else if (color == "black")
+    {
+        King watchingpawn(0, 0, -9000, 9000);
+        for (int i = 0; i < underboard.size(); i++)
+        {
+            for (int j = 0; j < underboard[0].size(); j++)
+            {
+                if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == "black"
+                    and ((underboard[i+1][j-1] == 'P' and thepieces[i+1][j-1].getcolor() == "black") or (underboard[i+1][j+1] == 'P'
+                                                                                                         and thepieces[i+1][j+1].getcolor() == "black")))
+                {
+                    if (underboard[i+1][j] == ' ' and isWatching(underboard, thepieces, color, i+1, j))
+                    {
+                        numbackwardpawns += 1;
+                    }
+                }
+            }
+        }
+    }
+    return -4 * numbackwardpawns;
+}
 
+int Chess::MediumAi::countpassedpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+        int numpassedpawns = 0;
+        for (int i = 0; i < underboard.size(); i++)
+        {
+            for (int j = 0; j < underboard[0].size(); j++)
+            {
+                if (color == "white" and underboard[i][j] == 'P')
+                {
+                    for (int z = i; z >= 0; z--)
+                    {
+                        if (() or () or ())
+                        {
+
+
+
+                        }
 
 
                     }
-
+                } else
+                {
 
                 }
             }
         }
-
-
-
-
-    } else if (color == "black") {
-
-
-
-    }
 }
 
-int Chess::MediumAi::countpassedpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
 
-
-
-
-}
+/*
+ *
+ *
+ *
+ *
+ */
 
 
 
@@ -488,5 +546,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
+
 
 
