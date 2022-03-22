@@ -162,6 +162,8 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     int Q = 900;
     int K = 20000;
     int totalscore = 0;
+    int wscore = 0;
+    int bscore = 0;
 
 
 
@@ -381,8 +383,15 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         {
             std::vector<std::vector<char>> prevboard = underboard;
             std::vector<std::vector<Pieces>> prevpieces = thepieces;
-            thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[3], move.second[4], matter);
-            if (move.first == 'P' and move.second[3] == 0)
+            if (move.second.size() == 5 and move.second[4] == CASTLE)
+            {
+                King tempking(move.second[1], move.second[0], move.second[3], move.second[2]);
+                tempking.CastleMovement(underboard, thepieces);
+            } else 
+            {
+                thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[2], move.second[3], matter);
+            }
+            if (move.first == 'P' and move.second[2] == 0)
             {
                 updatepiece(underboard, thepieces, move.second[3], move.second[4], 'Q');
             }
@@ -419,8 +428,15 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         {
             std::vector<std::vector<char>> prevboard = underboard;
             std::vector<std::vector<Pieces>> prevpieces = thepieces;
-            thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[3], move.second[4], matter);
-            if (move.first == 'P' and move.second[3] == 7)
+            if (move.second.size() == 5 and move.second[4] == CASTLE)
+            {
+                King tempking(move.second[1], move.second[0], move.second[3], move.second[2]);
+                tempking.CastleMovement(underboard, thepieces);
+            } else
+            {
+                thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[2], move.second[3], matter);
+            }
+            if (move.first == 'P' and move.second[2] == 7)
             {
                 updatepiece(underboard, thepieces, move.second[3], move.second[4], 'Q');
             }
