@@ -11,15 +11,17 @@
 #ifndef CHESS_MEDIUMAI_H
 #define CHESS_MEDIUMAI_H
 #include "Game.h"
-
+#include <set>
 #include <vector>
-
+#define ENPASSANT -10
+#define CASTLE -10
 namespace Chess {
     class MediumAi {
 
 
 
     public:
+        bool inbounds(int row, int col);
         void whitesetPawnevalsquares();
         void whitesetKnightevalsquares();
         void whitesetBishopevalsquares();
@@ -34,12 +36,21 @@ namespace Chess {
         void blacksetQueenevalsquares();
         void blacksetKingevalsquares();
         void endgameblacksetkingevalsquares();
+        int zorbistpieceindex(char item, std::string color);
+        void InitalizeZorbistTable();
+
+        bool isWatching(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int row, int col);
+        int countpassedpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
+        int countbackwardpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, Game& thegame);
+        int countdoubledpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
+        int countisolatedpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
+        void updatepiece(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int endposrow, int endposcol, char piece);
         std::vector<std::pair<char, std::vector<int>>> getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard,
         std::vector<std::vector<Pieces>> thepieces);
         int minimaxalphabeta(std::vector<std::vector<char>> underboard,
                              std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame);
         int staticeval(std::vector<std::vector<char>> underboard,
-                       std::vector<std::vector<Pieces>> thepieces);
+                       std::vector<std::vector<Pieces>> thepieces, std::string color);
 
 
 
@@ -54,9 +65,8 @@ namespace Chess {
         std::vector<std::vector<int>> queenevalsquares;
         std::vector<std::vector<int>> kingevalsquares;
         std::vector<std::vector<int>> endgamekingevalsquares;
-
-
-
+        unsigned long long int ZobristTable[8][8][12];
+        std::set<int> zorbisthash;
         std::vector<std::vector<int>> blackpawnevalsquares;
         std::vector<std::vector<int>> blackknightevalsquares;
         std::vector<std::vector<int>> blackbishopevalsquares;
@@ -75,4 +85,5 @@ namespace Chess {
 
 
 #endif //CHESS_MEDIUMAI_H
+
 
