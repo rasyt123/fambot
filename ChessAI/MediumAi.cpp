@@ -162,9 +162,8 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     int Q = 900;
     int K = 20000;
     int totalscore = 0;
-    int wscore = 0;
-    int bscore = 0;
-
+    int wmaterialscore = 0;
+    int bmaterialscore = 0;
 
 
 
@@ -387,7 +386,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
             {
                 King tempking(move.second[1], move.second[0], move.second[3], move.second[2]);
                 tempking.CastleMovement(underboard, thepieces);
-            } else 
+            } else
             {
                 thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[2], move.second[3], matter);
             }
@@ -452,6 +451,43 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         }
         return minEvaluation;
     }
+}
+
+//Pawn King Bishop Rook Queen Knight
+int Chess::MediumAi::zorbistpieceindex(char item, std::string color) {
+    if (color == "white")
+    {
+        switch (item) {
+            case 'P':
+                return 0;
+            case 'A':
+                return 1;
+            case 'B':
+                return 2;
+            case 'R':
+                return 3;
+            case 'Q':
+                return 4;
+            case 'K':
+                return 5;
+        }
+    } else {
+        switch (item) {
+            case 'P':
+                return 6;
+            case 'A':
+                return 7;
+            case 'B':
+                return 8;
+            case 'R':
+                return 9;
+            case 'Q':
+                return 10;
+            case 'K':
+                return 11;
+        }
+    }
+    return -1;
 }
 
 
@@ -571,7 +607,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
-
 
 
 
