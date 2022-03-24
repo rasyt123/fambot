@@ -491,6 +491,33 @@ int Chess::MediumAi::zorbistpieceindex(char item, std::string color) {
 }
 
 
+void Chess::MediumAi::InitalizeZorbistTable() {
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            for (int k = 0; k < 12; k++) {
+                unsigned long long int value = 0;
+                value = value - 1;
+                ZobristTable[i][j][k] = rand() % value -1;
+            }
+        }
+    }
+}
+
+
+unsigned long long int Chess::MediumAi::createhashboardpos(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    unsigned long long int hash = 0;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (underboard[i][j] != ' ') {
+                int thepieceindex = zorbistpieceindex(underboard[i][j], thepieces[i][j].getcolor());
+                hash ^= ZobristTable[i][j][thepieceindex];
+            }
+        }
+    }
+    return hash;
+}
+
+
 void Chess::MediumAi::updatepiece(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int endposrow, int endposcol, char piece) {
     underboard[endposrow][endposcol] = piece;
     thepieces[endposrow][endposcol].settype(piece);
@@ -518,7 +545,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
                     {
                         case 'P':
                             pawnobj.setstartpos(i, j);
-                            pawnobj.getpossiblemoves();
                             for (auto item : pawnobj.getpossiblemoves())
                             {
                                 std::vector<int> moves;
@@ -607,7 +633,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
-
 
 
 
