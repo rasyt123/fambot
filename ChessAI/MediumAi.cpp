@@ -349,7 +349,14 @@ int Chess::MediumAi::countpassedpawn(std::vector<std::vector<char>>& underboard,
 }
 
 
-int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame){
+//Generate the hash of the default position of the pieces beforeand
+//make the move, then generate the hash and add it to the set
+//I need that hash passed as a parameter to the nodes on the next level
+//I do not want to be calculating the hash repeatedly, would be really bad
+//for the time complexity
+//
+int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame,
+unsigned long long int hashvalue){
     //bool Chess::Game::checkmate(std::string colorturn, int endposy, int endposx) {
     //-10, -11, -12 will be values for
     if (depth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
@@ -360,11 +367,9 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     {
         int maxEvaluation = -INT_MAX;
         //check if im currently able to castle on both ways and add that move in
-
         //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
         //getallpossiblemoves will handle move types like enpassant, promotion
-
         //castle move additions
         King jking(0, 0, -9000, -9000);
         std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
@@ -389,6 +394,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
             } else
             {
                 thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[2], move.second[3], matter);
+
             }
             if (move.first == 'P' and move.second[2] == 0)
             {
@@ -405,7 +411,6 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
             }
         }
         return maxEvaluation;
-
     } else
     {
         int minEvaluation = INT_MAX;
@@ -451,6 +456,19 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         }
         return minEvaluation;
     }
+}
+
+
+unsigned long long int Chess::MediumAi::makemove(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, unsigned long long int hashval,
+                                                 int startposy, int startposx, int endposy, int endposx, char piece, std::string color) {
+    hashval ^= ZobristTable[startposy][startposx][zorbistpieceindex(underboard[startposy][startposx], thepieces[startposy][startposx].getcolor())];
+    hashval ^= ZobristTable[endposy][endposx][zorbistpieceindex(piece, color)];
+    if (thepieces[endposy][endposx].getcolor() != color and underboard[endposy][endposx] != 'A'
+    and underboard[endposy][endposx] != ' ')
+    {
+        hashval ^= ZobristTable[endposy][endposx][zorbistpieceindex(underboard[startposy][startposx], thepieces[startposy][startposx].getcolor())];
+    }
+    return hashval;
 }
 
 
