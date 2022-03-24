@@ -38,6 +38,7 @@ namespace Chess {
         void endgameblacksetkingevalsquares();
         int zorbistpieceindex(char item, std::string color);
         void InitalizeZorbistTable();
+        unsigned long long int createhashboardpos(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces);
 
         bool isWatching(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, int row, int col);
         int countpassedpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
@@ -47,8 +48,10 @@ namespace Chess {
         void updatepiece(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int endposrow, int endposcol, char piece);
         std::vector<std::pair<char, std::vector<int>>> getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard,
         std::vector<std::vector<Pieces>> thepieces);
+        unsigned long long int makemove(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, unsigned long long int hashval,
+                                        int startposy, int startposx, int endposy, int endposx, char piece, std::string color);
         int minimaxalphabeta(std::vector<std::vector<char>> underboard,
-                             std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame);
+                             std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame, unsigned long long int hashvalue);
         int staticeval(std::vector<std::vector<char>> underboard,
                        std::vector<std::vector<Pieces>> thepieces, std::string color);
 
@@ -66,7 +69,7 @@ namespace Chess {
         std::vector<std::vector<int>> kingevalsquares;
         std::vector<std::vector<int>> endgamekingevalsquares;
         unsigned long long int ZobristTable[8][8][12];
-        std::set<int> zorbisthash;
+        std::set<unsigned long long int> zorbisthash;
         std::vector<std::vector<int>> blackpawnevalsquares;
         std::vector<std::vector<int>> blackknightevalsquares;
         std::vector<std::vector<int>> blackbishopevalsquares;
@@ -85,5 +88,6 @@ namespace Chess {
 
 
 #endif //CHESS_MEDIUMAI_H
+
 
 
