@@ -15,7 +15,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-### Chess With Basic AI (In-Progress)
+### SFML Chess With AI (In-Progress)
 
 **2 player chess game built using the SFML (Simple and Fast Multimedia Layer) Library that also has an AI.**
 
