@@ -453,6 +453,46 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     }
 }
 
+
+void Chess::MediumAi::InitalizeZorbistTable() {
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            for (int k = 0; k < 12; k++)
+            {
+                unsigned long long int value = 0;
+                value = value - 1;
+                ZobristTable[i][j][k] = rand() % value -1;
+            }
+        }
+    }
+}
+
+
+unsigned long long int Chess::MediumAi::createhashboardpos(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    unsigned long long int hash = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (underboard[i][j] != ' ')
+            {
+                int thepieceindex = zorbistpieceindex(underboard[i][j], thepieces[i][j].getcolor());
+                hash ^= ZobristTable[i][j][thepieceindex];
+            }
+        }
+    }
+    return hash;
+}
+
+
+void Chess::MediumAi::updatepiece(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int endposrow, int endposcol, char piece) {
+    underboard[endposrow][endposcol] = piece;
+    thepieces[endposrow][endposcol].settype(piece);
+}
+
+
 //Pawn King Bishop Rook Queen Knight
 int Chess::MediumAi::zorbistpieceindex(char item, std::string color) {
     if (color == "white")
@@ -490,38 +530,6 @@ int Chess::MediumAi::zorbistpieceindex(char item, std::string color) {
     return -1;
 }
 
-
-void Chess::MediumAi::InitalizeZorbistTable() {
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            for (int k = 0; k < 12; k++) {
-                unsigned long long int value = 0;
-                value = value - 1;
-                ZobristTable[i][j][k] = rand() % value -1;
-            }
-        }
-    }
-}
-
-
-unsigned long long int Chess::MediumAi::createhashboardpos(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
-    unsigned long long int hash = 0;
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            if (underboard[i][j] != ' ') {
-                int thepieceindex = zorbistpieceindex(underboard[i][j], thepieces[i][j].getcolor());
-                hash ^= ZobristTable[i][j][thepieceindex];
-            }
-        }
-    }
-    return hash;
-}
-
-
-void Chess::MediumAi::updatepiece(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int endposrow, int endposcol, char piece) {
-    underboard[endposrow][endposcol] = piece;
-    thepieces[endposrow][endposcol].settype(piece);
-}
 
 
 
