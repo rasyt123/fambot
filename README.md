@@ -20,12 +20,19 @@
 **2 player chess game built using the SFML (Simple and Fast Multimedia Layer) Library that also has an AI.
 
 Features:
+
 -Minimax Algorithm
+
 -Alpha Beta Pruning 
+
 -Quiescence Search 
+
 -Basic Tapered Evaluation
+
 -Evaluation
+
 -Piece Square Tables
+
 -Transposition Tables (Zobrist Hash)
 
 <p align="center">
