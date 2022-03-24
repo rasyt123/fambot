@@ -33,6 +33,8 @@
 **-Piece Square Tables**
 
 **-Transposition Tables (Zobrist Hash)**
+  
+  
 </p>
 
 <p align="center">
