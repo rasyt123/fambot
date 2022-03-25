@@ -366,7 +366,7 @@ unsigned long long int hashvalue){
             return zorbisthash[hashvalue];
         } else
         {
-            zorbisthash[hashvalue] = staticeval(underboard, thepieces, maximizingPlayer);
+            zorbisthash[hashvalue] = quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame);
         }
         return zorbisthash[hashvalue];
     }
@@ -375,7 +375,7 @@ unsigned long long int hashvalue){
         int maxEvaluation = -INT_MAX;
         //check if im currently able to castle on both ways and add that move in
         //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color
-        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
+        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces, false);
         //getallpossiblemoves will handle move types like enpassant, promotion
         //castle move additions
         King jking(0, 0, -9000, -9000);
@@ -424,7 +424,7 @@ unsigned long long int hashvalue){
     } else
     {
         int minEvaluation = INT_MAX;
-        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces);
+        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces, false);
         //getallpossiblemoves will handle move types like enpassant, promotion
         King jking(0, 0, -9000, -9000);
         std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
@@ -468,6 +468,82 @@ unsigned long long int hashvalue){
         return minEvaluation;
     }
 }
+
+
+int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
+                std::vector<std::vector<Pieces>> thepieces, int alpha, int beta, std::string maximizingPlayer, Game& thegame) {
+    //int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, std::string color)
+    //make sure to deal with depth later
+    if (maximizingPlayer == "white")
+    {
+        int standing_pateval = staticeval(underboard, thepieces, maximizingPlayer);
+        if (standing_pateval >= beta)
+        {
+            return beta;
+        }
+        if (alpha < standing_pateval)
+        {
+            alpha = standing_pateval;
+        }
+        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces, true);
+        Player matter;
+        for (auto capturemoves : possiblemoves)
+        {
+            std::vector<std::vector<char>> prevboard = underboard;
+            std::vector<std::vector<Pieces>> prevpieces = thepieces;
+            thegame.move(underboard, thepieces, maximizingPlayer, capturemoves.second[0], capturemoves.second[1], capturemoves.second[2], capturemoves.second[3], matter);
+            int evalscore = quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame);
+            underboard = prevboard;
+            thepieces = prevpieces;
+
+            if (evalscore >= beta)
+            {
+                return beta;
+            }
+            if (evalscore > alpha)
+            {
+                alpha = evalscore;
+            }
+        }
+        return alpha;
+    } else
+    {
+        int standing_pateval = staticeval(underboard, thepieces, maximizingPlayer);
+        if (standing_pateval <= alpha)
+        {
+            return alpha;
+        }
+
+        if (standing_pateval < beta)
+        {
+            beta = standing_pateval;
+        }
+        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard, thepieces, true);
+        Player matter;
+        for (auto capturemoves : possiblemoves)
+        {
+            std::vector<std::vector<char>> prevboard = underboard;
+            std::vector<std::vector<Pieces>> prevpieces = thepieces;
+            thegame.move(underboard, thepieces, maximizingPlayer, capturemoves.second[0], capturemoves.second[1], capturemoves.second[2], capturemoves.second[3], matter);
+            int evalscore = quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame);
+            underboard = prevboard;
+            thepieces = prevpieces;
+
+            if (evalscore <= alpha)
+            {
+                return alpha;
+            }
+            if (evalscore < beta)
+            {
+                beta = standing_pateval;
+            }
+        }
+        return beta;
+    }
+}
+
+
+
 
 
 unsigned long long int Chess::MediumAi::makemove(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, unsigned long long int hashval,
@@ -562,7 +638,9 @@ int Chess::MediumAi::zorbistpieceindex(char item, std::string color) {
 
 
 
-std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces) {
+
+
+std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, bool needscaptures) {
     std::vector<std::pair<char, std::vector<int>>> allpossiblemoves;
     Pawn pawnobj(0, 0, -9000, -9000);
     Rook rookobj(0, 0, -9000, -9000);
@@ -582,87 +660,171 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
                     {
                         case 'P':
                             pawnobj.setstartpos(i, j);
-                            for (auto item : pawnobj.getpossiblemoves())
+                            if (needscaptures)
                             {
-                                std::vector<int> moves;
-                                moves.push_back(i);
-                                moves.push_back(j);
-                                moves.push_back(item.first);
-                                moves.push_back(item.second);
-                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
-                                allpossiblemoves.push_back(movecomb);
+                                for (auto item : pawnobj.getcapturemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
+                            } else
+                            {
+                                for (auto item : pawnobj.getpossiblemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
                             }
                             break;
                         case 'R':
                             rookobj.setstartpos(i, j);
                             rookobj.getpossiblemoves();
-                            for (auto item : rookobj.getpossiblemoves())
-                            {
-                                std::vector<int> moves;
-                                moves.push_back(i);
-                                moves.push_back(j);
-                                moves.push_back(item.first);
-                                moves.push_back(item.second);
-                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
-                                allpossiblemoves.push_back(movecomb);
+                            if (needscaptures) {
+                                for (auto item : rookobj.getcapturemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
+                            } else {
+                                for (auto item : rookobj.getpossiblemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
                             }
-
                             break;
                         case 'K':
                             knightobj.setstartpos(i, j);
                             knightobj.getpossiblemoves();
-                            for (auto item : knightobj.getpossiblemoves())
+                            if (needscaptures)
                             {
-                                std::vector<int> moves;
-                                moves.push_back(i);
-                                moves.push_back(j);
-                                moves.push_back(item.first);
-                                moves.push_back(item.second);
-                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
-                                allpossiblemoves.push_back(movecomb);
+                                for (auto item : knightobj.getcapturemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
+                            } else {
+                                for (auto item : knightobj.getpossiblemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
                             }
                             break;
                         case 'B':
                             bishopobj.setstartpos(i, j);
                             bishopobj.getpossiblemoves();
-                            for (auto item : bishopobj.getpossiblemoves())
+                            if (needscaptures)
                             {
-                                std::vector<int> moves;
-                                moves.push_back(i);
-                                moves.push_back(j);
-                                moves.push_back(item.first);
-                                moves.push_back(item.second);
-                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
-                                allpossiblemoves.push_back(movecomb);
+                                for (auto item : bishopobj.getcapturemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
+                            } else
+                            {
+                                for (auto item : bishopobj.getpossiblemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
                             }
                             break;
                         case 'Q':
                             queenobj.setstartpos(i, j);
                             queenobj.getpossiblemoves();
-                            for (auto item : queenobj.getpossiblemoves())
+                            if (needscaptures)
                             {
-                                std::vector<int> moves;
-                                moves.push_back(i);
-                                moves.push_back(j);
-                                moves.push_back(item.first);
-                                moves.push_back(item.second);
-                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
-                                allpossiblemoves.push_back(movecomb);
+                                for (auto item : queenobj.getcapturemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
+                            } else
+                            {
+                                for (auto item : queenobj.getpossiblemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
                             }
-
                             break;
                         case 'A':
                             kingobj.setstartpos(i, j);
                             kingobj.getpossiblemoves();
-                            for (auto item : kingobj.getpossiblemoves())
-                            {
-                                std::vector<int> moves;
-                                moves.push_back(i);
-                                moves.push_back(j);
-                                moves.push_back(item.first);
-                                moves.push_back(item.second);
-                                std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
-                                allpossiblemoves.push_back(movecomb);
+                            if (needscaptures) {
+                                for (auto item : kingobj.getcapturemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
+                            } else {
+                                for (auto item : kingobj.getpossiblemoves())
+                                {
+                                    std::vector<int> moves;
+                                    moves.push_back(i);
+                                    moves.push_back(j);
+                                    moves.push_back(item.first);
+                                    moves.push_back(item.second);
+                                    std::pair<char, std::vector<int>> movecomb = std::make_pair(underboard[i][j], moves);
+                                    allpossiblemoves.push_back(movecomb);
+                                }
+
                             }
                             break;
                     }
@@ -670,5 +832,6 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
+
 
 
