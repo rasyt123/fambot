@@ -47,13 +47,15 @@ namespace Chess {
         int countisolatedpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color);
         void updatepiece(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int endposrow, int endposcol, char piece);
         std::vector<std::pair<char, std::vector<int>>> getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard,
-        std::vector<std::vector<Pieces>> thepieces);
+        std::vector<std::vector<Pieces>> thepieces, bool needscaptures);
         unsigned long long int makemove(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, unsigned long long int hashval,
                                         int startposy, int startposx, int endposy, int endposx, char piece, std::string color);
         int minimaxalphabeta(std::vector<std::vector<char>> underboard,
                              std::vector<std::vector<Pieces>> thepieces, int depth, int alpha, int beta, std::string maximizingPlayer, Game& thegame, unsigned long long int hashvalue);
         int staticeval(std::vector<std::vector<char>> underboard,
                        std::vector<std::vector<Pieces>> thepieces, std::string color);
+        int quietsearch(std::vector<std::vector<char>> underboard,
+                        std::vector<std::vector<Pieces>> thepieces, int alpha, int beta, std::string maximizingPlayer, Game& thegame);
 
 
 
@@ -69,7 +71,7 @@ namespace Chess {
         std::vector<std::vector<int>> kingevalsquares;
         std::vector<std::vector<int>> endgamekingevalsquares;
         unsigned long long int ZobristTable[8][8][12];
-        std::set<unsigned long long int> zorbisthash;
+        std::map<unsigned long long int, int> zorbisthash;
         std::vector<std::vector<int>> blackpawnevalsquares;
         std::vector<std::vector<int>> blackknightevalsquares;
         std::vector<std::vector<int>> blackbishopevalsquares;
@@ -88,6 +90,7 @@ namespace Chess {
 
 
 #endif //CHESS_MEDIUMAI_H
+
 
 
 
