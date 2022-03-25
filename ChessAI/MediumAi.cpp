@@ -361,7 +361,14 @@ unsigned long long int hashvalue){
     //-10, -11, -12 will be values for
     if (depth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
     {
-        return staticeval(underboard, thepieces, maximizingPlayer);
+        if (zorbisthash.count(hashvalue) > 0)
+        {
+            return zorbisthash[hashvalue];
+        } else
+        {
+            zorbisthash[hashvalue] = staticeval(underboard, thepieces, maximizingPlayer);
+        }
+        return zorbisthash[hashvalue];
     }
     if (maximizingPlayer == "white")
     {
@@ -383,6 +390,7 @@ unsigned long long int hashvalue){
             possiblemoves.emplace_back(castlepairs);
         }
         Player matter;
+        //for int i = 0; i <
         for (std::pair<char, std::vector<int>>& move : possiblemoves)
         {
             std::vector<std::vector<char>> prevboard = underboard;
@@ -394,13 +402,15 @@ unsigned long long int hashvalue){
             } else
             {
                 thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[2], move.second[3], matter);
-
             }
+            //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, unsigned long long int hashval,
+            //                                                 int startposy, int startposx, int endposy, int endposx, char piece, std::string color
+            int newhash = makemove(underboard, thepieces, hashvalue, move.second[0], move.second[1], move.second[2], move.second[3], move.first, maximizingPlayer);
             if (move.first == 'P' and move.second[2] == 0)
             {
                 updatepiece(underboard, thepieces, move.second[3], move.second[4], 'Q');
             }
-            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, maximizingPlayer, thegame);
+            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, maximizingPlayer, thegame, newhash);
             underboard = prevboard;
             thepieces = prevpieces;
             maxEvaluation = std::max(maxEvaluation, eval);
@@ -440,11 +450,12 @@ unsigned long long int hashvalue){
             {
                 thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[2], move.second[3], matter);
             }
+            int newhash = makemove(underboard, thepieces, hashvalue, move.second[0], move.second[1], move.second[2], move.second[3], move.first, maximizingPlayer);
             if (move.first == 'P' and move.second[2] == 7)
             {
                 updatepiece(underboard, thepieces, move.second[3], move.second[4], 'Q');
             }
-            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, maximizingPlayer, thegame);
+            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, maximizingPlayer, thegame, newhash);
             underboard = prevboard;
             thepieces = prevpieces;
             minEvaluation = std::min(minEvaluation, eval);
@@ -659,6 +670,5 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
-
 
 
