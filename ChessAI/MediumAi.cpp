@@ -164,6 +164,87 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     int totalscore = 0;
     int wmaterialscore = 0;
     int bmaterialscore = 0;
+    int wpiecetablescore = 0;
+    int bpiecetablescore = 0;
+    int wmobilityscore = 0;
+    int bmobilityscore = 0;
+
+    for (int i = 0; i < underboard.size(); i++)
+    {
+        for (int j = 0; j < underboard[0].size(); j++)
+        {
+            if (underboard[i][j] != ' ' and thepieces[i][j].getcolor() == "white")
+            {
+                switch (underboard[i][j])
+                {
+                    case 'P':
+                        wmaterialscore += 100;
+                        wpiecetablescore += pawnevalsquares[i][j];
+                    case 'A':
+                        wmaterialscore += 20000;
+                        wpiecetablescore += kingevalsquares[i][j];
+                    case 'B':
+                        wmaterialscore += 330;
+                        wpiecetablescore += bishopevalsquares[i][j];
+                    case 'R':
+                        wmaterialscore += 500;
+                        wpiecetablescore += rookevalsquares[i][j];
+                    case 'Q':
+                        wmaterialscore += 900;
+                        wpiecetablescore += queenevalsquares[i][j];
+                    case 'K':
+                        wmaterialscore += 320;
+                        wpiecetablescore += knightevalsquares[i][j];
+                }
+            } else
+            {
+                switch (underboard[i][j])
+                {
+                    case 'P':
+                        bmaterialscore += 100;
+                        bpiecetablescore += blackpawnevalsquares[i][j];
+                    case 'A':
+                        bmaterialscore += 20000;
+                        bpiecetablescore += blackkingevalsquares[i][j];
+                    case 'B':
+                        bmaterialscore += 330;
+                        bpiecetablescore += blackbishopevalsquares[i][j];
+                    case 'R':
+                        bmaterialscore += 500;
+                        bpiecetablescore += blackrookevalsquares[i][j];
+                    case 'Q':
+                        bmaterialscore += 900;
+                        bpiecetablescore += blackqueenevalsquares[i][j];
+                    case 'K':
+                        bmaterialscore += 320;
+                        bpiecetablescore += blackknightevalsquares[i][j];
+                }
+            }
+        }
+    }
+    int wdpawnpenalty = countdoubledpawnscore(underboard, thepieces, "white");
+    int wisopawnpenalty = countisolatedpawnscore(underboard, thepieces, "white");
+    int wbpawnpenalty = countbackwardpawn(underboard, thepieces, "white");
+    int wpassedpawnbonus = countpassedpawn(underboard, thepieces, "white");
+    wmobilityscore = wdpawnpenalty + wisopawnpenalty + wbpawnpenalty + wpassedpawnbonus;
+
+
+    int bdpawnpenalty = countdoubledpawnscore(underboard, thepieces, "black");
+    int bisopawnpenalty = countisolatedpawnscore(underboard, thepieces, "black");
+    int bbpawnpenalty = countbackwardpawn(underboard, thepieces, "black");
+    int bpassedpawnbonus = countpassedpawn(underboard, thepieces, "black");
+
+    
+
+
+    //material scores on each side first  (eventually will do whitescore - blackscore)
+    //piece square table penalties ()
+    //pawn structure penalities
+
+
+
+    //potential tapered evaluatuation
+    //(keep this basic) switch between endgame and middlegame when there are only 12 pieces left
 
 
 
@@ -264,7 +345,7 @@ bool Chess::MediumAi::inbounds(int row, int col) {
 
 
 
-int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color, Game& thegame) {
+int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
     int numbackwardpawns = 0;
     if (color == "white")
     {
