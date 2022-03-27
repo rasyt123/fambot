@@ -196,7 +196,7 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
                         wmaterialscore += 320;
                         wpiecetablescore += knightevalsquares[i][j];
                 }
-            } else
+            } else if (underboard[i][j] != ' ' and thepieces[i][j].getcolor() == "black")
             {
                 switch (underboard[i][j])
                 {
@@ -233,21 +233,12 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     int bisopawnpenalty = countisolatedpawnscore(underboard, thepieces, "black");
     int bbpawnpenalty = countbackwardpawn(underboard, thepieces, "black");
     int bpassedpawnbonus = countpassedpawn(underboard, thepieces, "black");
-
+    bmobilityscore = bdpawnpenalty + bisopawnpenalty + bbpawnpenalty + bpassedpawnbonus;
     
-
-
-    //material scores on each side first  (eventually will do whitescore - blackscore)
-    //piece square table penalties ()
-    //pawn structure penalities
-
-
-
-    //potential tapered evaluatuation
-    //(keep this basic) switch between endgame and middlegame when there are only 12 pieces left
-
-
-
+    
+    int wtotalscore = wmaterialscore + wpiecetablescore + wmobilityscore;
+    int btotalscore = bmaterialscore + bpiecetablescore + bmobilityscore;
+    return wtotalscore - btotalscore;
 }
 
 int Chess::MediumAi::countdoubledpawnscore(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
@@ -913,6 +904,7 @@ std::vector<std::pair<char, std::vector<int>>> Chess::MediumAi::getallpossiblemo
             }
         }
 }
+
 
 
 
