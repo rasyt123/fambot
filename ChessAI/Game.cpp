@@ -95,6 +95,8 @@ void Chess::Game::menudeal(sf::RenderWindow *window, bool& easyaistartgame, bool
 }
 
 
+
+
 //make gameloop pass a pointer to the sfrenderwindow
 void Chess::Game::GameLoop() {
     sf::RenderWindow window(sf::VideoMode(960, 960), "Chess", sf::Style::Close | sf::Style::Titlebar);
@@ -145,6 +147,9 @@ void Chess::Game::GameLoop() {
     bool iswhite = false;
     bool isblack = false;
     bool pieceselect = false;
+    MediumAi mediumAi;
+
+
     while (window.isOpen())
     {
         if (ischeckmate)
@@ -176,124 +181,135 @@ void Chess::Game::GameLoop() {
         std::pair<float, float> promotioncoords;
         std::pair<int, int> promotionlocation;
         //void Chess::Pawn::drawPromotions(sf::RenderWindow* window, std::vector<std::string> promotionimgs, std::vector<std::vector<char>>& underboard, std::pair<float, float> cellcoords)
-        if (pawn.lastrankoppo(underboard, thepieces, currentturn, boardcoords, promotioncoords, promotionlocation, iswhite, isblack))
+        if ((mediumaistart and currentturn == "white") or !mediumaistart)
         {
-            std::cout << "last rank oppo initiated" << std::endl;
-            if (iswhite)
+            if (pawn.lastrankoppo(underboard, thepieces, currentturn, boardcoords, promotioncoords, promotionlocation, iswhite, isblack))
             {
-              promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
-            } else if (isblack)
-            {
-                promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_K60.png"};
+                std::cout << "last rank oppo initiated" << std::endl;
+                if (iswhite)
+                {
+                    promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\w_K60.png"};
+                } else if (isblack)
+                {
+                    promotionstrs = {"C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_Q60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_b60.png", "C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_R60.png","C:\\Users\\rasyt\\Pictures\\Saved Pictures\\b_K60.png"};
+                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                sf::Event event;
+                float hovermousey = mousePos.y;
+                float hovermousex = mousePos.x;
+                pawn.drawPromotions(&window, promotionstrs, underboard, promotioncoords, hovermousey, hovermousex, currentturn, iswhite, isblack);
+                pollpromotion(&window, hovermousey, hovermousex, currentturn, promotionlocation.first, promotionlocation.second, iswhite, isblack, pieceselect);
+                //void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& promotion)
+                window.display();
+                continue;
             }
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            sf::Event event;
-            float hovermousey = mousePos.y;
-            float hovermousex = mousePos.x;
-            pawn.drawPromotions(&window, promotionstrs, underboard, promotioncoords, hovermousey, hovermousex, currentturn, iswhite, isblack);
-            pollpromotion(&window, hovermousey, hovermousex, currentturn, promotionlocation.first, promotionlocation.second, iswhite, isblack, pieceselect);
-           //void Chess::Game::pollpromotion(sf::RenderWindow *window, float hovermousey, float hovermousex, std::string currturn, int promposy, int promposx, bool& promotion)
-            window.display();
-            continue;
-        }
-        while (window.pollEvent(event))
-        {
-            switch (event.type) {
-                case sf::Event::Closed:
-                    window.close();
-                    break;
-                case sf::Event::MouseButtonPressed:
-                    if (event.mouseButton.button == sf::Mouse::Left)
-                    {
-                        sf::Vector2i mousePos1 = sf::Mouse::getPosition(window);
-                        int getposy = mousePos1.y;
-                        int getposx = mousePos1.x;
-                        std::pair<int, int> curryxpair;
-                        bool confirmedpiece = isPiece2(getposy, getposx, curryxpair);
-                        if (!tileselect or (confirmedpiece and thepieces[curryxpair.first][curryxpair.second].getcolor() == currentturn))
+            while (window.pollEvent(event))
+            {
+                switch (event.type) {
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                    case sf::Event::MouseButtonPressed:
+                        if (event.mouseButton.button == sf::Mouse::Left)
                         {
-                            std::cout << "Tileselcted!" << std::endl;
                             sf::Vector2i mousePos1 = sf::Mouse::getPosition(window);
-                            clickposy = mousePos1.y;
-                            clickposx = mousePos1.x;
-                            CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
-                            if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second))
+                            int getposy = mousePos1.y;
+                            int getposx = mousePos1.x;
+                            std::pair<int, int> curryxpair;
+                            bool confirmedpiece = isPiece2(getposy, getposx, curryxpair);
+                            if (!tileselect or (confirmedpiece and thepieces[curryxpair.first][curryxpair.second].getcolor() == currentturn))
                             {
-                                std::cout << "Checkmated" << std::endl;
-                                checkmateturn = currentturn;
-                                ischeckmate = true;
-                                break;
-                            }
-                            else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
-                            {
-                                std::cout << "Check but not checkmate" << std::endl;
-                                incheck = true;
-                                startpieceyx = findking(currentturn, this->underboard, this->thepieces);
-                            }
-                            tileselect = true;
-                            move = true;
-                        } else if (tileselect and move and !samecoords(startpiececoords.first, startpiececoords.second, getposy, getposx))
-                        {
-                            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                            int clickposy1 = mousePos.y;
-                            int clickposx1 = mousePos.x;
-                            endpieceyx = returnendpos(&window, currentturn, clickposy1, clickposx1);
-                            currentendposy = endpieceyx.first;
-                            currentendposx = endpieceyx.second;
-                            std::cout << "Value of incheck: " << incheck << std::endl;
-                            //Deal with moving a piece that makes the king go in check
-                            //
-                            if (incheck)
-                            {
-                                std::cout << "I'm in check bruh!" << std::endl;
-                                copyboardstate = underboard;
-                                copyboard = thepieces;
-                                MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion);
-                                if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
+                                std::cout << "Tileselcted!" << std::endl;
+                                sf::Vector2i mousePos1 = sf::Mouse::getPosition(window);
+                                clickposy = mousePos1.y;
+                                clickposx = mousePos1.x;
+                                CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
+                                if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second))
                                 {
-                                    std::cout << "current turn: " << currentturn;
-                                    underboard = copyboardstate;
-                                    thepieces = copyboard;
+                                    std::cout << "Checkmated" << std::endl;
+                                    checkmateturn = currentturn;
+                                    ischeckmate = true;
+                                    break;
+                                }
+                                else if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
+                                {
+                                    std::cout << "Check but not checkmate" << std::endl;
+                                    incheck = true;
+                                    startpieceyx = findking(currentturn, this->underboard, this->thepieces);
+                                }
+                                tileselect = true;
+                                move = true;
+                            } else if (tileselect and move and !samecoords(startpiececoords.first, startpiececoords.second, getposy, getposx))
+                            {
+                                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                                int clickposy1 = mousePos.y;
+                                int clickposx1 = mousePos.x;
+                                endpieceyx = returnendpos(&window, currentturn, clickposy1, clickposx1);
+                                currentendposy = endpieceyx.first;
+                                currentendposx = endpieceyx.second;
+                                std::cout << "Value of incheck: " << incheck << std::endl;
+                                //Deal with moving a piece that makes the king go in check
+                                //
+                                if (incheck)
+                                {
+                                    std::cout << "I'm in check bruh!" << std::endl;
+                                    copyboardstate = underboard;
+                                    copyboard = thepieces;
+                                    MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion);
+                                    if (currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
+                                    {
+                                        std::cout << "current turn: " << currentturn;
+                                        underboard = copyboardstate;
+                                        thepieces = copyboard;
+                                        tileselect = false;
+                                    } else
+                                    {
+                                        std::cout << "Got out of check!" << std::endl;
+                                        move = false;
+                                        tileselect = false;
+                                        incheck = false;
+                                        currturncount += 1;
+                                    }
+                                    break;
+                                }
+                                prevboard = underboard;
+                                prevthepieces = thepieces;
+                                std::pair<int, int> kingcoords = findking(currentturn, this->underboard, this->thepieces);
+                                if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion) and !currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
+                                {
                                     tileselect = false;
+                                    move = false;
+                                    currturncount += 1;
                                 } else
                                 {
-                                    std::cout << "Got out of check!" << std::endl;
-                                    move = false;
-                                    tileselect = false;
-                                    incheck = false;
-                                    currturncount += 1;
+                                    underboard = prevboard;
+                                    thepieces = prevthepieces;
                                 }
-                                break;
-                            }
-                            prevboard = underboard;
-                            prevthepieces = thepieces;
-                            std::pair<int, int> kingcoords = findking(currentturn, this->underboard, this->thepieces);
-                            if (MakeMovePlayer(&window, currentturn, startpieceyx, endpieceyx,currplayer, promotion) and !currentlyincheck(&window, currentturn, mademove, endpieceyx.first, endpieceyx.second, currplayer))
-                            {
-                                tileselect = false;
-                                move = false;
-                                currturncount += 1;
-                            } else
-                            {
-                                underboard = prevboard;
-                                thepieces = prevthepieces;
                             }
                         }
-                    }
-                    break;
+                        break;
+                }
             }
+        } else
+        {
+            if (Chess::Game::checkmate(currentturn, endpieceyx.first, endpieceyx.second))
+            {
+                ischeckmate = true;
+                continue;
+            }
+            unsigned long long int defaulthash = mediumAi.createhashboardpos(underboard, thepieces);
+            std::pair<char, std::vector<int>> aichosenmove;
+            mediumAi.minimaxalphabeta(underboard, thepieces, 3, -INT_MAX, INT_MAX, "black", *this, defaulthash,
+                                      aichosenmove);
+            std::pair<int, int> thestartpieceyx = std::make_pair(aichosenmove.second[0], aichosenmove.second[1]);
+            std::pair<int, int> theendpieceyx = std::make_pair(aichosenmove.second[2], aichosenmove.second[3]);
+            MakeMovePlayer(&window, currentturn, thestartpieceyx, theendpieceyx, currplayer, promotion);
         }
         if (move and !ischeckmate)
         {
             CheckSelect(&window, isgreen, startpiececoords, startpieceyx, mademove, clickposy, clickposx);
         }
         window.display();
-        /*
-        if (ischeckmate) {
-            std::cout << "End Game!" << std::endl;
-            break;
-        }
-         */
     }
 }
 
