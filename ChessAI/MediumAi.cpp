@@ -151,6 +151,7 @@ basic knowledge about endgames drawn by insufficient material
 
 int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces,
                                 std::string color) {
+    std::cout << "STATIC EVAL DETECTED" << std::endl;
     int P = 100;
     int N = 320;
     int B = 330;
@@ -274,7 +275,7 @@ int Chess::MediumAi::countdoubledpawnscore(std::vector<std::vector<char>> &under
         for (int j = 0; j < underboard[0].size(); j++)
         {
             if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
-                and i - 1 >= 0 and underboard[i - 1][j] == 'P' and thepieces[i - 1][j].getcolor() == color)
+                and inbounds(i-1, j) and underboard[i - 1][j] == 'P' and thepieces[i - 1][j].getcolor() == color)
             {
                 numdoubled += 1;
             }
@@ -295,36 +296,36 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>> &unde
         for (int j = 0; j < underboard[0].size(); j++)
         {
             if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
-                and j - 1 >= 0 and j - 1 <= underboard[0].size() - 1)
+                and inbounds(i, j - 1))
             {
                 for (int z = 0; z < underboard.size(); z++)
                 {
-                    if ((underboard[i][j - 1 + z] == 'P' and thepieces[i][j - 1 + z].getcolor() == color)
-                        or (underboard[i][j - 1 - z] == 'P' and thepieces[i][j - 1 - z].getcolor() == color))
+                    if ((inbounds(i, j - 1 + z) and underboard[i][j - 1 + z] == 'P' and thepieces[i][j - 1 + z].getcolor() == color)
+                        or (inbounds(i,j-1 - z ) and underboard[i][j - 1 - z] == 'P' and thepieces[i][j - 1 - z].getcolor() == color))
                     {
                         hasisolatedleftfile = false;
                     }
                 }
             }
             if (underboard[i][j] == 'P' and thepieces[i][j].getcolor() == color
-                and j + 1 < underboard[0].size())
+                and inbounds(i, j+1))
             {
                 for (int z = 0; z < underboard.size(); z++)
                 {
-                    if ((underboard[i][j + 1 + z] == 'P' and thepieces[i][j + 1 + z].getcolor() == color)
-                        or (underboard[i][j + 1 - z] == 'P' and thepieces[i][j + 1 - z].getcolor() == color))
+                    if ((inbounds(i, j + 1 + z) and underboard[i][j + 1 + z] == 'P' and thepieces[i][j + 1 + z].getcolor() == color)
+                        or (inbounds(i, j+1-z) and underboard[i][j + 1 - z] == 'P' and thepieces[i][j + 1 - z].getcolor() == color))
                     {
                         hasisolatedrightfile = false;
                     }
                 }
 
             }
-            if (!hasisolatedleftfile and !hasisolatedrightfile)
+            if (hasisolatedleftfile and hasisolatedrightfile)
             {
                 numisolated += 1;
             }
-            hasisolatedrightfile = true;
             hasisolatedleftfile = true;
+            hasisolatedrightfile = true;
         }
     }
     int score = numisolated * -10;
@@ -378,7 +379,7 @@ int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>> &underboar
                          (inbounds(i - 1, j + 1) and underboard[i - 1][j + 1] == 'P'
                           and thepieces[i - 1][j + 1].getcolor() == "white")))
                 {
-                    if (underboard[i - 1][j] == ' ' and isWatching(underboard, thepieces, color, i - 1, j))
+                    if (inbounds(i-1, j) and underboard[i - 1][j] == ' ' and isWatching(underboard, thepieces, color, i - 1, j))
                     {
                         numbackwardpawns += 1;
                     }
@@ -399,7 +400,7 @@ int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>> &underboar
                                                                              thepieces[i + 1][j + 1].getcolor() ==
                                                                              "black")))
                 {
-                    if (underboard[i + 1][j] == ' ' and isWatching(underboard, thepieces, color, i + 1, j))
+                    if (inbounds(i+1, j) and underboard[i + 1][j] == ' ' and isWatching(underboard, thepieces, color, i + 1, j))
                     {
                         numbackwardpawns += 1;
                     }
@@ -473,14 +474,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     //-10, -11, -12 will be values for
     if (depth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
     {
-        if (zorbisthash.count(hashvalue) > 0)
-        {
-            return zorbisthash[hashvalue];
-        } else
-        {
-            zorbisthash[hashvalue] = quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame);
-        }
-        return zorbisthash[hashvalue];
+        return quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame);
     }
     if (maximizingPlayer == "white")
     {
@@ -488,14 +482,19 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         //check if im currently able to castle on both ways and add that move in
         //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard,
-                                                                                           thepieces, false);
+                                                                                           thepieces, false, thegame);
         //getallpossiblemoves will handle move types like enpassant, promotion
         //castle move additions
         King jking(0, 0, -9000, -9000);
         std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
         std::vector<std::pair<int, int>> currcheckmoves;
         jking.setstartpos(ourking.first, ourking.second);
+        jking.setendpos();
         jking.CastleCheckGeneration(underboard, thepieces, currcheckmoves, maximizingPlayer);
+
+
+        // castleenact(underboard, thepieces, startposx - 4, endposx + 1);
+        //castleenact(underboard, thepieces, startposx + 3, endposx - 1);
         for (auto item: currcheckmoves)
         {
             std::vector<int> currmove = {item.first, item.second, CASTLE};
@@ -540,7 +539,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     {
         int minEvaluation = INT_MAX;
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard,
-                                                                                           thepieces, false);
+                                                                                           thepieces, false, thegame);
         //getallpossiblemoves will handle move types like enpassant, promotion
         King jking(0, 0, -9000, -9000);
         std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
@@ -612,7 +611,7 @@ int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
             alpha = standing_pateval;
         }
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard,
-                                                                                           thepieces, true);
+                                                                                           thepieces, true, thegame);
         Player matter;
         for (auto capturemoves: possiblemoves)
         {
@@ -641,13 +640,12 @@ int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
         {
             return alpha;
         }
-
         if (standing_pateval < beta)
         {
             beta = standing_pateval;
         }
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard,
-                                                                                           thepieces, true);
+                                                                                           thepieces, true, thegame);
         Player matter;
         for (auto capturemoves: possiblemoves)
         {
@@ -658,7 +656,6 @@ int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
             int evalscore = quietsearch(underboard, thepieces, alpha, beta, "white", thegame);
             underboard = prevboard;
             thepieces = prevpieces;
-
             if (evalscore <= alpha)
             {
                 return alpha;
@@ -772,10 +769,25 @@ int Chess::MediumAi::zorbistpieceindex(char item, std::string color) {
     return -1;
 }
 
+bool Chess::MediumAi::currentlyincheck(std::vector<std::vector<char>> underboard,
+                                       std::vector<std::vector<Pieces>> thepieces, std::string colorturn, int endposy, int endposx)
+{
+    Game newgame;
+    std::pair<int, int> kingcoords = newgame.findking(colorturn, underboard, thepieces);
+    King kingobj(kingcoords.second, kingcoords.first, endposx, endposy);
+    if (kingobj.determinecheck(underboard, thepieces, colorturn))
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
 
 std::vector<std::pair<char, std::vector<int>>>
 Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<char>> underboard,
-                                     std::vector<std::vector<Pieces>> thepieces, bool needscaptures) {
+                                     std::vector<std::vector<Pieces>> thepieces, bool needscaptures, Game& thegame) {
     std::vector<std::pair<char, std::vector<int>>> allpossiblemoves;
     Pawn pawnobj(0, 0, -9000, -9000);
     Rook rookobj(0, 0, -9000, -9000);
@@ -799,6 +811,9 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: pawnobj.getcapturemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0)) {
+                                   continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -811,6 +826,9 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: pawnobj.getpossiblemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0)) {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -828,6 +846,9 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: rookobj.getcapturemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0)) {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -840,6 +861,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: rookobj.getpossiblemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -857,6 +882,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: knightobj.getcapturemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -869,6 +898,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: knightobj.getpossiblemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -886,6 +919,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: bishopobj.getcapturemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -898,6 +935,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: bishopobj.getpossiblemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -915,6 +956,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: queenobj.getcapturemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -927,6 +972,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: queenobj.getpossiblemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -944,6 +993,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: kingobj.getcapturemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -956,6 +1009,10 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
                         {
                             for (auto item: kingobj.getpossiblemoves())
                             {
+                                if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                                {
+                                    continue;
+                                }
                                 std::vector<int> moves;
                                 moves.push_back(i);
                                 moves.push_back(j);
@@ -972,7 +1029,5 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
         }
     }
 }
-
-
 
 
