@@ -489,15 +489,10 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
         std::vector<std::pair<int, int>> currcheckmoves;
         jking.setstartpos(ourking.first, ourking.second);
-        jking.setendpos();
         jking.CastleCheckGeneration(underboard, thepieces, currcheckmoves, maximizingPlayer);
-
-
-        // castleenact(underboard, thepieces, startposx - 4, endposx + 1);
-        //castleenact(underboard, thepieces, startposx + 3, endposx - 1);
         for (auto item: currcheckmoves)
         {
-            std::vector<int> currmove = {item.first, item.second, CASTLE};
+            std::vector<int> currmove = {ourking.first, ourking.second, item.first, item.second, CASTLE};
             std::pair<char, std::vector<int>> castlepairs = std::make_pair('A', currmove);
             possiblemoves.emplace_back(castlepairs);
         }
@@ -516,15 +511,12 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
                 thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[2],
                              move.second[3], matter);
             }
-            //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, unsigned long long int hashval,
-            //                                                 int startposy, int startposx, int endposy, int endposx, char piece, std::string color
-            int newhash = makemove(underboard, thepieces, hashvalue, move.second[0], move.second[1], move.second[2],
-                                   move.second[3], move.first, maximizingPlayer);
+
             if (move.first == 'P' and move.second[2] == 0)
             {
                 updatepiece(underboard, thepieces, move.second[3], move.second[4], 'Q');
             }
-            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, "black", thegame, newhash, aichosenmove);
+            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, "black", thegame, hashvalue, aichosenmove);
             underboard = prevboard;
             thepieces = prevpieces;
             maxEvaluation = std::max(maxEvaluation, eval);
@@ -548,7 +540,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         jking.CastleCheckGeneration(underboard, thepieces, currcheckmoves, maximizingPlayer);
         for (auto item: currcheckmoves)
         {
-            std::vector<int> currmove = {item.first, item.second};
+            std::vector<int> currmove = {ourking.first, ourking.second, item.first, item.second};
             std::pair<char, std::vector<int>> castlepairs = std::make_pair('A', currmove);
             possiblemoves.emplace_back(castlepairs);
         }
@@ -566,13 +558,11 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
                 thegame.move(underboard, thepieces, maximizingPlayer, move.second[0], move.second[1], move.second[2],
                              move.second[3], matter);
             }
-            int newhash = makemove(underboard, thepieces, hashvalue, move.second[0], move.second[1], move.second[2],
-                                   move.second[3], move.first, maximizingPlayer);
             if (move.first == 'P' and move.second[2] == 7)
             {
                 updatepiece(underboard, thepieces, move.second[3], move.second[4], 'Q');
             }
-            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, "white", thegame, newhash, aichosenmove);
+            int eval = minimaxalphabeta(underboard, thepieces, depth - 1, alpha, beta, "white", thegame, hashvalue, aichosenmove);
             underboard = prevboard;
             thepieces = prevpieces;
             if (eval < minEvaluation and depth == 3)
@@ -1029,5 +1019,6 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
         }
     }
 }
+
 
 
