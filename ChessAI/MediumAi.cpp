@@ -478,6 +478,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     }
     if (maximizingPlayer == "white")
     {
+        std::cout << "Maximizing Player white" << std::endl;
         int maxEvaluation = -INT_MAX;
         //check if im currently able to castle on both ways and add that move in
         //std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>> possiblemoves,  std::string color
@@ -529,15 +530,19 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
         return maxEvaluation;
     } else
     {
+        std::cout << "Minimizing Player Black" << std::endl;
         int minEvaluation = INT_MAX;
+        std::cout << "The King was Found" << std::endl;
         std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard,
                                                                                            thepieces, false, thegame);
+        std::cout << "Where am I seg faulting now?" << std::endl;
         //getallpossiblemoves will handle move types like enpassant, promotion
         King jking(0, 0, -9000, -9000);
         std::pair<int, int> ourking = jking.findking(maximizingPlayer, underboard, thepieces);
         std::vector<std::pair<int, int>> currcheckmoves;
         jking.setstartpos(ourking.first, ourking.second);
         jking.CastleCheckGeneration(underboard, thepieces, currcheckmoves, maximizingPlayer);
+        std::cout << "Where am I seg faulting now?" << std::endl;
         for (auto item: currcheckmoves)
         {
             std::vector<int> currmove = {ourking.first, ourking.second, item.first, item.second};
@@ -589,6 +594,7 @@ int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
                                  std::string maximizingPlayer, Game &thegame) {
     //int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, std::string color)
     //make sure to deal with depth later
+    std::cout << "Getting to bottom most level" << std::endl;
     if (maximizingPlayer == "white")
     {
         int standing_pateval = staticeval(underboard, thepieces, maximizingPlayer);
@@ -789,7 +795,7 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
     //castling, en passant, promotion
     for (int i = 0; i < underboard.size(); i++)
     {
-        for (int j = 0; j < underboard[0].size(); i++)
+        for (int j = 0; j < underboard[0].size(); j++)
         {
             if (thepieces[i][j].getcolor() == color and underboard[i][j] != ' ')
             {
