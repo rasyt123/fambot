@@ -175,12 +175,11 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     int bkingpiecesquare;
     int bkingy;
     int bkingx;
-
+    std::cout << "Underboard size: " << underboard.size();
     for (int i = 0; i < underboard.size(); i++)
     {
         for (int j = 0; j < underboard[0].size(); j++)
         {
-            std::cout << underboard[i][j] << " ";
             if (underboard[i][j] != ' ' and thepieces[i][j].getcolor() == "white")
             {
                 switch (underboard[i][j])
@@ -277,6 +276,7 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     }
     int wtotalscore = wmaterialscore + wpiecetablescore + wmobilityscore;
     int btotalscore = bmaterialscore + bpiecetablescore + bmobilityscore;
+    std::cout << "Eval score: " << wtotalscore - btotalscore;
     return wtotalscore - btotalscore;
 }
 
@@ -348,8 +348,7 @@ int Chess::MediumAi::countisolatedpawnscore(std::vector<std::vector<char>> &unde
 }
 
 
-bool
-Chess::MediumAi::isWatching(std::vector<std::vector<char>> &underboard, std::vector<std::vector<Pieces>> &thepieces,
+bool Chess::MediumAi::isWatching(std::vector<std::vector<char>> &underboard, std::vector<std::vector<Pieces>> &thepieces,
                             std::string color, int row, int col) {
     King watching(0, 0, -9000, 9000);
     for (int i = 0; i < underboard.size(); i++)
@@ -412,8 +411,7 @@ int Chess::MediumAi::countbackwardpawn(std::vector<std::vector<char>> &underboar
                     and ((inbounds(i + 1, j - 1) and underboard[i + 1][j - 1] == 'P' and
                           thepieces[i + 1][j - 1].getcolor() == "black") or (inbounds(i + 1, j + 1) and
                                                                              underboard[i + 1][j + 1] == 'P' and
-                                                                             thepieces[i + 1][j + 1].getcolor() ==
-                                                                             "black")))
+                                                                             thepieces[i + 1][j + 1].getcolor() == "black")))
                 {
                     if (inbounds(i+1, j) and underboard[i + 1][j] == ' ' and isWatching(underboard, thepieces, color, i + 1, j))
                     {
@@ -489,7 +487,8 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     //-10, -11, -12 will be values for
     if (depth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
     {
-        return quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame);
+        std::cout << "alpha beta depth max reached" << std::endl;
+        return quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame, 0);
     }
     if (maximizingPlayer == "white")
     {
@@ -561,9 +560,6 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
             possiblemoves.emplace_back(castlepairs);
         }
         Player matter;
-        if (depth == 3) {
-            std::cout << "Number of possible moves" << possiblemoves.size() << std::endl;
-        }
         for (std::pair<char, std::vector<int>> &move: possiblemoves)
         {
             std::vector<std::vector<char>> prevboard = underboard;
@@ -605,10 +601,20 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
 
 int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
                                  std::vector<std::vector<Pieces>> thepieces, int alpha, int beta,
-                                 std::string maximizingPlayer, Game &thegame) {
+                                 std::string maximizingPlayer, Game &thegame, int newdepth) {
     //int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, std::string color)
     //make sure to deal with depth later
-    std::cout << "Getting to bottom most level" << std::endl;
+    if (newdepth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
+    {
+        return staticeval(underboard, thepieces,maximizingPlayer);
+    }
+    std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard,
+                                                                                       thepieces, true, thegame);
+    std::cout << "Quiet search possiblemoves: " << possiblemoves.size() << std::endl;
+    if (possiblemoves.size() == 0)
+    {
+        return staticeval(underboard, thepieces,maximizingPlayer);
+    }
     if (maximizingPlayer == "white")
     {
         int standing_pateval = staticeval(underboard, thepieces, maximizingPlayer);
@@ -620,8 +626,6 @@ int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
         {
             alpha = standing_pateval;
         }
-        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard,
-                                                                                           thepieces, true, thegame);
         Player matter;
         for (auto capturemoves: possiblemoves)
         {
@@ -629,7 +633,7 @@ int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
             std::vector<std::vector<Pieces>> prevpieces = thepieces;
             thegame.move(underboard, thepieces, maximizingPlayer, capturemoves.second[0], capturemoves.second[1],
                          capturemoves.second[2], capturemoves.second[3], matter);
-            int evalscore = quietsearch(underboard, thepieces, alpha, beta, "black", thegame);
+            int evalscore = quietsearch(underboard, thepieces, alpha, beta, "black", thegame, newdepth - 1);
             underboard = prevboard;
             thepieces = prevpieces;
 
@@ -654,8 +658,6 @@ int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
         {
             beta = standing_pateval;
         }
-        std::vector<std::pair<char, std::vector<int>>> possiblemoves = getallpossiblemoves(maximizingPlayer, underboard,
-                                                                                           thepieces, true, thegame);
         Player matter;
         for (auto capturemoves: possiblemoves)
         {
@@ -663,7 +665,7 @@ int Chess::MediumAi::quietsearch(std::vector<std::vector<char>> underboard,
             std::vector<std::vector<Pieces>> prevpieces = thepieces;
             thegame.move(underboard, thepieces, maximizingPlayer, capturemoves.second[0], capturemoves.second[1],
                          capturemoves.second[2], capturemoves.second[3], matter);
-            int evalscore = quietsearch(underboard, thepieces, alpha, beta, "white", thegame);
+            int evalscore = quietsearch(underboard, thepieces, alpha, beta, "white", thegame, newdepth - 1);
             underboard = prevboard;
             thepieces = prevpieces;
             if (evalscore <= alpha)
@@ -796,7 +798,7 @@ bool Chess::MediumAi::currentlyincheck(std::vector<std::vector<char>> underboard
 
 
 
-std::pair<char, std::vector<int>> Chess::MediumAi::grabpiecemoves(int i, int j, bool needscaptures, std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, std::string color) {
+void Chess::MediumAi::grabpiecemoves(int i, int j, bool needscaptures, std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces, std::string color,  std::vector<std::pair<char, std::vector<int>>>& allpossiblemoves) {
     Pawn pawnobj(0, 0, -9000, -9000);
     Rook rookobj(0, 0, -9000, -9000);
     Knight knightobj(0, 0, -9000, -9000);
@@ -812,7 +814,8 @@ std::pair<char, std::vector<int>> Chess::MediumAi::grabpiecemoves(int i, int j, 
             {
                 for (auto item: pawnobj.getcapturemoves())
                 {
-                    if (currentlyincheck(underboard, thepieces, color, 0, 0)) {
+                    if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                    {
                         continue;
                     }
                     std::vector<int> moves;
@@ -827,7 +830,8 @@ std::pair<char, std::vector<int>> Chess::MediumAi::grabpiecemoves(int i, int j, 
             {
                 for (auto item: pawnobj.getpossiblemoves())
                 {
-                    if (currentlyincheck(underboard, thepieces, color, 0, 0)) {
+                    if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                    {
                         continue;
                     }
                     std::vector<int> moves;
@@ -848,7 +852,8 @@ std::pair<char, std::vector<int>> Chess::MediumAi::grabpiecemoves(int i, int j, 
             {
                 for (auto item: rookobj.getcapturemoves())
                 {
-                    if (currentlyincheck(underboard, thepieces, color, 0, 0)) {
+                    if (currentlyincheck(underboard, thepieces, color, 0, 0))
+                    {
                         continue;
                     }
                     std::vector<int> moves;
@@ -1029,9 +1034,7 @@ std::pair<char, std::vector<int>> Chess::MediumAi::grabpiecemoves(int i, int j, 
                 }
 
             }
-
-
-
+    }
 }
 
 
@@ -1047,15 +1050,13 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
         {
             if (thepieces[i][j].getcolor() == color and underboard[i][j] != ' ')
             {
-
-                        break;
-                }
+                //int i, int j, bool needscaptures, std::vector<std::vector<char>> underboard, std::vector<std::vector<Pieces>> thepieces,
+                // std::string color,  std::vector<std::pair<char, std::vector<int>>>& allpossiblemoves
+                grabpiecemoves(i, j, needscaptures, underboard, thepieces, color, allpossiblemoves);
             }
         }
     }
-    std::cout << "Allpossiblemoves: " << allpossiblemoves.size() << std::endl;
     return allpossiblemoves;
 }
-
 
 
