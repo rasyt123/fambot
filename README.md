@@ -15,8 +15,8 @@
 
 
 <!-- ABOUT THE PROJECT -->
-**SFML Chess With AI (In-Progress)**
 <p align="center">
+**SFML Chess With AI (In-Progress)**
   
 **2 player chess game built using the SFML (Simple and Fast Multimedia Layer) Library that also has an AI. You can choose to play against a human or a bot. You can click on the pieces of the board/your color to move and play the game.
 
@@ -32,8 +32,7 @@ AI Features:
 
 -Piece Square Tables
 
--Transposition Tables (Zobrist Hash)
-  **
+-Transposition Tables (Zobrist Hash)**
   
 </p>
 
