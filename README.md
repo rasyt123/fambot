@@ -38,10 +38,10 @@
 </p>
 
 <p align="center">
-  <img width="800" alt="chessscreenshot" src="https://user-images.githubusercontent.com/26770454/161856668-91f38df9-07a1-4793-95fe-3590a8589c56.png">
+  <img width="600" alt="chessscreenshot" src="https://user-images.githubusercontent.com/26770454/161856668-91f38df9-07a1-4793-95fe-3590a8589c56.png">
 </p>
 
-![chessenact2](![chessgif123](https://user-images.githubusercontent.com/26770454/161856599-541d7c8a-72a7-4ae3-800d-f47ffbcb2373.gif))
+![chessenact2](https://user-images.githubusercontent.com/26770454/161856599-541d7c8a-72a7-4ae3-800d-f47ffbcb2373.gif)
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
