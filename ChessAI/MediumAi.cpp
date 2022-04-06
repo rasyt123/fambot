@@ -254,6 +254,7 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     }
 
     std::cout << "Past table scores: " << std::endl;
+    /*
     int wdpawnpenalty = countdoubledpawnscore(underboard, thepieces, "white");
     int wisopawnpenalty = countisolatedpawnscore(underboard, thepieces, "white");
     int wbpawnpenalty = countbackwardpawn(underboard, thepieces, "white");
@@ -266,7 +267,7 @@ int Chess::MediumAi::staticeval(std::vector<std::vector<char>> underboard, std::
     int bbpawnpenalty = countbackwardpawn(underboard, thepieces, "black");
     int bpassedpawnbonus = countpassedpawn(underboard, thepieces, "black");
     bmobilityscore = bdpawnpenalty + bisopawnpenalty + bbpawnpenalty + bpassedpawnbonus;
-
+    */
     if (numberofpieces <= 12)
     {
         wpiecetablescore = wpiecetablescore - wkingpiecesquare;
@@ -488,7 +489,7 @@ int Chess::MediumAi::minimaxalphabeta(std::vector<std::vector<char>> underboard,
     if (depth == 0 or thegame.checkmate(maximizingPlayer, -9000, 9000))
     {
         std::cout << "alpha beta depth max reached" << std::endl;
-        return quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame, 0);
+        return quietsearch(underboard, thepieces, alpha, beta, maximizingPlayer, thegame, 2);
     }
     if (maximizingPlayer == "white")
     {
@@ -1058,5 +1059,6 @@ Chess::MediumAi::getallpossiblemoves(std::string color, std::vector<std::vector<
     }
     return allpossiblemoves;
 }
+
 
 
