@@ -50,7 +50,6 @@
 
 * https://www.sfml-dev.org/
 * https://www.chessprogramming.org/Main_Page
-* https://www.freecodecamp.org/news/simple-chess-ai-step-by-step-1d55a9266977/
 * https://www.cplusplus.com/
 
 <p align="right">(<a href="#top">back to top</a>)</p>
