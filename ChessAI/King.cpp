@@ -48,6 +48,11 @@ void Chess::King::GenerateMoves(std::vector<std::vector<char>>& underboard, std:
         {
             std::cout << "current possible move: " << "rowy " << item.first << "rowx " << item.second << std::endl;
             possiblemoves.emplace_back(item);
+            if (underboard[item.first][item.second] != ' ' and thepieces[item.first][item.second].getcolor() != color
+                and !IsPieceProtected(item.first, item.second))
+            {
+                capturemoves.emplace_back(item);
+            }
         }
         if (InBounds(item.first, item.second, underboard) and underboard[item.first][item.second] != ' '
         and thepieces[item.first][item.second].getcolor() == color)
@@ -112,9 +117,14 @@ bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, 
         }
     }
 
+
+    //iterate through all available moves per piece on opposite color (white)
+    //we check if we have a move that can put us out of check that gobbles a piece
     for (auto movechars : currmvavailable)
     {
+        //iterate through possible moves
         for (std::pair<int, int> moves : movechars.second) {
+            //if the piece of opposite color can gobble a piece that's currently checking the king
             if (moves.first == piecechecky and moves.second == piececheckx)
             {
                 char oldpiece = movechars.first;
@@ -124,6 +134,8 @@ bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, 
                 thepieces[piecestartingpos[pieceitr].first][piecestartingpos[pieceitr].second].settype(' ');
                 thepieces[piecestartingpos[pieceitr].first][piecestartingpos[pieceitr].second].setblank(true);
                 thepieces[piecestartingpos[pieceitr].first][piecestartingpos[pieceitr].second].setcolor("");
+                //make the move and determine if the king is still in check
+                //we return true when we can make such a move that keeps our king out of check
                 if (!determinecheck(underboard, thepieces, color)) {
                     underboard = tempunderboard;
                     thepieces = temppieces;
@@ -135,6 +147,8 @@ bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, 
         }
         pieceitr += 1;
     }
+    //if none of the captures keeps our king out of check,
+    //we just reset the board to be the original that's unedited and return false
     underboard = tempunderboard;
     thepieces = temppieces;
     std::cout << "Cannot gobble near king" << std::endl;
@@ -143,6 +157,8 @@ bool Chess::King::cangobblenearking(std::vector<std::vector<char>>& underboard, 
 
 
 bool Chess::King::IsPieceProtected(int opppiecerowpos, int opppiececolpos) {
+    //iterates through protected squares and if a coordinates of a piece on the board falls under these squares then we return
+    //that it is protected/true
     for (auto protectedsq : totalprotectingsquares)
     {
         if (opppiecerowpos == protectedsq.first and opppiececolpos == protectedsq.second)
@@ -154,6 +170,9 @@ bool Chess::King::IsPieceProtected(int opppiecerowpos, int opppiececolpos) {
 }
 
 std::pair<int, int> Chess::King::findking(std::string color, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    /*
+     *iterate through entire board and if we find a king that has the color you want, create a pair comprised of the coordinates of said king
+     */
     for (int height = 0; height < 8; height++)
     {
         for (int width = 0; width < 8; width++)
@@ -170,6 +189,18 @@ std::pair<int, int> Chess::King::findking(std::string color, std::vector<std::ve
 
 
 void Chess::King::castleenact(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int startposfactor, int kingcrement) {
+    /*
+     *save the rook cause when you do the actual castle you're going to change position of the rook
+     *save rook info also in Pieces
+     *
+     *set the position of the rook to a blank
+     *save the king cause you're going to move it multiple spaces to the left or right
+     * and it's info
+     *
+     *
+     * The empty position that you clicked on with the king will be moved there
+     *
+     */
     char temprook = underboard[endposy][startposfactor];
     Pieces tpiecer = thepieces[endposy][startposfactor];
     setblank(endposy, startposfactor, underboard, thepieces);
@@ -184,6 +215,8 @@ void Chess::King::castleenact(std::vector<std::vector<char>>& underboard, std::v
 }
 
 void Chess::King::setblank(int ypos, int xpos, std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces) {
+    //set current position to be a blank and the piece class associated with it
+    //such that it is a blank, has no color, and no type
     underboard[ypos][xpos] = ' ';
     thepieces[ypos][xpos].setblank(true);
     thepieces[ypos][xpos].setcolor(" ");
@@ -191,6 +224,11 @@ void Chess::King::setblank(int ypos, int xpos, std::vector<std::vector<char>>& u
 }
 
 bool Chess::King::performCastle(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::string color) {
+    /*
+     * 2 spaces to the left and 2 spaces to the right
+     * We first check if the we select the king and we want to move it with a castle on the left or the right
+     * If the position is valid to castle, then we castle using castlemovement function
+     */
     if (color == "black" and endposy == 0 and (endposx == startposx - 2 or
     endposx == startposx + 2) and startposy == 0 and startposx == 4)
     {
@@ -219,6 +257,12 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
     std::vector<std::pair<int, int>> bkingsidecoords;
     bool qsidehrook = false;
     bool ksinghrook = false;
+
+    /*
+     * If we want to castle queenside, and if the rook is in the right place, we set qside rook to true
+     * same applies to the kingside castle
+     *
+     */
     if (InBounds(startposy, startposx - 4, underboard) and underboard[startposy][startposx - 4] == 'R'
         and thepieces[startposy][startposx - 4].getcolor() == color)
     {
@@ -229,6 +273,10 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
     {
         ksinghrook = true;
     }
+    //You need these if statements because there are different castle types
+
+    //if the position we clicked on was a queenside castle
+    //run through all positions between rook and king to see if empty on both types
     if (endposx == startposx - 2)
     {
         if (!qsidehrook)
@@ -244,6 +292,8 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
 
         }
     }
+
+    //if the position we clicked on was a kingside castle
     if (endposx == startposx + 2)
     {
         if (!ksinghrook)
@@ -269,6 +319,9 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
             }
         }
     }
+    //Sometimes pieces can watch squares that are a part of the castling path, and if this is the case
+    //we return false, we have and if and else statement to deal with both queenside castling
+    //and kingside castling
 
     for (std::pair<int, int> move : interferemoves)
     {
@@ -299,7 +352,11 @@ bool Chess::King::CastleCheck(std::vector<std::vector<char>>& underboard, std::v
 }
 
 
-
+/*
+ *This function is only used in the Artificial Intelligence because we actually need the AI to choose whether or not it can castle
+ * and also test the castle. It is a clone of the function above.
+ *
+ */
 bool Chess::King::CastleCheckGeneration(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, std::vector<std::pair<int,int>>& possiblemoves,  std::string color) {
     std::vector<std::pair<int, int>> wqsidecoords = {{startposy, startposx - 1}, {startposy, startposx - 2}, {startposy, startposx - 3}};
     std::vector<std::pair<int, int>> wkingsidecoords = {{startposy, startposx + 1}, {startposy, startposx + 2}};
@@ -320,6 +377,7 @@ bool Chess::King::CastleCheckGeneration(std::vector<std::vector<char>>& underboa
         ksinghrook = true;
     }
     int currentendposxleft = startposx - 2;
+
     if (!qsidehrook)
     {
             return false;
@@ -336,7 +394,7 @@ bool Chess::King::CastleCheckGeneration(std::vector<std::vector<char>>& underboa
         {
             return false;
         }
-        for (int xbet = startposx + 1; xbet <= endposx; xbet++)
+        for (int xbet = startposx + 1; xbet <= 7; xbet++)
         {
             if (underboard[startposy][xbet] != ' ')
             {
@@ -382,6 +440,7 @@ bool Chess::King::CastleCheckGeneration(std::vector<std::vector<char>>& underboa
 }
 
 
+
 bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underboard, std::vector<std::vector<Pieces>>& thepieces, int y, int x, std::string color) {
     //whitew
     Pawn pawnobj(x, y, -9000, -9000);
@@ -391,6 +450,13 @@ bool Chess::King::collectmoveinterference(std::vector<std::vector<char>>& underb
     King kingobj(x, y, -9000, -9000);
     Knight knightobj(x, y, -9000, -9000);
     bool staredowntrue = false;
+    /*
+     * Helper function for the nested for loop 
+     * check what type of piece it is, generate the moves for the piece, and see if it interferes with 
+     * any castle or other movement. we also want to know which pieces each piece protects also 
+     *
+     *
+     */
     switch (underboard[y][x])
     {
         case 'P':
@@ -535,6 +601,7 @@ std::pair<int, int> Chess::King::collectmoveinterference2(std::vector<std::vecto
     return checkpiecepos;
 }
 
+//copies moves from src to destination 
 void Chess::King::addmoves(std::vector<std::pair<int, int>> src, std::vector<std::pair<int, int>> &destination) {
     for (auto item : src)
     {
@@ -710,34 +777,12 @@ void Chess::King::setstartpos(int startposy, int startposx) {
     this->startposx = startposx;
 }
 
+void Chess::King::setendpos(int endposy, int endposx) {
+    this->endposy = endposy;
+    this->endposx = endposx;
+}
 
-/*
-   for (auto item : dirs)
-   {
-       if (item.first >= 0 and item.first < underboard.size()
-       and item.second >= 0 and item.second < underboard[0].size())
-       {
-           if (currstarekingy != -9000 and currstarekingx != -9000 and
-           currstarekingy == item.first and currstarekingx == item.second)
-           {
-               for (int y = 0; y < underboard.size(); y++)
-               {
-                   for (int x = 0; x < underboard[0].size(); x++)
-                   {
-                       if (thepieces[y][x].getcolor() == color and underboard[y][x] != ' ' and underboard[y][x] != 'A')
-                       {
-                           collectmoveinterference2(underboard, thepieces, y, x, thepieces[y][x].getcolor(), interferemoves2);
-                       }
-                   }
-               }
-               for (auto intmoves : interferemoves2)
-               {
-                   if (intmoves.first == currstarekingy and intmoves.second == currstarekingx)
-                   {
-                       return false;
-                   }
-               }
-           }
-       }
-   }
-    */
+std::vector<std::pair<int,int>>& Chess::King::getcapturemoves() {
+    return capturemoves;
+}
+
